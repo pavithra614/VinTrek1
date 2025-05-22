@@ -1,0 +1,96 @@
+<template>
+    <lightning-card title="Trail Explorer" icon-name="custom:custom57">
+        <div class="slds-m-around_medium">
+            <!-- Filters -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="Difficulty"
+                        value={filterOptions.difficulty}
+                        options={difficultyOptions}
+                        onchange={handleDifficultyChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <lightning-input 
+                        type="number" 
+                        label="Min Distance (km)" 
+                        value={filterOptions.minDistance}
+                        onchange={handleMinDistanceChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input 
+                        type="number" 
+                        label="Max Distance (km)" 
+                        value={filterOptions.maxDistance}
+                        onchange={handleMaxDistanceChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={error}>
+                <div class="slds-text-color_error">
+                    Error loading trails: {error.body.message}
+                </div>
+            </template>
+
+            <!-- Trail List -->
+            <template if:true={trails.length}>
+                <div class="slds-grid slds-wrap">
+                    <template for:each={trails} for:item="trail">
+                        <div key={trail.Id} class="slds-col slds-size_1-of-3 slds-p-around_small">
+                            <div class="slds-box slds-box_link" data-id={trail.Id} onclick={handleTrailSelect}>
+                                <div class="slds-media">
+                                    <div class="slds-media__body">
+                                        <h3 class="slds-text-heading_small">{trail.Name}</h3>
+                                        <p class="slds-text-body_small">
+                                            <lightning-badge label={trail.Difficulty__c}></lightning-badge>
+                                            <span class="slds-m-left_small">{trail.Distance_km__c} km</span>
+                                        </p>
+                                        <p class="slds-truncate">{trail.Location__c}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- No Trails Message -->
+            <template if:false={trails.length}>
+                <div class="slds-text-align_center slds-m-top_large">
+                    No trails found. Try adjusting your filters.
+                </div>
+            </template>
+
+            <!-- Selected Trail Details -->
+            <template if:true={selectedTrail}>
+                <div class="slds-m-top_large">
+                    <h2 class="slds-text-heading_medium">{selectedTrail.Name}</h2>
+                    <p>{selectedTrail.Description__c}</p>
+                    <div class="slds-grid slds-gutters slds-m-top_small">
+                        <div class="slds-col">
+                            <p><strong>Difficulty:</strong> {selectedTrail.Difficulty__c}</p>
+                        </div>
+                        <div class="slds-col">
+                            <p><strong>Distance:</strong> {selectedTrail.Distance_km__c} km</p>
+                        </div>
+                        <div class="slds-col">
+                            <p><strong>Elevation:</strong> {selectedTrail.Elevation_m__c} m</p>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_medium">
+                        <lightning-button label="Book This Trail" variant="brand"></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

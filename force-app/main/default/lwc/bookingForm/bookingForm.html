@@ -1,0 +1,56 @@
+<template>
+    <lightning-card title="Book Your Adventure" icon-name="standard:event">
+        <div class="slds-m-around_medium">
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-input 
+                        type="date" 
+                        label="Start Date" 
+                        value={startDate}
+                        onchange={handleStartDateChange}
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input 
+                        type="date" 
+                        label="End Date" 
+                        value={endDate}
+                        onchange={handleEndDateChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+            
+            <div class="slds-m-top_medium">
+                <lightning-input 
+                    type="number" 
+                    label="Number of People" 
+                    value={numberOfPeople}
+                    min="1"
+                    max="20"
+                    onchange={handleNumberOfPeopleChange}
+                    required>
+                </lightning-input>
+            </div>
+            
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Book Now" 
+                    variant="brand" 
+                    onclick={handleSubmit}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Reset" 
+                    onclick={resetForm}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,36 @@
+<template>
+    <lightning-card title="Trail Map" icon-name="custom:custom97">
+        <div class="slds-m-around_medium">
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            
+            <!-- Error Message -->
+            <template if:true={error}>
+                <div class="slds-text-color_error">
+                    Error loading map: {error.body.message}
+                </div>
+            </template>
+            
+            <!-- Map Component -->
+            <template if:true={mapMarkers.length}>
+                <lightning-map
+                    map-markers={mapMarkers}
+                    zoom-level={zoomLevel}
+                    markers-title={markersTitle}
+                    selected-marker-value={selectedMarkerValue}
+                    onmarkerselect={handleMarkerSelect}
+                    show-footer={showFooter}>
+                </lightning-map>
+            </template>
+            
+            <!-- No Trails Message -->
+            <template if:false={mapMarkers.length}>
+                <div class="slds-text-align_center slds-m-top_large">
+                    No trails available to display on the map.
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
