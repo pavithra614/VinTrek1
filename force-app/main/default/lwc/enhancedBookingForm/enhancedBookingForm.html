@@ -1,0 +1,195 @@
+<template>
+    <div class="enhanced-booking-form">
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+        
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <h2>{error}</h2>
+            </div>
+        </template>
+        
+        <!-- Success Message -->
+        <template if:true={showSuccessMessage}>
+            <div class="success-message slds-p-around_medium">
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_1-of-2">
+                        <div class="slds-box slds-theme_success slds-text-align_center">
+                            <lightning-icon icon-name="utility:success" size="large" variant="inverse" class="slds-m-bottom_small"></lightning-icon>
+                            <h2 class="slds-text-heading_medium slds-m-bottom_small">Booking Confirmed!</h2>
+                            <p class="slds-m-bottom_medium">Your booking has been successfully created. Thank you for choosing VinTrek!</p>
+                            <div class="slds-grid slds-grid_align-center">
+                                <lightning-button label="View Booking" variant="brand" onclick={handleViewBooking} class="slds-m-right_small"></lightning-button>
+                                <lightning-button label="New Booking" variant="neutral" onclick={handleNewBooking}></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Booking Form -->
+        <template if:false={showSuccessMessage}>
+            <div class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="standard:event" size="small"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>{formTitle}</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <!-- Booking Details Column -->
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                            <!-- Booking Form -->
+                            <div class="slds-form slds-p-around_medium">
+                                <div class="slds-grid slds-gutters slds-wrap">
+                                    <!-- Start Date -->
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
+                                        <lightning-input type="date" label="Start Date" value={booking.startDate} required onchange={handleStartDateChange}></lightning-input>
+                                    </div>
+                                    
+                                    <!-- End Date -->
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
+                                        <lightning-input type="date" label="End Date" value={booking.endDate} required onchange={handleEndDateChange}></lightning-input>
+                                    </div>
+                                    
+                                    <!-- Number of People -->
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
+                                        <lightning-input type="number" label="Number of People" value={booking.numberOfPeople} min="1" max="10" required onchange={handleNumberOfPeopleChange}></lightning-input>
+                                    </div>
+                                    
+                                    <!-- Special Requests -->
+                                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                                        <lightning-textarea label="Special Requests" value={booking.specialRequests} onchange={handleSpecialRequestsChange}></lightning-textarea>
+                                    </div>
+                                    
+                                    <!-- Terms and Conditions -->
+                                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                                        <lightning-input type="checkbox" label="I accept the terms and conditions" checked={booking.termsAccepted} onchange={handleTermsChange}></lightning-input>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Availability Calendar (if enabled) -->
+                            <template if:true={showAvailabilityCalendar}>
+                                <template if:true={campsiteId}>
+                                    <div class="slds-box slds-theme_shade slds-m-top_medium">
+                                        <h3 class="slds-text-heading_small slds-m-bottom_small">Availability Calendar</h3>
+                                        <c-availability-calendar record-id={campsiteId} object-api-name="Campsite__c" is-read-only="true" height="400px"></c-availability-calendar>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                        
+                        <!-- Booking Summary Column -->
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                            <div class="slds-box slds-theme_shade">
+                                <h3 class="slds-text-heading_small slds-m-bottom_medium">Booking Summary</h3>
+                                
+                                <!-- Trail Details -->
+                                <template if:true={showTrailDetails}>
+                                    <div class="summary-section slds-m-bottom_medium">
+                                        <h4 class="slds-text-heading_small slds-m-bottom_x-small">Trail</h4>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
+                                            <div class="slds-col slds-size_1-of-4">
+                                                <div class="image-container">
+                                                    <img src={trail.Image_URL__c} alt={trail.Name} onerror="this.src='/resource/default_trail_image';" />
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-4 slds-p-left_small">
+                                                <div class="slds-text-heading_small">{trail.Name}</div>
+                                                <div class="slds-text-body_small">{trail.Length_km__c} km | {trail.Difficulty__c}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <!-- Campsite Details -->
+                                <template if:true={showCampsiteDetails}>
+                                    <div class="summary-section slds-m-bottom_medium">
+                                        <h4 class="slds-text-heading_small slds-m-bottom_x-small">Campsite</h4>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
+                                            <div class="slds-col slds-size_1-of-4">
+                                                <div class="image-container">
+                                                    <img src={campsite.Image_URL__c} alt={campsite.Name} onerror="this.src='/resource/default_campsite_image';" />
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-4 slds-p-left_small">
+                                                <div class="slds-text-heading_small">{campsite.Name}</div>
+                                                <div class="slds-text-body_small">Daily Fee: ${campsite.Daily_Fee__c} | Capacity: {campsite.Capacity__c}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <!-- Camping Items Details -->
+                                <template if:true={showCampingItemsDetails}>
+                                    <div class="summary-section slds-m-bottom_medium">
+                                        <h4 class="slds-text-heading_small slds-m-bottom_x-small">Camping Items</h4>
+                                        <template for:each={campingItems} for:item="item">
+                                            <div key={item.Id} class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
+                                                <div class="slds-col slds-size_1-of-4">
+                                                    <div class="image-container">
+                                                        <img src={item.Image_URL__c} alt={item.Name} onerror="this.src='/resource/default_item_image';" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_3-of-4 slds-p-left_small">
+                                                    <div class="slds-text-heading_small">{item.Name}</div>
+                                                    <div class="slds-text-body_small">Daily Fee: ${item.Daily_Fee__c}</div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                
+                                <!-- Booking Details -->
+                                <div class="summary-section slds-m-bottom_medium">
+                                    <h4 class="slds-text-heading_small slds-m-bottom_x-small">Details</h4>
+                                    <div class="slds-grid slds-m-bottom_x-small">
+                                        <div class="slds-col slds-size_1-of-2 slds-text-body_small">Duration:</div>
+                                        <div class="slds-col slds-size_1-of-2 slds-text-align_right">{numberOfDays} days</div>
+                                    </div>
+                                    <div class="slds-grid slds-m-bottom_x-small">
+                                        <div class="slds-col slds-size_1-of-2 slds-text-body_small">People:</div>
+                                        <div class="slds-col slds-size_1-of-2 slds-text-align_right">{booking.numberOfPeople}</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Total Price -->
+                                <div class="summary-section slds-m-top_medium">
+                                    <div class="slds-grid slds-grid_vertical-align-center">
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <div class="slds-text-heading_medium">Total:</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                            <div class="slds-text-heading_medium">{formattedTotalPrice}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Book Now Button -->
+                                <div class="slds-grid slds-grid_align-center slds-m-top_large">
+                                    <lightning-button label="Book Now" variant="brand" icon-name="utility:event" onclick={handleSubmit}></lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

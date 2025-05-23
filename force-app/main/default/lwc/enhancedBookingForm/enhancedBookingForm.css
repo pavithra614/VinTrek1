@@ -1,0 +1,29 @@
+.enhanced-booking-form {
+    background-color: white;
+}
+
+.summary-section {
+    border-bottom: 1px solid #f3f3f3;
+    padding-bottom: 1rem;
+}
+
+.summary-section:last-child {
+    border-bottom: none;
+}
+
+.image-container {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.success-message {
+    padding: 2rem 0;
+}

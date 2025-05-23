@@ -1,0 +1,120 @@
+<template>
+    <div class="availability-calendar">
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+        
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <h2>{error}</h2>
+            </div>
+        </template>
+        
+        <!-- Calendar Container -->
+        <div class="calendar-container">
+            <div class="calendar"></div>
+        </div>
+        
+        <!-- Add Event Modal -->
+        <template if:true={showAddEventModal}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal Header -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseAddModal}>
+                            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Availability</h2>
+                    </header>
+                    
+                    <!-- Modal Body -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="slds-form">
+                            <!-- Start Date -->
+                            <div class="slds-form-element slds-m-bottom_small">
+                                <lightning-input type="date" label="Start Date" value={newEvent.start} required onchange={handleNewEventStartChange}></lightning-input>
+                            </div>
+                            
+                            <!-- End Date -->
+                            <div class="slds-form-element slds-m-bottom_small">
+                                <lightning-input type="date" label="End Date" value={newEvent.end} required onchange={handleNewEventEndChange}></lightning-input>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="slds-form-element slds-m-bottom_small">
+                                <lightning-combobox label="Status" value={newEvent.status} options={statusOptions} required onchange={handleNewEventStatusChange}></lightning-combobox>
+                            </div>
+                            
+                            <!-- Notes -->
+                            <div class="slds-form-element">
+                                <lightning-textarea label="Notes" value={newEvent.notes} onchange={handleNewEventNotesChange}></lightning-textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={handleCloseAddModal}>Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={handleAddEvent}>Save</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        
+        <!-- Edit Event Modal -->
+        <template if:true={showEditEventModal}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal Header -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseEditModal}>
+                            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Edit Availability</h2>
+                    </header>
+                    
+                    <!-- Modal Body -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                        <div class="slds-form">
+                            <!-- Start Date -->
+                            <div class="slds-form-element slds-m-bottom_small">
+                                <lightning-input type="date" label="Start Date" value={selectedEvent.start} required onchange={handleSelectedEventStartChange}></lightning-input>
+                            </div>
+                            
+                            <!-- End Date -->
+                            <div class="slds-form-element slds-m-bottom_small">
+                                <lightning-input type="date" label="End Date" value={selectedEvent.end} required onchange={handleSelectedEventEndChange}></lightning-input>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="slds-form-element slds-m-bottom_small">
+                                <lightning-combobox label="Status" value={selectedEvent.status} options={statusOptions} required onchange={handleSelectedEventStatusChange}></lightning-combobox>
+                            </div>
+                            
+                            <!-- Notes -->
+                            <div class="slds-form-element">
+                                <lightning-textarea label="Notes" value={selectedEvent.notes} onchange={handleSelectedEventNotesChange}></lightning-textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_destructive" onclick={handleDeleteEvent}>Delete</button>
+                        <button class="slds-button slds-button_neutral" onclick={handleCloseEditModal}>Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={handleUpdateEvent}>Save</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

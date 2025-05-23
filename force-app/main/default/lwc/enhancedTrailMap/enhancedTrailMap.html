@@ -1,0 +1,85 @@
+<template>
+    <div class="enhanced-trail-map">
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+        
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <h2>Error loading trail map. Please try again later.</h2>
+            </div>
+        </template>
+        
+        <!-- Trail Info Header -->
+        <template if:true={trail}>
+            <div class="trail-info-header slds-p-around_small">
+                <div class="slds-grid slds-gutters slds-grid_vertical-align-center">
+                    <div class="slds-col slds-size_8-of-12">
+                        <h2 class="slds-text-heading_medium">{trail.Name}</h2>
+                        <div class="slds-grid slds-gutters slds-m-top_xx-small">
+                            <div class="slds-col">
+                                <lightning-icon icon-name="utility:trail" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                {trail.Length_km__c} km
+                            </div>
+                            <div class="slds-col">
+                                <lightning-icon icon-name="utility:trending" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                {trail.Elevation_Gain__c} m
+                            </div>
+                            <div class="slds-col">
+                                <div class={difficultyClass}>
+                                    {trail.Difficulty__c}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                        <lightning-button-icon icon-name="utility:refresh" variant="border-filled" 
+                                              alternative-text="Refresh" title="Refresh" 
+                                              onclick={refresh}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Map Container -->
+        <div class="map-container" style={mapStyle}></div>
+        
+        <!-- Trail Stats Footer -->
+        <template if:true={trail}>
+            <div class="trail-stats-footer slds-p-around_small">
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-vertical_x-small">
+                        <div class="stat-box">
+                            <div class="stat-label">Distance</div>
+                            <div class="stat-value">{trail.Length_km__c} km</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-vertical_x-small">
+                        <div class="stat-box">
+                            <div class="stat-label">Elevation Gain</div>
+                            <div class="stat-value">{trail.Elevation_Gain__c} m</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-vertical_x-small">
+                        <div class="stat-box">
+                            <div class="stat-label">Difficulty</div>
+                            <div class="stat-value">{trail.Difficulty__c}</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-vertical_x-small">
+                        <div class="stat-box">
+                            <div class="stat-label">Trail Type</div>
+                            <div class="stat-value">{trail.Trail_Type__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

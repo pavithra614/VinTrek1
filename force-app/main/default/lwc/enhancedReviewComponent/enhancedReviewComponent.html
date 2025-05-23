@@ -1,0 +1,159 @@
+<template>
+    <div class="enhanced-review-component">
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </div>
+        </template>
+        
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <h2>Error loading reviews. Please try again later.</h2>
+            </div>
+        </template>
+        
+        <!-- Rating Summary -->
+        <div class="rating-summary slds-p-around_medium">
+            <div class="slds-grid slds-gutters slds-grid_vertical-align-center">
+                <div class="slds-col slds-size_1-of-3">
+                    <div class="average-rating">
+                        <div class="rating-value">{averageRating}</div>
+                        <div class="rating-stars">
+                            <template for:each={averageStars} for:item="star">
+                                <span key={star.key} class={star.class}>★</span>
+                            </template>
+                        </div>
+                        <div class="rating-count">{reviewCount} reviews</div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_2-of-3 slds-text-align_right">
+                    <template if:true={showAddReview}>
+                        <template if:false={showAddReviewForm}>
+                            <lightning-button label="Write a Review" variant="brand" onclick={handleAddReview}></lightning-button>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Review Form -->
+        <template if:true={showAddReviewForm}>
+            <div class="add-review-form slds-p-around_medium slds-m-bottom_medium">
+                <h2 class="slds-text-heading_medium slds-m-bottom_small">Write a Review</h2>
+                
+                <div class="slds-form">
+                    <!-- Rating -->
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="rating-input">Rating</label>
+                        <div class="slds-form-element__control">
+                            <lightning-slider label="Rating" value={newReview.rating} min="1" max="5" step="1" 
+                                             variant="label-hidden" onchange={handleRatingChange}></lightning-slider>
+                            <div class="rating-display">
+                                <template for:each={newReviewStars} for:item="star">
+                                    <span key={star.key} class={star.class}>★</span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Comments -->
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <lightning-textarea name="comments" label="Comments" value={newReview.comments} 
+                                           placeholder="Share your experience..." required
+                                           onchange={handleCommentsChange}></lightning-textarea>
+                    </div>
+                    
+                    <!-- Photo URL (if enabled) -->
+                    <template if:true={showPhotoUpload}>
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <lightning-input type="url" name="photoUrl" label="Photo URL (optional)" 
+                                            value={newReview.photoUrl} placeholder="https://example.com/photo.jpg"
+                                            onchange={handlePhotoUrlChange}></lightning-input>
+                        </div>
+                    </template>
+                    
+                    <!-- Buttons -->
+                    <div class="slds-grid slds-grid_align-end">
+                        <lightning-button label="Cancel" variant="neutral" onclick={handleCancel} 
+                                         class="slds-m-right_x-small"></lightning-button>
+                        <lightning-button label="Submit" variant="brand" onclick={handleSubmit}></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Reviews List -->
+        <template if:false={isLoading}>
+            <div class="reviews-list">
+                <template if:true={displayedReviews.length}>
+                    <ul>
+                        <template for:each={displayedReviews} for:item="review">
+                            <li key={review.Id} class="review-item slds-p-around_medium">
+                                <div class="slds-grid slds-gutters">
+                                    <!-- User Info -->
+                                    <div class="slds-col slds-size_1-of-6">
+                                        <div class="user-avatar">
+                                            <lightning-avatar size="medium" 
+                                                            src="https://www.lightningdesignsystem.com/assets/images/avatar2.jpg" 
+                                                            fallback-icon-name="standard:user" 
+                                                            alternative-text={review.userName}></lightning-avatar>
+                                        </div>
+                                        <div class="user-name slds-truncate">{review.userName}</div>
+                                    </div>
+                                    
+                                    <!-- Review Content -->
+                                    <div class="slds-col slds-size_4-of-6">
+                                        <div class="review-rating">
+                                            <template for:each={review.starRating} for:item="star">
+                                                <span key={star.key} class={star.filled ? 'star filled' : 'star'}>★</span>
+                                            </template>
+                                            <span class="review-date">{review.formattedDate}</span>
+                                        </div>
+                                        <div class="review-comments">{review.Comments__c}</div>
+                                        
+                                        <!-- Review Photo (if any) -->
+                                        <template if:true={review.Photo_URL__c}>
+                                            <div class="review-photo slds-m-top_small">
+                                                <img src={review.Photo_URL__c} alt="Review photo" />
+                                            </div>
+                                        </template>
+                                    </div>
+                                    
+                                    <!-- Actions -->
+                                    <div class="slds-col slds-size_1-of-6 slds-text-align_right">
+                                        <template if:true={review.isCurrentUserReview}>
+                                            <lightning-button-icon icon-name="utility:delete" variant="border-filled" 
+                                                                  alternative-text="Delete" title="Delete" 
+                                                                  onclick={handleDeleteReview} data-id={review.Id}>
+                                            </lightning-button-icon>
+                                        </template>
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                    
+                    <!-- More Reviews Link -->
+                    <template if:true={hasMoreReviews}>
+                        <div class="more-reviews slds-text-align_center slds-p-around_medium">
+                            <a href="javascript:void(0);" onclick={handleViewAllReviews}>
+                                View {hiddenReviewCount} more reviews
+                            </a>
+                        </div>
+                    </template>
+                </template>
+                
+                <!-- No Reviews -->
+                <template if:false={displayedReviews.length}>
+                    <div class="no-reviews slds-text-align_center slds-p-around_medium">
+                        <lightning-icon icon-name="utility:comments" size="small" class="slds-m-bottom_small"></lightning-icon>
+                        <p>No reviews yet. Be the first to share your experience!</p>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

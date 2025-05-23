@@ -1,0 +1,78 @@
+<template>
+    <div class="trail-recommendations">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="custom:custom41" size="small"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span>Recommended Trails For You</span>
+                        </h2>
+                    </div>
+                    <div class="slds-no-flex">
+                        <lightning-button-icon icon-name="utility:refresh" variant="border-filled" 
+                                              alternative-text="Refresh" title="Refresh" 
+                                              onclick={handleRefresh}></lightning-button-icon>
+                    </div>
+                </header>
+            </div>
+            
+            <div class="slds-card__body slds-card__body_inner">
+                <!-- Loading Spinner -->
+                <template if:true={isLoading}>
+                    <div class="slds-is-relative slds-p-around_medium">
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </div>
+                </template>
+                
+                <!-- Error Message -->
+                <template if:true={error}>
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>Error loading recommendations. Please try again later.</h2>
+                    </div>
+                </template>
+                
+                <!-- Recommendations List -->
+                <template if:false={isLoading}>
+                    <template if:true={recommendations.length}>
+                        <div class="recommendations-container">
+                            <template for:each={recommendations} for:item="trail">
+                                <div key={trail.Id} class="recommendation-card slds-m-bottom_small" data-id={trail.Id} onclick={handleTrailSelect}>
+                                    <div class="recommendation-image" style={trail.imageStyle}>
+                                        <img src={trail.imageUrl} alt={trail.Name} />
+                                        <div class={trail.difficultyClass}>{trail.Difficulty__c}</div>
+                                    </div>
+                                    <div class="recommendation-details slds-p-around_small">
+                                        <h3 class="slds-text-heading_small">{trail.Name}</h3>
+                                        <div class="slds-grid slds-gutters slds-m-top_xx-small">
+                                            <div class="slds-col">
+                                                <lightning-icon icon-name="utility:trail" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                {trail.Length_km__c} km
+                                            </div>
+                                            <div class="slds-col">
+                                                <lightning-icon icon-name="utility:trending" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                {trail.Elevation_Gain__c} m
+                                            </div>
+                                        </div>
+                                        <p class="slds-truncate slds-m-top_xx-small">{trail.Description__c}</p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    
+                    <!-- No Recommendations -->
+                    <template if:false={recommendations.length}>
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <lightning-icon icon-name="utility:trail" size="small" class="slds-m-bottom_small"></lightning-icon>
+                            <p>No trail recommendations available. Complete your profile to get personalized suggestions.</p>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

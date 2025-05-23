@@ -1,0 +1,137 @@
+.enhanced-trail-map {
+    border: 1px solid #d8dde6;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.map-container {
+    width: 100%;
+    height: 500px;
+    z-index: 1;
+}
+
+.trail-info-header {
+    background-color: #f3f3f3;
+    border-bottom: 1px solid #d8dde6;
+}
+
+.trail-stats-footer {
+    background-color: #f3f3f3;
+    border-top: 1px solid #d8dde6;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #706e6b;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* Difficulty badges */
+.difficulty-easy,
+.difficulty-moderate,
+.difficulty-difficult,
+.difficulty-very-difficult,
+.difficulty-unknown {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+}
+
+.difficulty-easy {
+    background-color: #04844b; /* Green */
+}
+
+.difficulty-moderate {
+    background-color: #ffb75d; /* Orange */
+    color: #514f4d;
+}
+
+.difficulty-difficult {
+    background-color: #e57373; /* Red */
+}
+
+.difficulty-very-difficult {
+    background-color: #c62828; /* Dark Red */
+}
+
+.difficulty-unknown {
+    background-color: #706e6b; /* Gray */
+}
+
+/* Map markers */
+:host {
+    --start-marker-color: #04844b;
+    --end-marker-color: #c62828;
+    --campsite-marker-color: #1589ee;
+}
+
+.marker-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.start-icon {
+    background-color: var(--start-marker-color);
+}
+
+.end-icon {
+    background-color: var(--end-marker-color);
+}
+
+.campsite-icon {
+    background-color: var(--campsite-marker-color);
+}
+
+.marker-label {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+/* Popup styles */
+.campsite-popup h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.campsite-popup p {
+    margin-bottom: 5px;
+}
+
+.view-campsite-btn {
+    background-color: #0070d2;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.view-campsite-btn:hover {
+    background-color: #005fb2;
+}

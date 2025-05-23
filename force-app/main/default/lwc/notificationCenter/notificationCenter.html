@@ -1,0 +1,85 @@
+<template>
+    <div class="notification-center">
+        <!-- Notification Bell Icon -->
+        <div class="notification-bell" onclick={toggleNotifications}>
+            <lightning-button-icon icon-name="utility:notification" variant="border-filled" 
+                                  alternative-text="Notifications" title="Notifications">
+            </lightning-button-icon>
+            <template if:true={unreadCount}>
+                <span class="notification-badge">{unreadCount}</span>
+            </template>
+        </div>
+        
+        <!-- Notifications Panel -->
+        <div class={notificationPanelClass}>
+            <div class="notification-header slds-grid slds-grid_align-spread slds-p-around_small">
+                <div class="slds-col">
+                    <h2 class="slds-text-heading_small">Notifications</h2>
+                </div>
+                <div class="slds-col slds-text-align_right">
+                    <lightning-button-icon icon-name="utility:refresh" variant="border-filled" 
+                                          alternative-text="Refresh" title="Refresh" 
+                                          onclick={handleRefresh} class="slds-m-right_x-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:check" variant="border-filled" 
+                                          alternative-text="Mark All as Read" title="Mark All as Read" 
+                                          onclick={handleMarkAllAsRead}>
+                    </lightning-button-icon>
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-is-relative slds-p-around_medium">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </div>
+            </template>
+            
+            <!-- Error Message -->
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Error loading notifications. Please try again later.</h2>
+                </div>
+            </template>
+            
+            <!-- Notifications List -->
+            <template if:false={isLoading}>
+                <div class="notification-list">
+                    <template if:true={notifications.length}>
+                        <ul>
+                            <template for:each={notifications} for:item="notification">
+                                <li key={notification.Id} class={notification.Is_Read__c ? 'notification-item read' : 'notification-item unread'}>
+                                    <div class="slds-grid slds-grid_vertical-align-center">
+                                        <div class="slds-col slds-size_1-of-12">
+                                            <lightning-icon icon-name={notification.iconName} size="small"></lightning-icon>
+                                        </div>
+                                        <div class="slds-col slds-size_9-of-12 notification-content" onclick={handleMarkAsRead} data-id={notification.Id}>
+                                            <h3 class="notification-title">{notification.Title__c}</h3>
+                                            <p class="notification-message">{notification.Message__c}</p>
+                                            <p class="notification-date">{notification.formattedDate}</p>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-12 slds-text-align_right">
+                                            <lightning-button-icon icon-name="utility:delete" variant="border-filled" 
+                                                                  alternative-text="Delete" title="Delete" 
+                                                                  onclick={handleDeleteNotification} data-id={notification.Id}>
+                                            </lightning-button-icon>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    
+                    <!-- No Notifications -->
+                    <template if:false={notifications.length}>
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <lightning-icon icon-name="utility:notification" size="small" class="slds-m-bottom_small"></lightning-icon>
+                            <p>No notifications to display.</p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
