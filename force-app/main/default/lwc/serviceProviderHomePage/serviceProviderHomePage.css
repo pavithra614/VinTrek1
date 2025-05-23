@@ -1,9 +1,74 @@
+.service-provider-home-page {
+    padding-bottom: 2rem;
+}
+
+.welcome-banner {
+    background: linear-gradient(to right, #1589ee, #5eb4ff);
+    color: white;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
 .stat-box {
     transition: all 0.3s ease;
     height: 100%;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    background-color: white;
 }
 
 .stat-box:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.stat-box .slds-media__figure {
+    padding-right: 0.75rem;
+}
+
+.stat-box .slds-media__figure lightning-icon {
+    --sds-c-icon-color-background: #1589ee;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #032d60;
+    line-height: 1.2;
+}
+
+.placeholder-content {
+    padding: 2rem;
+    text-align: center;
+    background-color: #f3f5f7;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.placeholder-content lightning-icon {
+    margin-bottom: 1rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .welcome-banner {
+        padding: 1rem;
+    }
+
+    .welcome-banner h2 {
+        font-size: 1.25rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
 }
