@@ -2,10 +2,101 @@
     position: sticky;
     top: 0;
     z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slds-context-bar {
+    background: linear-gradient(to right, #1a5276, #2980b9);
+    color: white;
+    border-bottom: none;
+    padding: 0.25rem 0;
+}
+
+.slds-context-bar__label-action,
+.slds-context-bar__app-name {
+    color: white !important;
+    font-weight: 500;
+}
+
+.slds-context-bar__item:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.slds-context-bar__item.active-item {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-bottom: 3px solid #f39c12;
 }
 
 .user-menu {
     position: absolute;
     right: 0;
     top: 100%;
+    min-width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    border: none;
+}
+
+.user-profile-button {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.user-profile-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.app-logo {
+    display: flex;
+    align-items: center;
+}
+
+.app-logo-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.mobile-menu-button {
+    display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .slds-context-bar__secondary {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #2980b9;
+        flex-direction: column;
+        padding: 0.5rem 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .slds-context-bar__secondary.mobile-menu-open {
+        display: flex;
+    }
+
+    .slds-context-bar__item {
+        width: 100%;
+        padding: 0.5rem 1rem;
+    }
+
+    .mobile-menu-button {
+        display: block;
+        margin-left: auto;
+        margin-right: 1rem;
+    }
 }

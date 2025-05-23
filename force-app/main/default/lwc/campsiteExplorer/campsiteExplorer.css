@@ -1,0 +1,301 @@
+/* Search Container */
+.search-container {
+    display: flex;
+    align-items: flex-end;
+}
+
+.search-input {
+    flex-grow: 1;
+    margin-right: 0.5rem;
+}
+
+/* Trail Card Styles */
+.trail-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    background-color: white;
+}
+
+.trail-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.trail-card-image {
+    height: 140px;
+    background-color: #f3f3f3;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.trail-card-difficulty {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.trail-card-content {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.trail-stat {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #555;
+}
+
+/* Campsite Card Styles */
+.campsite-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    background-color: white;
+}
+
+.campsite-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.campsite-card-image {
+    height: 140px;
+    background-color: #f3f3f3;
+    background-image: url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.campsite-card-capacity {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.campsite-card-content {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.campsite-stat {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #555;
+}
+
+/* Rental Item Card Styles */
+.rental-item-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.rental-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.rental-item-image {
+    height: 120px;
+    background-color: #f3f3f3;
+    background-size: cover;
+    background-position: center;
+}
+
+.rental-item-content {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.rental-item-price {
+    font-weight: bold;
+    color: #2980b9;
+    font-size: 1.1rem;
+}
+
+/* Badge styles */
+.badge-easy {
+    background-color: #4caf50;
+}
+
+.badge-moderate {
+    background-color: #ff9800;
+}
+
+.badge-difficult {
+    background-color: #f44336;
+}
+
+.badge-capacity {
+    background-color: #2980b9;
+}
+
+/* Selected Trail Details Styles */
+.selected-trail-details {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.selected-trail-header {
+    height: 160px;
+    background-color: #2980b9;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.selected-trail-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+}
+
+.selected-trail-header-content {
+    position: relative;
+    padding: 20px;
+    width: 100%;
+    color: white;
+    z-index: 1;
+}
+
+.selected-trail-body {
+    background-color: white;
+}
+
+.trail-stat-card {
+    text-align: center;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.trail-stat-value {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 8px 0;
+    color: #2980b9;
+}
+
+.trail-stat-label {
+    font-size: 0.875rem;
+    color: #555;
+}
+
+/* Selected Campsite Details Styles */
+.selected-campsite-details {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.selected-campsite-header {
+    height: 160px;
+    background-color: #27ae60;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.selected-campsite-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+}
+
+.selected-campsite-header-content {
+    position: relative;
+    padding: 20px;
+    width: 100%;
+    color: white;
+    z-index: 1;
+}
+
+.selected-campsite-body {
+    background-color: white;
+}
+
+.campsite-stat-card {
+    text-align: center;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.campsite-stat-value {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 8px 0;
+    color: #27ae60;
+}
+
+.campsite-stat-label {
+    font-size: 0.875rem;
+    color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-input {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .slds-grid.slds-gutters {
+        display: block;
+    }
+    
+    .slds-col {
+        margin-bottom: 1rem;
+    }
+    
+    .trail-stat-card,
+    .campsite-stat-card {
+        margin-bottom: 1rem;
+    }
+}

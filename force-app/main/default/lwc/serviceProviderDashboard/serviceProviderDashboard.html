@@ -1,0 +1,140 @@
+<template>
+    <div class="service-provider-dashboard">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="standard:dashboard" size="medium"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_medium">Service Provider Dashboard</span>
+                        </h2>
+                    </div>
+                </header>
+                <div class="slds-no-flex">
+                    <lightning-button-group>
+                        <lightning-button label="Refresh" icon-name="utility:refresh" onclick={refreshData}></lightning-button>
+                        <lightning-button label="Settings" icon-name="utility:settings"></lightning-button>
+                    </lightning-button-group>
+                </div>
+            </div>
+            <div class="slds-card__body">
+                <div class="slds-tabs_default">
+                    <ul class="slds-tabs_default__nav" role="tablist">
+                        <li class="slds-tabs_default__item" title="Dashboard" role="presentation">
+                            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected={isDashboardActive} aria-controls="tab-dashboard" data-tab-value="dashboard" onclick={handleTabClick}>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="slds-tabs_default__item" title="Manage Inventory" role="presentation">
+                            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected={isInventoryActive} aria-controls="tab-inventory" data-tab-value="inventory" onclick={handleTabClick}>
+                                Manage Inventory
+                            </a>
+                        </li>
+                        <li class="slds-tabs_default__item" title="Manage Campsites" role="presentation">
+                            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected={isCampsitesActive} aria-controls="tab-campsites" data-tab-value="campsites" onclick={handleTabClick}>
+                                Manage Campsites
+                            </a>
+                        </li>
+                        <li class="slds-tabs_default__item" title="Bookings" role="presentation">
+                            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected={isBookingsActive} aria-controls="tab-bookings" data-tab-value="bookings" onclick={handleTabClick}>
+                                Bookings
+                            </a>
+                        </li>
+                        <li class="slds-tabs_default__item" title="Reports" role="presentation">
+                            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected={isReportsActive} aria-controls="tab-reports" data-tab-value="reports" onclick={handleTabClick}>
+                                Reports
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Dashboard Tab Content -->
+                    <div id="tab-dashboard" class={dashboardTabClass} role="tabpanel" aria-labelledby="tab-dashboard">
+                        <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                            <!-- Dashboard Stats -->
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <lightning-icon icon-name="standard:service_appointment" size="medium"></lightning-icon>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3>Active Bookings</h3>
+                                        <p class="stat-value">12</p>
+                                        <p class="stat-trend positive">
+                                            <lightning-icon icon-name="utility:trending" size="xx-small"></lightning-icon>
+                                            <span>+3 from last week</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <lightning-icon icon-name="standard:product_item" size="medium"></lightning-icon>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3>Available Items</h3>
+                                        <p class="stat-value">45</p>
+                                        <p class="stat-badge">
+                                            <lightning-badge label="In Stock"></lightning-badge>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <lightning-icon icon-name="standard:customer" size="medium"></lightning-icon>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3>Total Customers</h3>
+                                        <p class="stat-value">78</p>
+                                        <p class="stat-trend positive">
+                                            <lightning-icon icon-name="utility:trending" size="xx-small"></lightning-icon>
+                                            <span>+12 this month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Manage Inventory Tab Content -->
+                    <div id="tab-inventory" class={inventoryTabClass} role="tabpanel" aria-labelledby="tab-inventory">
+                        <c-inventory-manager></c-inventory-manager>
+                    </div>
+                    
+                    <!-- Manage Campsites Tab Content -->
+                    <div id="tab-campsites" class={campsitesTabClass} role="tabpanel" aria-labelledby="tab-campsites">
+                        <c-campsite-manager></c-campsite-manager>
+                    </div>
+                    
+                    <!-- Bookings Tab Content -->
+                    <div id="tab-bookings" class={bookingsTabClass} role="tabpanel" aria-labelledby="tab-bookings">
+                        <div class="slds-p-around_medium">
+                            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Booking Management</h2>
+                            <p>View and manage customer bookings for your camping equipment and campsites.</p>
+                            <div class="slds-m-top_medium">
+                                <lightning-button label="View All Bookings" variant="brand"></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reports Tab Content -->
+                    <div id="tab-reports" class={reportsTabClass} role="tabpanel" aria-labelledby="tab-reports">
+                        <div class="slds-p-around_medium">
+                            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Analytics & Reports</h2>
+                            <p>View detailed reports and analytics about your business performance.</p>
+                            <div class="slds-m-top_medium">
+                                <lightning-button label="Generate Report" variant="brand"></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

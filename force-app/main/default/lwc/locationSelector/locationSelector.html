@@ -1,0 +1,50 @@
+<template>
+    <div class="location-selector">
+        <div class="slds-grid slds-gutters slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input
+                    type="number"
+                    label="Latitude"
+                    value={latitude}
+                    step="0.000001"
+                    onchange={handleLatitudeChange}
+                    required>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input
+                    type="number"
+                    label="Longitude"
+                    value={longitude}
+                    step="0.000001"
+                    onchange={handleLongitudeChange}
+                    required>
+                </lightning-input>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <!-- Map Component -->
+            <lightning-map
+                map-markers={mapMarkers}
+                zoom-level={zoomLevel}
+                center={mapCenter}
+                markers-title="Campsite Location"
+                onmarkerselect={handleMarkerSelect}
+                onmarkerdragend={handleMarkerDrag}
+                onmapclick={handleMapClick}
+                list-view="hidden">
+            </lightning-map>
+
+            <div class="slds-p-around_small slds-text-align_center">
+                <p class="slds-text-body_small">Click on the map to set the campsite location or drag the marker to adjust.</p>
+                <lightning-button
+                    label="Use Current Location"
+                    icon-name="utility:location"
+                    onclick={handleUseCurrentLocation}
+                    class="slds-m-top_x-small">
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>

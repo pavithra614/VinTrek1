@@ -102,13 +102,154 @@
                                     </lightning-tab>
 
                                     <lightning-tab label="Manage Inventory" value="inventory" onactive={handleTabChange}>
-                                        <div class="placeholder-content">
-                                            <lightning-icon icon-name="standard:product_item" size="large"></lightning-icon>
-                                            <h3 class="slds-text-heading_medium slds-p-vertical_small">Inventory Management</h3>
-                                            <p class="slds-text-body_regular slds-p-bottom_medium">
-                                                Add, update, and manage your camping equipment inventory.
-                                            </p>
-                                            <lightning-button label="Add New Item" variant="brand" icon-name="utility:add"></lightning-button>
+                                        <div class="slds-p-around_medium">
+                                            <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+                                                <div class="slds-col">
+                                                    <h2 class="slds-text-heading_medium">Camping Equipment Inventory</h2>
+                                                </div>
+                                                <div class="slds-col slds-text-align_right">
+                                                    <lightning-button label="Add New Item" variant="brand" icon-name="utility:add" onclick={handleAddNewItem}></lightning-button>
+                                                </div>
+                                            </div>
+
+                                            <!-- New Item Form -->
+                                            <template if:true={showNewItemForm}>
+                                                <div class="slds-box slds-m-bottom_medium">
+                                                    <h3 class="slds-text-heading_small slds-m-bottom_small">Add New Camping Item</h3>
+                                                    <lightning-record-edit-form object-api-name="Camping_Item__c" onsuccess={handleItemFormSuccess}>
+                                                        <lightning-messages></lightning-messages>
+                                                        <div class="slds-grid slds-gutters slds-wrap">
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Name" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Category__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Daily_Rate__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Status__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Description__c"></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Image_URL__c"></lightning-input-field>
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                                                            <lightning-button class="slds-m-right_x-small" label="Cancel" onclick={handleCancelItemForm}></lightning-button>
+                                                            <lightning-button variant="brand" type="submit" label="Save Item"></lightning-button>
+                                                        </div>
+                                                    </lightning-record-edit-form>
+                                                </div>
+                                            </template>
+
+                                            <!-- Inventory List -->
+                                            <template if:true={campingItems.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={campingItems}
+                                                        columns={itemColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleRowAction}>
+                                                    </lightning-datatable>
+                                                </div>
+                                            </template>
+                                            <template if:false={campingItems.length}>
+                                                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                    <div class="slds-text-longform">
+                                                        <h3 class="slds-text-heading_medium">No camping items found</h3>
+                                                        <p class="slds-text-body_regular">Add your first camping item to get started.</p>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Manage Campsites" value="campsites" onactive={handleTabChange}>
+                                        <div class="slds-p-around_medium">
+                                            <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+                                                <div class="slds-col">
+                                                    <h2 class="slds-text-heading_medium">My Campsites</h2>
+                                                </div>
+                                                <div class="slds-col slds-text-align_right">
+                                                    <lightning-button label="Add New Campsite" variant="brand" icon-name="utility:add" onclick={handleAddNewCampsite}></lightning-button>
+                                                </div>
+                                            </div>
+
+                                            <!-- New Campsite Form -->
+                                            <template if:true={showNewCampsiteForm}>
+                                                <div class="slds-box slds-m-bottom_medium">
+                                                    <h3 class="slds-text-heading_small slds-m-bottom_small">Add New Campsite</h3>
+                                                    <lightning-record-edit-form object-api-name="Campsite__c" onsuccess={handleCampsiteFormSuccess}>
+                                                        <lightning-messages></lightning-messages>
+                                                        <div class="slds-grid slds-gutters slds-wrap">
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Name" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Trail__c"></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Daily_Fee__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Capacity__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Description__c"></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Facilities__c"></lightning-input-field>
+                                                            </div>
+                                                            <!-- Location Selector Map -->
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <div class="slds-box slds-p-around_medium slds-m-bottom_medium">
+                                                                    <h3 class="slds-text-heading_small slds-m-bottom_small">Select Campsite Location</h3>
+                                                                    <c-location-selector
+                                                                        latitude={campsiteLatitude}
+                                                                        longitude={campsiteLongitude}
+                                                                        onlocationchange={handleLocationChange}>
+                                                                    </c-location-selector>
+                                                                </div>
+                                                                <!-- Hidden input fields for latitude and longitude -->
+                                                                <div class="slds-hide">
+                                                                    <lightning-input-field field-name="Latitude__c" value={campsiteLatitude}></lightning-input-field>
+                                                                    <lightning-input-field field-name="Longitude__c" value={campsiteLongitude}></lightning-input-field>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                                                            <lightning-button class="slds-m-right_x-small" label="Cancel" onclick={handleCancelCampsiteForm}></lightning-button>
+                                                            <lightning-button variant="brand" type="submit" label="Save Campsite"></lightning-button>
+                                                        </div>
+                                                    </lightning-record-edit-form>
+                                                </div>
+                                            </template>
+
+                                            <!-- Campsites List -->
+                                            <template if:true={campsites.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={campsites}
+                                                        columns={campsiteColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleCampsiteRowAction}>
+                                                    </lightning-datatable>
+                                                </div>
+                                            </template>
+                                            <template if:false={campsites.length}>
+                                                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                    <div class="slds-text-longform">
+                                                        <h3 class="slds-text-heading_medium">No campsites found</h3>
+                                                        <p class="slds-text-body_regular">Add your first campsite to get started.</p>
+                                                    </div>
+                                                </div>
+                                            </template>
                                         </div>
                                     </lightning-tab>
 
