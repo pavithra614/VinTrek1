@@ -1,0 +1,40 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Booking__c",
+        "referenceId": "Booking1"
+      },
+      "Name": "B-00001",
+      "Start_Date__c": "2023-07-15",
+      "End_Date__c": "2023-07-18",
+      "Status__c": "Confirmed",
+      "Trail__c": "@Trail1",
+      "Campsite__c": "@Campsite1"
+    },
+    {
+      "attributes": {
+        "type": "Booking__c",
+        "referenceId": "Booking2"
+      },
+      "Name": "B-00002",
+      "Start_Date__c": "2023-07-20",
+      "End_Date__c": "2023-07-22",
+      "Status__c": "Confirmed",
+      "Trail__c": "@Trail2",
+      "Campsite__c": "@Campsite2"
+    },
+    {
+      "attributes": {
+        "type": "Booking__c",
+        "referenceId": "Booking3"
+      },
+      "Name": "B-00003",
+      "Start_Date__c": "2023-08-05",
+      "End_Date__c": "2023-08-08",
+      "Status__c": "Pending",
+      "Trail__c": "@Trail3",
+      "Campsite__c": "@Campsite3"
+    }
+  ]
+}

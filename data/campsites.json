@@ -1,0 +1,59 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Campsite__c",
+        "referenceId": "Campsite1"
+      },
+      "Name": "Eagle's Nest",
+      "Description__c": "Perched high with amazing views of the valley. Primitive site with no facilities.",
+      "Capacity__c": 4,
+      "Amenities__c": "Fire Ring;Water Source",
+      "Location__c": "37.7749,-122.4194"
+    },
+    {
+      "attributes": {
+        "type": "Campsite__c",
+        "referenceId": "Campsite2"
+      },
+      "Name": "Lakeside Haven",
+      "Description__c": "Beautiful waterfront site with easy access to fishing and swimming.",
+      "Capacity__c": 6,
+      "Amenities__c": "Fire Ring;Picnic Table;Toilet;Water Source",
+      "Location__c": "37.8044,-122.2711"
+    },
+    {
+      "attributes": {
+        "type": "Campsite__c",
+        "referenceId": "Campsite3"
+      },
+      "Name": "Forest Retreat",
+      "Description__c": "Secluded site nestled among tall pines. Great for wildlife viewing.",
+      "Capacity__c": 8,
+      "Amenities__c": "Fire Ring;Picnic Table;Toilet",
+      "Location__c": "37.8715,-122.2730"
+    },
+    {
+      "attributes": {
+        "type": "Campsite__c",
+        "referenceId": "Campsite4"
+      },
+      "Name": "Sunset Point",
+      "Description__c": "Spectacular sunset views from this coastal bluff site.",
+      "Capacity__c": 4,
+      "Amenities__c": "Fire Ring;Picnic Table",
+      "Location__c": "37.7336,-122.5021"
+    },
+    {
+      "attributes": {
+        "type": "Campsite__c",
+        "referenceId": "Campsite5"
+      },
+      "Name": "Desert Oasis",
+      "Description__c": "Unique desert camping experience with nearby natural spring.",
+      "Capacity__c": 6,
+      "Amenities__c": "Fire Ring;Picnic Table;Water Source",
+      "Location__c": "37.7469,-122.4586"
+    }
+  ]
+}

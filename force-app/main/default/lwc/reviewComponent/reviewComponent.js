@@ -8,33 +8,33 @@ import getAverageRating from '@salesforce/apex/ReviewController.getAverageRating
 export default class ReviewComponent extends LightningElement {
     @api recordId;
     @api objectApiName;
-    
+
     @track reviews = [];
     @track newReview = {
-        rating: '5',
+        rating: 5,
         comments: ''
     };
     @track averageRating = 0;
     @track reviewCount = 0;
     @track isLoading = true;
     @track error;
-    
+
     ratingOptions = [
-        { label: '5 - Excellent', value: '5' },
-        { label: '4 - Very Good', value: '4' },
-        { label: '3 - Good', value: '3' },
-        { label: '2 - Fair', value: '2' },
-        { label: '1 - Poor', value: '1' }
+        { label: '5 - Excellent', value: 5 },
+        { label: '4 - Very Good', value: 4 },
+        { label: '3 - Good', value: 3 },
+        { label: '2 - Fair', value: 2 },
+        { label: '1 - Poor', value: 1 }
     ];
-    
+
     connectedCallback() {
         this.loadReviews();
         this.loadAverageRating();
     }
-    
+
     loadReviews() {
         this.isLoading = true;
-        
+
         if (this.objectApiName === 'Trail__c') {
             getTrailReviews({ trailId: this.recordId })
                 .then(result => {
@@ -61,7 +61,7 @@ export default class ReviewComponent extends LightningElement {
                 });
         }
     }
-    
+
     loadAverageRating() {
         getAverageRating({ recordId: this.recordId })
             .then(result => {
@@ -72,36 +72,36 @@ export default class ReviewComponent extends LightningElement {
                 console.error('Error loading average rating', error);
             });
     }
-    
+
     handleRatingChange(event) {
         this.newReview.rating = event.detail.value;
     }
-    
+
     handleCommentsChange(event) {
         this.newReview.comments = event.target.value;
     }
-    
+
     handleSubmit() {
         if (!this.newReview.comments) {
             this.showToast('Error', 'Please enter comments for your review', 'error');
             return;
         }
-        
+
         this.isLoading = true;
-        
+
         const trailId = this.objectApiName === 'Trail__c' ? this.recordId : null;
         const campsiteId = this.objectApiName === 'Campsite__c' ? this.recordId : null;
-        
-        createReview({ 
-            trailId: trailId, 
-            campsiteId: campsiteId, 
-            rating: this.newReview.rating, 
-            comments: this.newReview.comments 
+
+        createReview({
+            trailId: trailId,
+            campsiteId: campsiteId,
+            rating: this.newReview.rating,
+            comments: this.newReview.comments
         })
             .then(() => {
                 this.showToast('Success', 'Review submitted successfully', 'success');
                 this.newReview = {
-                    rating: '5',
+                    rating: 5,
                     comments: ''
                 };
                 this.loadReviews();
@@ -112,7 +112,7 @@ export default class ReviewComponent extends LightningElement {
                 this.isLoading = false;
             });
     }
-    
+
     showToast(title, message, variant) {
         const event = new ShowToastEvent({
             title: title,
@@ -121,11 +121,11 @@ export default class ReviewComponent extends LightningElement {
         });
         this.dispatchEvent(event);
     }
-    
+
     get formattedAverageRating() {
         return this.averageRating.toFixed(1);
     }
-    
+
     get reviewCountText() {
         return this.reviewCount === 1 ? '1 review' : this.reviewCount + ' reviews';
     }
