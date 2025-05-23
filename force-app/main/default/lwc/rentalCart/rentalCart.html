@@ -1,0 +1,127 @@
+<template>
+    <div class="rental-cart-container">
+        <div class="slds-grid slds-gutters">
+            <!-- Camping Items List -->
+            <div class="slds-col slds-size_2-of-3">
+                <c-camping-item-list onaddtocart={handleAddToCart}></c-camping-item-list>
+            </div>
+            
+            <!-- Cart -->
+            <div class="slds-col slds-size_1-of-3">
+                <lightning-card title="Your Rental Cart" icon-name="standard:cart">
+                    <div class="slds-p-horizontal_small">
+                        <!-- Loading Spinner -->
+                        <template if:true={isLoading}>
+                            <div class="slds-is-relative slds-p-around_medium">
+                                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                            </div>
+                        </template>
+                        
+                        <!-- Error Message -->
+                        <template if:true={error}>
+                            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                                <span class="slds-assistive-text">error</span>
+                                <h2>Error processing cart. Please try again later.</h2>
+                            </div>
+                        </template>
+                        
+                        <!-- Rental Days Input -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label" for="rental-days">Rental Days</label>
+                            <div class="slds-form-element__control">
+                                <lightning-input 
+                                    type="number" 
+                                    id="rental-days"
+                                    name="rentalDays"
+                                    min="1"
+                                    value={rentalDays}
+                                    onchange={handleDaysChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
+                        
+                        <!-- Cart Items -->
+                        <template if:true={cartItems.length}>
+                            <ul class="slds-has-dividers_bottom-space">
+                                <template for:each={cartItems} for:item="item">
+                                    <li key={item.Id} class="slds-item slds-p-vertical_x-small">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span class="slds-avatar slds-avatar_small">
+                                                            <img src={item.imageUrl} alt={item.Name} />
+                                                        </span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <h3 class="slds-text-heading_small">{item.Name}</h3>
+                                                        <p class="slds-text-body_small">${item.Daily_Rate__c}/day</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12">
+                                                <lightning-input 
+                                                    type="number" 
+                                                    label="Qty"
+                                                    variant="label-hidden"
+                                                    min="1"
+                                                    value={item.quantity}
+                                                    data-id={item.Id}
+                                                    onchange={handleQuantityChange}>
+                                                </lightning-input>
+                                            </div>
+                                            <div class="slds-col slds-size_2-of-12 slds-text-align_right">
+                                                <lightning-button-icon 
+                                                    icon-name="utility:delete" 
+                                                    alternative-text="Remove from cart"
+                                                    title="Remove from cart"
+                                                    data-id={item.Id}
+                                                    onclick={handleRemoveFromCart}>
+                                                </lightning-button-icon>
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid slds-m-top_x-small">
+                                            <div class="slds-col slds-text-align_right slds-text-heading_small">
+                                                Subtotal: ${item.subtotal}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                            
+                            <!-- Cart Total -->
+                            <div class="slds-grid slds-m-top_medium slds-p-top_medium slds-border_top">
+                                <div class="slds-col slds-text-align_right">
+                                    <p class="slds-text-heading_medium slds-text-color_success">
+                                        Total: ${totalAmount}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Checkout Button -->
+                            <div class="slds-m-top_medium">
+                                <lightning-button 
+                                    variant="brand" 
+                                    label="Proceed to Checkout" 
+                                    title="Checkout"
+                                    onclick={handleCheckout}
+                                    class="slds-button_stretch">
+                                </lightning-button>
+                            </div>
+                        </template>
+                        
+                        <!-- Empty Cart -->
+                        <template if:false={cartItems.length}>
+                            <div class="slds-illustration slds-illustration_small slds-p-vertical_medium">
+                                <div class="slds-text-longform slds-text-align_center">
+                                    <h3 class="slds-text-heading_medium">Your cart is empty</h3>
+                                    <p class="slds-text-body_regular">Add camping items to get started</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-card>
+            </div>
+        </div>
+    </div>
+</template>
