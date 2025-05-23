@@ -1,0 +1,66 @@
+<template>
+    <div class="admin-home-page">
+        <!-- Navigation Bar -->
+        <c-navigation-bar></c-navigation-bar>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Access Denied Message -->
+        <template if:false={hasAccess}>
+            <template if:false={isLoading}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>Access Denied: You do not have permission to view this page.</h2>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <!-- Admin Dashboard -->
+        <template if:true={hasAccess}>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_12-of-12">
+                    <lightning-card title="VinTrek Administration" icon-name="custom:custom57">
+                        <div class="slds-p-horizontal_small">
+                            <p class="slds-text-body_regular slds-p-bottom_medium">
+                                Welcome to the VinTrek Administration Portal. Use the tabs below to manage different aspects of the VinTrek application.
+                            </p>
+
+                            <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+                                <lightning-tab label="Trails" value="trails" onactive={handleTabChange}>
+                                    <c-trail-admin></c-trail-admin>
+                                </lightning-tab>
+                                <lightning-tab label="Campsites" value="campsites" onactive={handleTabChange}>
+                                    <div class="slds-p-around_medium slds-text-align_center">
+                                        <p>Campsite management will be implemented here</p>
+                                    </div>
+                                </lightning-tab>
+                                <lightning-tab label="Shops" value="shops" onactive={handleTabChange}>
+                                    <div class="slds-p-around_medium slds-text-align_center">
+                                        <p>Shop management will be implemented here</p>
+                                    </div>
+                                </lightning-tab>
+                                <lightning-tab label="Camping Items" value="items" onactive={handleTabChange}>
+                                    <div class="slds-p-around_medium slds-text-align_center">
+                                        <p>Camping item management will be implemented here</p>
+                                    </div>
+                                </lightning-tab>
+                                <lightning-tab label="Users" value="users" onactive={handleTabChange}>
+                                    <div class="slds-p-around_medium slds-text-align_center">
+                                        <p>User management will be implemented here</p>
+                                    </div>
+                                </lightning-tab>
+                            </lightning-tabset>
+                        </div>
+                    </lightning-card>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

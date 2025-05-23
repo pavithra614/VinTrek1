@@ -1,0 +1,95 @@
+<template>
+    <div class="login-container">
+        <div class="slds-grid slds-gutters slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12 slds-large-size_6-of-12 slds-align_absolute-center">
+                <div class="slds-box slds-box_x-small slds-m-around_medium login-box">
+                    <div class="slds-text-align_center slds-m-bottom_medium">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_small">Welcome to VinTrek</h2>
+                        <p class="slds-text-body_regular">Sign in to continue to your account</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div class="slds-form">
+                        <!-- Username Field -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label" for="username">Username</label>
+                            <div class="slds-form-element__control">
+                                <lightning-input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value={username}
+                                    onchange={handleUsernameChange}
+                                    required>
+                                </lightning-input>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label" for="password">Password</label>
+                            <div class="slds-form-element__control">
+                                <lightning-input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={password}
+                                    onchange={handlePasswordChange}
+                                    required>
+                                </lightning-input>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me Checkbox -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <div class="slds-form-element__control">
+                                <lightning-input
+                                    type="checkbox"
+                                    label="Remember me"
+                                    name="rememberMe"
+                                    checked={rememberMe}
+                                    onchange={handleRememberMeChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <template if:true={errorMessage}>
+                            <div class="slds-text-color_error slds-m-bottom_small">
+                                {errorMessage}
+                            </div>
+                        </template>
+
+                        <!-- Login Button -->
+                        <div class="slds-m-top_medium">
+                            <lightning-button
+                                variant="brand"
+                                label="Sign In"
+                                onclick={handleLogin}
+                                class="slds-button_stretch"
+                                disabled={isLoading}>
+                            </lightning-button>
+                        </div>
+
+                        <!-- Loading Spinner -->
+                        <template if:true={isLoading}>
+                            <div class="slds-is-relative slds-m-top_small">
+                                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                            </div>
+                        </template>
+
+                        <!-- Forgot Password Link -->
+                        <div class="slds-m-top_small slds-text-align_center">
+                            <a href="#" class="slds-text-link">Forgot your password?</a>
+                        </div>
+
+                        <!-- Registration Link -->
+                        <div class="slds-m-top_small slds-text-align_center">
+                            <p>Don't have an account? <a href="javascript:void(0);" onclick={navigateToRegistration} class="slds-text-link">Sign up</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

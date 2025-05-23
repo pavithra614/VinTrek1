@@ -7,12 +7,12 @@ export default class TrailMap extends LightningElement {
     @track mapMarkers = [];
     @track selectedMarkerValue;
     @track isLoading = true;
-    
+
     // Map configuration
     zoomLevel = 10;
     markersTitle = 'Hiking Trails';
     showFooter = true;
-    
+
     @wire(getTrails)
     wiredTrails({ error, data }) {
         this.isLoading = false;
@@ -26,15 +26,33 @@ export default class TrailMap extends LightningElement {
             this.mapMarkers = [];
         }
     }
-    
+
     createMapMarkers() {
         // In a real implementation, you would have latitude and longitude fields
-        // For this example, we'll use dummy coordinates
+        // For this example, we'll use the Location__c field or generate random coordinates
         this.mapMarkers = this.trails.map(trail => {
-            // Generate random coordinates around Sri Lanka
-            const lat = 7.8731 + (Math.random() - 0.5) * 2;
-            const lng = 80.7718 + (Math.random() - 0.5) * 2;
-            
+            let lat, lng;
+
+            // Try to parse location from Location__c field
+            if (trail.Location__c) {
+                try {
+                    const coords = trail.Location__c.split(',');
+                    if (coords.length === 2) {
+                        lat = parseFloat(coords[0].trim());
+                        lng = parseFloat(coords[1].trim());
+                    }
+                } catch (error) {
+                    console.error('Error parsing location:', error);
+                }
+            }
+
+            // If parsing failed or no location, generate random coordinates
+            if (isNaN(lat) || isNaN(lng)) {
+                // Generate random coordinates around Sri Lanka
+                lat = 7.8731 + (Math.random() - 0.5) * 2;
+                lng = 80.7718 + (Math.random() - 0.5) * 2;
+            }
+
             return {
                 location: {
                     Latitude: lat,
@@ -47,9 +65,10 @@ export default class TrailMap extends LightningElement {
             };
         });
     }
-    
+
     handleMarkerSelect(event) {
         this.selectedMarkerValue = event.detail.selectedMarkerValue;
+
         // Dispatch event to notify parent component
         this.dispatchEvent(new CustomEvent('trailselect', {
             detail: { trailId: this.selectedMarkerValue }

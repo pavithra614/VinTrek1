@@ -1,0 +1,200 @@
+<template>
+    <div class="trail-admin">
+        <lightning-card title="Trail Administration" icon-name="standard:trail">
+            <div class="slds-p-horizontal_small">
+                <!-- Header with New Trail button -->
+                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-2">
+                        <h2 class="slds-text-heading_medium">Manage Trails</h2>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                        <lightning-button
+                            label="New Trail"
+                            variant="brand"
+                            icon-name="utility:add"
+                            onclick={handleNewTrail}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <template if:true={isLoading}>
+                    <div class="slds-is-relative slds-p-around_medium">
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                    </div>
+                </template>
+
+                <!-- Error Message -->
+                <template if:true={error}>
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <h2>Error loading trails. Please try again later.</h2>
+                    </div>
+                </template>
+
+                <!-- Trails Table -->
+                <template if:false={isLoading}>
+                    <template if:true={trails.length}>
+                        <div class="slds-box slds-theme_default">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Name">Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Difficulty">Difficulty</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Distance">Distance (km)</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Elevation">Elevation (m)</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Actions">Actions</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={trails} for:item="trail">
+                                        <tr key={trail.Id}>
+                                            <td data-label="Name">
+                                                <div class="slds-truncate" title={trail.Name}>{trail.Name}</div>
+                                            </td>
+                                            <td data-label="Difficulty">
+                                                <div class="slds-truncate" title={trail.Difficulty__c}>{trail.Difficulty__c}</div>
+                                            </td>
+                                            <td data-label="Distance">
+                                                <div class="slds-truncate" title={trail.Distance_km__c}>{trail.Distance_km__c}</div>
+                                            </td>
+                                            <td data-label="Elevation">
+                                                <div class="slds-truncate" title={trail.Elevation_m__c}>{trail.Elevation_m__c}</div>
+                                            </td>
+                                            <td data-label="Actions">
+                                                <lightning-button-group>
+                                                    <lightning-button
+                                                        label="Edit"
+                                                        icon-name="utility:edit"
+                                                        data-id={trail.Id}
+                                                        onclick={handleEditTrail}>
+                                                    </lightning-button>
+                                                    <lightning-button
+                                                        label="Delete"
+                                                        icon-name="utility:delete"
+                                                        variant="destructive"
+                                                        data-id={trail.Id}
+                                                        onclick={handleDeleteTrail}>
+                                                    </lightning-button>
+                                                </lightning-button-group>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+
+                    <!-- No Trails Found -->
+                    <template if:false={trails.length}>
+                        <div class="slds-illustration slds-illustration_small">
+                            <div class="slds-text-longform slds-text-align_center">
+                                <h3 class="slds-text-heading_medium">No trails found</h3>
+                                <p class="slds-text-body_regular">Click the "New Trail" button to add your first trail</p>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </lightning-card>
+
+        <!-- Trail Edit Modal -->
+        <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleModalClose}>
+                            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <template if:true={isNewTrail}>
+                            <h2 id="modal-heading-new" class="slds-modal__title slds-hyphenate">New Trail</h2>
+                        </template>
+                        <template if:false={isNewTrail}>
+                            <h2 id="modal-heading-edit" class="slds-modal__title slds-hyphenate">Edit Trail</h2>
+                        </template>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning-input
+                            label="Trail Name"
+                            name="Name"
+                            value={currentTrail.Name}
+                            required
+                            onchange={handleFieldChange}>
+                        </lightning-input>
+                        <lightning-textarea
+                            label="Description"
+                            name="Description__c"
+                            value={currentTrail.Description__c}
+                            onchange={handleFieldChange}>
+                        </lightning-textarea>
+                        <lightning-combobox
+                            label="Difficulty"
+                            name="Difficulty__c"
+                            value={currentTrail.Difficulty__c}
+                            options={difficultyOptions}
+                            onchange={handleFieldChange}>
+                        </lightning-combobox>
+                        <lightning-input
+                            type="number"
+                            label="Distance (km)"
+                            name="Distance_km__c"
+                            value={currentTrail.Distance_km__c}
+                            step="0.1"
+                            onchange={handleFieldChange}>
+                        </lightning-input>
+                        <lightning-input
+                            label="Location"
+                            name="Location__c"
+                            value={currentTrail.Location__c}
+                            placeholder="Latitude, Longitude (e.g., 7.9570, 80.7603)"
+                            onchange={handleFieldChange}>
+                        </lightning-input>
+
+                        <div class="slds-m-top_medium">
+                            <c-map-location-picker
+                                label="Start Location"
+                                field-name="Start_Location__c"
+                                value={currentTrail.Start_Location__c}
+                                placeholder="Search for start location or click on map"
+                                onchange={handleLocationChange}>
+                            </c-map-location-picker>
+                        </div>
+
+                        <div class="slds-m-top_medium">
+                            <c-map-location-picker
+                                label="End Location"
+                                field-name="End_Location__c"
+                                value={currentTrail.End_Location__c}
+                                placeholder="Search for end location or click on map"
+                                onchange={handleLocationChange}>
+                            </c-map-location-picker>
+                        </div>
+                        <lightning-input
+                            type="number"
+                            label="Elevation (m)"
+                            name="Elevation_m__c"
+                            value={currentTrail.Elevation_m__c}
+                            onchange={handleFieldChange}>
+                        </lightning-input>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={handleModalClose}>Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={handleSubmit}>Save</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

@@ -1,17 +1,15 @@
 import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import isCurrentUserCamper from '@salesforce/apex/UserProfileService.isCurrentUserCamper';
+import isCurrentUserAdmin from '@salesforce/apex/UserProfileService.isCurrentUserAdmin';
 
-export default class VinTrekApp extends LightningElement {
-    @track selectedTrailId;
-    @track selectedCampsiteId;
+export default class AdminHomePage extends LightningElement {
     @track activeTab = 'trails';
     @track isLoading = true;
     @track error;
     @track hasAccess = false;
 
-    // Wire the Apex method to check if user is a camper
-    @wire(isCurrentUserCamper)
+    // Wire the Apex method to check if user is an admin
+    @wire(isCurrentUserAdmin)
     wiredUserAccess({ error, data }) {
         this.isLoading = true;
         if (data !== undefined) {
@@ -25,25 +23,11 @@ export default class VinTrekApp extends LightningElement {
         this.isLoading = false;
     }
 
-    handleTrailSelect(event) {
-        this.selectedTrailId = event.detail.trailId;
-        this.selectedCampsiteId = null;
-    }
-
-    handleCampsiteSelect(event) {
-        this.selectedCampsiteId = event.detail.campsiteId;
-        this.selectedTrailId = null;
-    }
-
     handleTabChange(event) {
         this.activeTab = event.target.value;
     }
 
-    handleBookingCreated(event) {
-        const bookingId = event.detail.bookingId;
-        this.showToast('Success', 'Booking created successfully!', 'success');
-    }
-
+    // Show toast message
     showToast(title, message, variant) {
         const event = new ShowToastEvent({
             title: title,
@@ -51,13 +35,5 @@ export default class VinTrekApp extends LightningElement {
             variant: variant
         });
         this.dispatchEvent(event);
-    }
-
-    get showTrailBooking() {
-        return this.selectedTrailId != null;
-    }
-
-    get showCampsiteBooking() {
-        return this.selectedCampsiteId != null;
     }
 }

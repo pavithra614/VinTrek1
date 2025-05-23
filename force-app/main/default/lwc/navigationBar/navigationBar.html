@@ -1,0 +1,113 @@
+<template>
+    <div class="navigation-bar">
+        <div class="slds-context-bar">
+            <div class="slds-context-bar__primary">
+                <!-- App Logo and Name -->
+                <div class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger_click slds-no-hover">
+                    <div class="slds-context-bar__icon-action">
+                        <span class="slds-icon_container slds-icon-standard-custom">
+                            <lightning-icon icon-name="custom:custom57" size="small"></lightning-icon>
+                        </span>
+                    </div>
+                    <span class="slds-context-bar__label-action slds-context-bar__app-name">
+                        <span class="slds-truncate" title="VinTrek">VinTrek</span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Navigation Items -->
+            <div class="slds-context-bar__secondary">
+                <!-- Loading Spinner -->
+                <template if:true={isLoading}>
+                    <div class="slds-is-relative slds-p-around_x-small">
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </div>
+                </template>
+                
+                <!-- Navigation Items based on User Role -->
+                <template if:false={isLoading}>
+                    <!-- Common Navigation Items -->
+                    <div class="slds-context-bar__item">
+                        <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToHome}>
+                            <span class="slds-truncate" title="Home">Home</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Camper Navigation Items -->
+                    <template if:true={isCamper}>
+                        <div class="slds-context-bar__item">
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToTrails}>
+                                <span class="slds-truncate" title="Trails">Trails</span>
+                            </a>
+                        </div>
+                        <div class="slds-context-bar__item">
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToBookings}>
+                                <span class="slds-truncate" title="My Bookings">My Bookings</span>
+                            </a>
+                        </div>
+                    </template>
+                    
+                    <!-- Admin Navigation Items -->
+                    <template if:true={isAdmin}>
+                        <div class="slds-context-bar__item">
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToAdminHome}>
+                                <span class="slds-truncate" title="Admin Dashboard">Admin Dashboard</span>
+                            </a>
+                        </div>
+                    </template>
+                    
+                    <!-- Service Provider Navigation Items -->
+                    <template if:true={isServiceProvider}>
+                        <div class="slds-context-bar__item">
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToServiceProviderHome}>
+                                <span class="slds-truncate" title="Service Dashboard">Service Dashboard</span>
+                            </a>
+                        </div>
+                    </template>
+                </template>
+            </div>
+            
+            <!-- User Profile Menu -->
+            <div class="slds-context-bar__tertiary">
+                <div class="slds-context-bar__item">
+                    <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                        <button class="slds-button slds-button_icon slds-button_icon-container slds-button_icon-small" 
+                                aria-haspopup="true" 
+                                title="User Menu" 
+                                onclick={toggleUserMenu}>
+                            <lightning-icon icon-name="utility:user" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">User Menu</span>
+                        </button>
+                        
+                        <!-- User Menu Dropdown -->
+                        <div class={userMenuClass}>
+                            <ul class="slds-dropdown__list" role="menu" aria-label="User Menu">
+                                <template if:true={userInfo}>
+                                    <li class="slds-dropdown__header" role="separator">
+                                        <span class="slds-text-title_caps">{userInfo.Name}</span>
+                                        <p class="slds-text-body_small">{userRole}</p>
+                                    </li>
+                                </template>
+                                <li class="slds-dropdown__item" role="presentation">
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="0">
+                                        <span class="slds-truncate" title="My Profile">My Profile</span>
+                                    </a>
+                                </li>
+                                <li class="slds-dropdown__item" role="presentation">
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="0">
+                                        <span class="slds-truncate" title="Settings">Settings</span>
+                                    </a>
+                                </li>
+                                <li class="slds-dropdown__item" role="presentation">
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="0" onclick={handleLogout}>
+                                        <span class="slds-truncate" title="Logout">Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

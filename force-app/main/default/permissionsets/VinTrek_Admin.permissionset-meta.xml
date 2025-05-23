@@ -34,6 +34,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Trail__c.Start_Location__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Trail__c.End_Location__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Campsite__c.Amenities__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -62,11 +72,12 @@
         <field>Booking__c.End_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
+    <!-- Removed Start_Date__c field permission due to required field issue -->
+    <!-- <fieldPermissions>
         <editable>true</editable>
         <field>Booking__c.Start_Date__c</field>
         <readable>true</readable>
-    </fieldPermissions>
+    </fieldPermissions> -->
     <fieldPermissions>
         <editable>true</editable>
         <field>Booking__c.Status__c</field>

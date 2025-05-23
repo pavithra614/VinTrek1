@@ -1,0 +1,151 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="custom:custom57" size="medium"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_medium">VinTrek Setup Utility</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <!-- Setup Steps -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                    <div class="slds-box slds-m-bottom_medium">
+                        <h3 class="slds-text-heading_small slds-m-bottom_medium">Setup Steps</h3>
+                        
+                        <!-- Loading Spinner -->
+                        <template if:true={isLoading}>
+                            <div class="slds-is-relative slds-m-vertical_medium">
+                                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                            </div>
+                        </template>
+                        
+                        <!-- Setup Steps List -->
+                        <ul class="slds-has-dividers_bottom-space">
+                            <li class="slds-item">
+                                <div class="slds-grid slds-gutters slds-grid_vertical-align-center">
+                                    <div class="slds-col slds-size_8-of-12">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <span class="slds-m-right_small">1.</span>
+                                            <div>
+                                                <strong>Create Custom Objects</strong>
+                                                <p class="slds-text-body_small">Create the custom objects needed for VinTrek</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                        <span class={objectsStatusClass}>{setupStatus.objects}</span>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_x-small slds-m-left_x-large">
+                                    <lightning-button 
+                                        label="Create Objects" 
+                                        onclick={handleCreateObjects} 
+                                        disabled={isLoading}>
+                                    </lightning-button>
+                                </div>
+                            </li>
+                            <li class="slds-item">
+                                <div class="slds-grid slds-gutters slds-grid_vertical-align-center">
+                                    <div class="slds-col slds-size_8-of-12">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <span class="slds-m-right_small">2.</span>
+                                            <div>
+                                                <strong>Create Sample Data</strong>
+                                                <p class="slds-text-body_small">Create sample data for testing</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                        <span class={sampleDataStatusClass}>{setupStatus.sampleData}</span>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_x-small slds-m-left_x-large">
+                                    <lightning-button 
+                                        label="Create Sample Data" 
+                                        onclick={handleCreateSampleData} 
+                                        disabled={isLoading}>
+                                    </lightning-button>
+                                </div>
+                            </li>
+                            <li class="slds-item">
+                                <div class="slds-grid slds-gutters slds-grid_vertical-align-center">
+                                    <div class="slds-col slds-size_8-of-12">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <span class="slds-m-right_small">3.</span>
+                                            <div>
+                                                <strong>Setup Profiles & Permission Sets</strong>
+                                                <p class="slds-text-body_small">Create profiles and permission sets for different user roles</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                        <span class={profilesStatusClass}>{setupStatus.profiles}</span>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_x-small slds-m-left_x-large">
+                                    <lightning-button 
+                                        label="Setup Profiles" 
+                                        onclick={handleSetupProfiles} 
+                                        disabled={isLoading}>
+                                    </lightning-button>
+                                </div>
+                            </li>
+                            <li class="slds-item">
+                                <div class="slds-grid slds-gutters slds-grid_vertical-align-center">
+                                    <div class="slds-col slds-size_8-of-12">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <span class="slds-m-right_small">4.</span>
+                                            <div>
+                                                <strong>Test Authentication</strong>
+                                                <p class="slds-text-body_small">Test the authentication and authorization system</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                        <span class={authenticationStatusClass}>{setupStatus.authentication}</span>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_x-small slds-m-left_x-large">
+                                    <lightning-button 
+                                        label="Test Authentication" 
+                                        onclick={handleTestAuthentication} 
+                                        disabled={isLoading}>
+                                    </lightning-button>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <!-- Run All Button -->
+                        <div class="slds-m-top_medium slds-text-align_center">
+                            <lightning-button 
+                                variant="brand" 
+                                label="Run All Steps" 
+                                onclick={handleRunAll} 
+                                disabled={isLoading}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Setup Log -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                    <div class="slds-box slds-m-bottom_medium">
+                        <h3 class="slds-text-heading_small slds-m-bottom_medium">Setup Log</h3>
+                        <div class="setup-log slds-box slds-box_xx-small slds-theme_shade">
+                            <template for:each={setupMessages} for:item="message">
+                                <div key={message} class="slds-p-vertical_xx-small">{message}</div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

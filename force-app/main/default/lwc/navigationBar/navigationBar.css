@@ -1,0 +1,11 @@
+.navigation-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.user-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+}
