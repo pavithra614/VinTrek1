@@ -1,0 +1,167 @@
+<template>
+    <div class="vintrek-admin-home">
+        <!-- Navigation Bar -->
+        <c-navigation-bar></c-navigation-bar>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Access Denied Message -->
+        <template if:false={hasAccess}>
+            <template if:false={isLoading}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>Access Denied: You do not have permission to view this page.</h2>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <!-- Admin Dashboard -->
+        <template if:true={hasAccess}>
+            <div class="slds-var-p-horizontal_medium">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner slds-var-m-bottom_medium">
+                    <h2>VinTrek Administration</h2>
+                    <p>Manage trails, campsites, and other VinTrek resources.</p>
+                </div>
+
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_12-of-12">
+                        <lightning-card title="VinTrek Admin Dashboard" icon-name="custom:custom57">
+                            <lightning-button-group slot="actions">
+                                <lightning-button label="Refresh" icon-name="utility:refresh" variant="brand-outline" onclick={refreshData}></lightning-button>
+                                <lightning-button label="Settings" icon-name="utility:settings" variant="brand-outline"></lightning-button>
+                            </lightning-button-group>
+
+                            <div class="slds-p-horizontal_small">
+                                <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+                                    <lightning-tab label="Dashboard" value="dashboard" onactive={handleTabChange}>
+                                        <div class="slds-p-around_medium">
+                                            <div class="slds-grid slds-gutters slds-wrap">
+                                                <!-- Dashboard Stats -->
+                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                                    <div class="slds-box slds-p-around_medium stat-box">
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:trail" size="medium"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h3 class="slds-text-heading_small">Total Trails</h3>
+                                                                <p class="stat-value">{trailCount}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                                    <div class="slds-box slds-p-around_medium stat-box">
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:location" size="medium"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h3 class="slds-text-heading_small">Total Campsites</h3>
+                                                                <p class="stat-value">{campsiteCount}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                                    <div class="slds-box slds-p-around_medium stat-box">
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:service_appointment" size="medium"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h3 class="slds-text-heading_small">Active Bookings</h3>
+                                                                <p class="stat-value">{bookingCount}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Quick Actions -->
+                                            <div class="slds-m-top_large">
+                                                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Quick Actions</h2>
+                                                <div class="slds-grid slds-gutters slds-wrap">
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-around_x-small">
+                                                        <div class="action-card slds-box slds-p-around_medium" onclick={navigateToTrailAdmin}>
+                                                            <lightning-icon icon-name="standard:trail" size="medium"></lightning-icon>
+                                                            <h3 class="slds-text-heading_small slds-m-top_small">Manage Trails</h3>
+                                                            <p class="slds-m-top_x-small">Create and manage hiking trails</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-around_x-small">
+                                                        <div class="action-card slds-box slds-p-around_medium" onclick={navigateToTrailRouteCreator}>
+                                                            <lightning-icon icon-name="standard:route" size="medium"></lightning-icon>
+                                                            <h3 class="slds-text-heading_small slds-m-top_small">Create Trail Route</h3>
+                                                            <p class="slds-m-top_x-small">Create new trail routes with map</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-around_x-small">
+                                                        <div class="action-card slds-box slds-p-around_medium">
+                                                            <lightning-icon icon-name="standard:location" size="medium"></lightning-icon>
+                                                            <h3 class="slds-text-heading_small slds-m-top_small">Manage Campsites</h3>
+                                                            <p class="slds-m-top_x-small">Create and manage campsites</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-around_x-small">
+                                                        <div class="action-card slds-box slds-p-around_medium">
+                                                            <lightning-icon icon-name="standard:service_appointment" size="medium"></lightning-icon>
+                                                            <h3 class="slds-text-heading_small slds-m-top_small">Manage Bookings</h3>
+                                                            <p class="slds-m-top_x-small">View and manage bookings</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Trails" value="trails" onactive={handleTabChange}>
+                                        <c-trail-admin></c-trail-admin>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Campsites" value="campsites" onactive={handleTabChange}>
+                                        <div class="placeholder-content">
+                                            <lightning-icon icon-name="standard:location" size="large"></lightning-icon>
+                                            <h3 class="slds-text-heading_medium slds-p-vertical_small">Campsite Management</h3>
+                                            <p class="slds-text-body_regular slds-p-bottom_medium">
+                                                Create and manage campsites for your trails.
+                                            </p>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Bookings" value="bookings" onactive={handleTabChange}>
+                                        <div class="placeholder-content">
+                                            <lightning-icon icon-name="standard:service_appointment" size="large"></lightning-icon>
+                                            <h3 class="slds-text-heading_medium slds-p-vertical_small">Booking Management</h3>
+                                            <p class="slds-text-body_regular slds-p-bottom_medium">
+                                                View and manage trail and campsite bookings.
+                                            </p>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Reports" value="reports" onactive={handleTabChange}>
+                                        <div class="placeholder-content">
+                                            <lightning-icon icon-name="standard:report" size="large"></lightning-icon>
+                                            <h3 class="slds-text-heading_medium slds-p-vertical_small">Analytics & Reports</h3>
+                                            <p class="slds-text-body_regular slds-p-bottom_medium">
+                                                View detailed reports and analytics about VinTrek usage.
+                                            </p>
+                                        </div>
+                                    </lightning-tab>
+                                </lightning-tabset>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

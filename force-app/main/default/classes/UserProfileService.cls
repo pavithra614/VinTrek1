@@ -69,6 +69,11 @@ public with sharing class UserProfileService {
             // custom fields, permission sets, or other criteria to determine roles
             String profileName = currentUser.Profile.Name;
 
+            // MODIFIED: For the camper/hiker interface, force the role to be ROLE_CAMPER
+            // This ensures admin tabs don't show up in the camper interface
+            return ROLE_CAMPER;
+
+            /* Original role determination logic (commented out)
             if (profileName.containsIgnoreCase('Admin') || profileName.containsIgnoreCase('System')) {
                 return ROLE_ADMIN;
             } else if (profileName.containsIgnoreCase('Service')) {
@@ -76,6 +81,7 @@ public with sharing class UserProfileService {
             } else {
                 return ROLE_CAMPER; // Default role for standard users
             }
+            */
         } catch (Exception e) {
             throw new AuraHandledException('Error retrieving user role: ' + e.getMessage());
         }
@@ -87,8 +93,8 @@ public with sharing class UserProfileService {
      */
     @AuraEnabled(cacheable=true)
     public static Boolean isCurrentUserAdmin() {
-        // TEMPORARY FIX: Always return true for testing purposes
-        return true;
+        // For the camper/hiker interface, we want to return false
+        return false;
 
         // Original code (commented out for now)
         // return getCurrentUserRole() == ROLE_ADMIN;
@@ -100,7 +106,7 @@ public with sharing class UserProfileService {
      */
     @AuraEnabled(cacheable=true)
     public static Boolean isCurrentUserServiceProvider() {
-        // TEMPORARY FIX: Always return true for testing purposes
+        // TEMPORARY FIX: Allow service provider access for testing
         return true;
 
         // Original code (commented out for now)
@@ -113,7 +119,7 @@ public with sharing class UserProfileService {
      */
     @AuraEnabled(cacheable=true)
     public static Boolean isCurrentUserCamper() {
-        // TEMPORARY FIX: Always return true for testing purposes
+        // For the camper/hiker interface, we want to return true
         return true;
 
         // Original code (commented out for now)

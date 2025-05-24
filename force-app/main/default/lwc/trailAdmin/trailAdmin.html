@@ -8,12 +8,20 @@
                         <h2 class="slds-text-heading_medium">Manage Trails</h2>
                     </div>
                     <div class="slds-col slds-size_1-of-2 slds-text-align_right">
-                        <lightning-button
-                            label="New Trail"
-                            variant="brand"
-                            icon-name="utility:add"
-                            onclick={handleNewTrail}>
-                        </lightning-button>
+                        <lightning-button-group>
+                            <lightning-button
+                                label="New Trail"
+                                variant="brand"
+                                icon-name="utility:add"
+                                onclick={handleNewTrail}>
+                            </lightning-button>
+                            <lightning-button
+                                label="Create Route"
+                                variant="brand-outline"
+                                icon-name="utility:route"
+                                onclick={handleCreateRoute}>
+                            </lightning-button>
+                        </lightning-button-group>
                     </div>
                 </div>
 

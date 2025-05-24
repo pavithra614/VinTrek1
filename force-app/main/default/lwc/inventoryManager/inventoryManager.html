@@ -1,0 +1,108 @@
+<template>
+    <div class="inventory-manager">
+        <!-- Header Section -->
+        <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+            <div class="slds-col">
+                <h2 class="slds-text-heading_medium">Camping Equipment Inventory</h2>
+                <p class="slds-text-body_small slds-text-color_weak">
+                    Manage your camping equipment inventory and add new items for rent.
+                </p>
+            </div>
+            <div class="slds-col slds-text-align_right">
+                <lightning-button 
+                    label="Add New Item" 
+                    variant="brand" 
+                    icon-name="utility:add" 
+                    onclick={handleAddNewItem}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- New Item Form -->
+        <template if:true={showNewItemForm}>
+            <div class="slds-box slds-m-bottom_medium item-form">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Add New Camping Item</h3>
+                <p class="slds-text-body_small slds-m-bottom_medium slds-text-color_weak">
+                    Add a new camping item to your rental inventory.
+                </p>
+                
+                <lightning-record-edit-form object-api-name="Camping_Item__c" onsuccess={handleItemFormSuccess}>
+                    <lightning-messages></lightning-messages>
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                            <lightning-input-field field-name="Name" required variant="label-stacked"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                            <lightning-input-field field-name="Category__c" required variant="label-stacked"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                            <lightning-input-field field-name="Daily_Rate__c" required variant="label-stacked"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                            <lightning-input-field field-name="Status__c" required variant="label-stacked"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                            <lightning-input-field field-name="Description__c" variant="label-stacked"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                            <lightning-input-field field-name="Image_URL__c" variant="label-stacked"></lightning-input-field>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                        <lightning-button 
+                            class="slds-m-right_small" 
+                            label="Cancel" 
+                            onclick={handleCancelItemForm}>
+                        </lightning-button>
+                        <lightning-button 
+                            variant="brand" 
+                            type="submit" 
+                            label="Save Item"
+                            icon-name="utility:save">
+                        </lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+        </template>
+
+        <!-- Inventory List -->
+        <template if:true={campingItems.length}>
+            <div class="slds-m-top_medium">
+                <lightning-datatable
+                    key-field="Id"
+                    data={campingItems}
+                    columns={itemColumns}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </div>
+        </template>
+        
+        <!-- Empty State -->
+        <template if:false={campingItems.length}>
+            <template if:false={isLoading}>
+                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                    <div class="slds-text-longform slds-text-align_center">
+                        <h3 class="slds-text-heading_medium">No camping items found</h3>
+                        <p class="slds-text-body_regular slds-m-bottom_medium">
+                            Add your first camping item to start building your rental inventory.
+                        </p>
+                        <lightning-button 
+                            label="Add Your First Item" 
+                            variant="brand" 
+                            icon-name="utility:add"
+                            onclick={handleAddNewItem}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

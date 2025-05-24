@@ -23,6 +23,30 @@
 
     <!-- Main App Content -->
     <template if:true={hasAccess}>
+        <!-- Weather Alert Section -->
+        <template if:true={showWeatherAlert}>
+            <div class={weatherAlert.alertClass} role="alert">
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        <lightning-icon icon-name="utility:warning" size="small" class="slds-m-right_x-small"></lightning-icon>
+                        Weather Alert for {weatherAlert.location}
+                    </h2>
+                    <p>{weatherAlert.message}</p>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Dismiss"
+                            variant="neutral"
+                            size="small"
+                            onclick={closeWeatherAlert}>
+                        </lightning-button>
+                    </div>
+                </div>
+                <button class="slds-notify__close" onclick={closeWeatherAlert}>
+                    <lightning-icon icon-name="utility:close" size="small" alternative-text="Close"></lightning-icon>
+                </button>
+            </div>
+        </template>
+
         <div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_8-of-12">
                 <!-- Main Content Area -->
@@ -276,9 +300,75 @@
                         </div>
                     </lightning-tab>
                     <lightning-tab label="My Bookings" value="bookings" onactive={handleTabChange}>
-                        <!-- My Bookings Component (would show user's bookings) -->
-                        <div class="slds-text-align_center slds-p-around_medium">
-                            My Bookings would be implemented here
+                        <!-- My Bookings Component -->
+                        <div class="slds-p-around_medium">
+                            <template if:true={isLoading}>
+                                <lightning-spinner alternative-text="Loading bookings..." size="medium"></lightning-spinner>
+                            </template>
+
+                            <template if:false={isLoading}>
+                                <template if:true={userBookings.length}>
+                                    <div class="slds-text-heading_medium slds-m-bottom_large">My Bookings</div>
+
+                                    <div class="slds-grid slds-wrap slds-gutters">
+                                        <template for:each={userBookings} for:item="booking">
+                                            <div key={booking.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                                                <lightning-card>
+                                                    <div class="slds-p-around_medium">
+                                                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                                            <h3 class="slds-text-heading_small">{booking.Name}</h3>
+                                                            <span class={booking.statusClass}>{booking.Status__c}</span>
+                                                        </div>
+
+                                                        <div class="slds-m-bottom_small">
+                                                            <lightning-icon icon-name="utility:trail" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <strong>Trail:</strong> {booking.trailName}
+                                                        </div>
+
+                                                        <div class="slds-m-bottom_small">
+                                                            <lightning-icon icon-name="utility:location" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <strong>Campsite:</strong> {booking.campsiteName}
+                                                        </div>
+
+                                                        <div class="slds-m-bottom_small">
+                                                            <lightning-icon icon-name="utility:date_input" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <strong>Dates:</strong> {booking.formattedStartDate} - {booking.formattedEndDate}
+                                                        </div>
+
+                                                        <template if:true={booking.Number_of_People__c}>
+                                                            <div class="slds-m-bottom_small">
+                                                                <lightning-icon icon-name="utility:people" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                <strong>People:</strong> {booking.Number_of_People__c}
+                                                            </div>
+                                                        </template>
+
+                                                        <template if:true={booking.Total_Cost__c}>
+                                                            <div class="slds-m-bottom_small">
+                                                                <lightning-icon icon-name="utility:currency" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                <strong>Total Cost:</strong> ${booking.Total_Cost__c}
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </lightning-card>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <template if:false={userBookings.length}>
+                                    <div class="slds-text-align_center slds-p-around_large">
+                                        <lightning-icon icon-name="utility:event" size="large" class="slds-m-bottom_medium"></lightning-icon>
+                                        <h3 class="slds-text-heading_medium slds-m-bottom_small">No Bookings Yet</h3>
+                                        <p class="slds-text-body_regular">Start exploring trails and campsites to make your first booking!</p>
+                                        <lightning-button
+                                            label="Explore Trails"
+                                            variant="brand"
+                                            onclick={handleExploreTrails}
+                                            class="slds-m-top_medium">
+                                        </lightning-button>
+                                    </div>
+                                </template>
+                            </template>
                         </div>
                     </lightning-tab>
                 </lightning-tabset>

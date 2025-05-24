@@ -3,13 +3,12 @@
     <fullName>Trail__c</fullName>
     <description>Trail associated with this campsite</description>
     <externalId>false</externalId>
-    <label>Trail</label>
+    <label>Associated Trail</label>
     <referenceTo>Trail__c</referenceTo>
     <relationshipLabel>Campsites</relationshipLabel>
     <relationshipName>Campsites</relationshipName>
-    <relationshipOrder>0</relationshipOrder>
-    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>MasterDetail</type>
-    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    <type>Lookup</type>
+    <deleteConstraint>SetNull</deleteConstraint>
 </CustomField>

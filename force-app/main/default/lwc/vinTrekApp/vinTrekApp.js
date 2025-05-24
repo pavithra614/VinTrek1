@@ -5,6 +5,8 @@ import isCurrentUserCamper from '@salesforce/apex/UserProfileService.isCurrentUs
 import searchTrailsAndCampsites from '@salesforce/apex/TrailController.searchTrailsAndCampsites';
 import getTrailWithCampsites from '@salesforce/apex/TrailController.getTrailWithCampsites';
 import getRentalItems from '@salesforce/apex/TrailController.getRentalItems';
+import getUserBookings from '@salesforce/apex/BookingController.getUserBookings';
+import getWeatherAlert from '@salesforce/apex/WeatherController.getWeatherAlert';
 
 export default class VinTrekApp extends NavigationMixin(LightningElement) {
     @track selectedTrailId;
@@ -19,6 +21,9 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
     @track selectedTrail = null;
     @track selectedCampsite = null;
     @track rentalItems = [];
+    @track userBookings = [];
+    @track weatherAlert = null;
+    @track showWeatherAlert = false;
 
     // Wire the Apex method to check if user is a camper
     @wire(isCurrentUserCamper)
@@ -54,6 +59,11 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
 
     handleTabChange(event) {
         this.activeTab = event.target.value;
+
+        // Load bookings when My Bookings tab is selected
+        if (this.activeTab === 'bookings') {
+            this.loadUserBookings();
+        }
     }
 
     handleBookingCreated(event) {
@@ -108,6 +118,9 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
         this.isLoading = true;
         this.selectedTrail = null;
         this.selectedCampsite = null;
+
+        // Check weather alert for search location
+        this.checkWeatherForLocation();
 
         // Call Apex method to search trails and campsites
         searchTrailsAndCampsites({ searchTerm: this.searchTerm })
@@ -255,5 +268,84 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
 
     get showCampsiteBooking() {
         return this.selectedCampsiteId != null;
+    }
+
+    // Load user bookings
+    loadUserBookings() {
+        this.isLoading = true;
+        getUserBookings()
+            .then(result => {
+                this.userBookings = result.map(booking => ({
+                    ...booking,
+                    formattedStartDate: new Date(booking.Start_Date__c).toLocaleDateString(),
+                    formattedEndDate: new Date(booking.End_Date__c).toLocaleDateString(),
+                    statusClass: this.getBookingStatusClass(booking.Status__c),
+                    trailName: booking.Trail__r ? booking.Trail__r.Name : 'N/A',
+                    campsiteName: booking.Campsite__r ? booking.Campsite__r.Name : 'N/A'
+                }));
+                this.error = undefined;
+            })
+            .catch(error => {
+                this.error = error;
+                this.userBookings = [];
+                this.showToast('Error', 'Error loading bookings', 'error');
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
+    }
+
+    // Get booking status CSS class
+    getBookingStatusClass(status) {
+        switch(status) {
+            case 'Confirmed': return 'slds-badge slds-theme_success';
+            case 'Pending': return 'slds-badge slds-theme_warning';
+            case 'Cancelled': return 'slds-badge slds-theme_error';
+            default: return 'slds-badge';
+        }
+    }
+
+    // Check weather for search location
+    checkWeatherForLocation() {
+        if (this.searchTerm) {
+            getWeatherAlert({ location: this.searchTerm })
+                .then(result => {
+                    if (result && result.hasAlert) {
+                        this.weatherAlert = {
+                            location: this.searchTerm,
+                            message: result.message,
+                            severity: result.severity,
+                            alertClass: this.getWeatherAlertClass(result.severity)
+                        };
+                        this.showWeatherAlert = true;
+                    } else {
+                        this.showWeatherAlert = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Weather alert error:', error);
+                    this.showWeatherAlert = false;
+                });
+        }
+    }
+
+    // Get weather alert CSS class
+    getWeatherAlertClass(severity) {
+        switch(severity) {
+            case 'High': return 'slds-notify slds-notify_alert slds-theme_error';
+            case 'Medium': return 'slds-notify slds-notify_alert slds-theme_warning';
+            case 'Low': return 'slds-notify slds-notify_alert slds-theme_info';
+            default: return 'slds-notify slds-notify_alert';
+        }
+    }
+
+    // Close weather alert
+    closeWeatherAlert() {
+        this.showWeatherAlert = false;
+    }
+
+    // Handle explore trails button click
+    handleExploreTrails() {
+        this.activeTab = 'trails';
     }
 }

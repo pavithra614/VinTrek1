@@ -221,28 +221,131 @@
     color: #555;
 }
 
+/* Booking Card Styles */
+.booking-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-left: 4px solid #2980b9;
+}
+
+.booking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.booking-card.confirmed {
+    border-left-color: #27ae60;
+}
+
+.booking-card.pending {
+    border-left-color: #f39c12;
+}
+
+.booking-card.cancelled {
+    border-left-color: #e74c3c;
+}
+
+/* Weather Alert Styles */
+.weather-alert {
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.weather-alert-high {
+    background-color: #fdf2f2;
+    border: 1px solid #e74c3c;
+    color: #c0392b;
+}
+
+.weather-alert-medium {
+    background-color: #fef9e7;
+    border: 1px solid #f39c12;
+    color: #d68910;
+}
+
+.weather-alert-low {
+    background-color: #eaf4fd;
+    border: 1px solid #3498db;
+    color: #2980b9;
+}
+
+/* Empty State Styles */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+}
+
+.empty-state-icon {
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .search-container {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .search-input {
         margin-right: 0;
         margin-bottom: 0.5rem;
     }
-    
+
     .slds-grid.slds-gutters {
         display: block;
     }
-    
+
     .slds-col {
         margin-bottom: 1rem;
     }
-    
+
     .trail-stat-card,
     .campsite-stat-card {
         margin-bottom: 1rem;
+    }
+
+    .booking-card {
+        margin-bottom: 1rem;
+    }
+
+    .weather-alert {
+        margin: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .selected-trail-header,
+    .selected-campsite-header {
+        height: 120px;
+    }
+
+    .trail-stat-card,
+    .campsite-stat-card {
+        padding: 12px;
+    }
+
+    .trail-stat-value,
+    .campsite-stat-value {
+        font-size: 1rem;
     }
 }

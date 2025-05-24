@@ -3,10 +3,34 @@ public with sharing class TrailController {
     public static List<Trail__c> getTrails() {
         return [
             SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
-                   Location__c, Elevation_m__c
+                   Location__c, Elevation_m__c, Start_Latitude__c,
+                   Start_Longitude__c, End_Latitude__c,
+                   End_Longitude__c, Route_Data__c
             FROM Trail__c
             ORDER BY Name ASC
         ];
+    }
+
+    /**
+     * Get all trails for dropdown selection (alias for getTrails)
+     * @return List of Trail__c records
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<Trail__c> getAllTrails() {
+        try {
+            return [
+                SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
+                       Location__c, Elevation_m__c, Start_Latitude__c,
+                       Start_Longitude__c, End_Latitude__c,
+                       End_Longitude__c, Route_Data__c
+                FROM Trail__c
+                ORDER BY Name ASC
+                LIMIT 100
+            ];
+        } catch (Exception e) {
+            System.debug('Error in getAllTrails: ' + e.getMessage());
+            throw new AuraHandledException('Unable to retrieve trails: ' + e.getMessage());
+        }
     }
 
     /**
@@ -22,7 +46,9 @@ public with sharing class TrailController {
             // Search for trails
             List<Trail__c> trails = [
                 SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
-                       Elevation_m__c, Location__c
+                       Elevation_m__c, Location__c, Start_Latitude__c,
+                       Start_Longitude__c, End_Latitude__c,
+                       End_Longitude__c, Route_Data__c
                 FROM Trail__c
                 WHERE Name LIKE :('%' + searchTerm + '%')
                 ORDER BY Name ASC
@@ -41,7 +67,9 @@ public with sharing class TrailController {
     @AuraEnabled(cacheable=true)
     public static List<Trail__c> getFilteredTrails(String difficulty, Decimal minDistance, Decimal maxDistance) {
         String query = 'SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c, ' +
-                      'Location__c, Elevation_m__c ' +
+                      'Location__c, Elevation_m__c, Start_Latitude__c, ' +
+                      'Start_Longitude__c, End_Latitude__c, ' +
+                      'End_Longitude__c, Route_Data__c ' +
                       'FROM Trail__c WHERE ';
 
         List<String> conditions = new List<String>();
@@ -77,7 +105,9 @@ public with sharing class TrailController {
     public static Trail__c getTrailById(Id trailId) {
         return [
             SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
-                   Location__c, Elevation_m__c
+                   Location__c, Elevation_m__c, Start_Latitude__c,
+                   Start_Longitude__c, End_Latitude__c,
+                   End_Longitude__c, Route_Data__c
             FROM Trail__c
             WHERE Id = :trailId
             LIMIT 1
@@ -95,7 +125,9 @@ public with sharing class TrailController {
             // Get the trail
             Trail__c trail = [
                 SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
-                       Elevation_m__c, Location__c
+                       Elevation_m__c, Location__c, Start_Latitude__c,
+                       Start_Longitude__c, End_Latitude__c,
+                       End_Longitude__c, Route_Data__c
                 FROM Trail__c
                 WHERE Id = :trailId
                 LIMIT 1
@@ -110,6 +142,11 @@ public with sharing class TrailController {
             result.put('Distance_km__c', trail.Distance_km__c);
             result.put('Elevation_m__c', trail.Elevation_m__c);
             result.put('Location__c', trail.Location__c);
+            result.put('Start_Latitude__c', trail.Start_Latitude__c);
+            result.put('Start_Longitude__c', trail.Start_Longitude__c);
+            result.put('End_Latitude__c', trail.End_Latitude__c);
+            result.put('End_Longitude__c', trail.End_Longitude__c);
+            result.put('Route_Data__c', trail.Route_Data__c);
 
             // Create mock campsites
             List<Map<String, Object>> campsites = new List<Map<String, Object>>();
@@ -165,6 +202,48 @@ public with sharing class TrailController {
         }
     }
 
+    /**
+     * Create a new trail with route data
+     * @param name - Trail name
+     * @param description - Trail description
+     * @param distance - Trail distance in km
+     * @param elevation - Trail elevation in m
+     * @param difficulty - Trail difficulty
+     * @param location - Trail location
+     * @param startLat - Start location latitude
+     * @param startLng - Start location longitude
+     * @param endLat - End location latitude
+     * @param endLng - End location longitude
+     * @param routeData - JSON string containing route data
+     * @return Id of the created trail
+     */
+    @AuraEnabled
+    public static Id createTrail(String name, String description, Decimal distance,
+                                Decimal elevation, String difficulty, String location,
+                                Decimal startLat, Decimal startLng, Decimal endLat,
+                                Decimal endLng, String routeData) {
+        try {
+            Trail__c trail = new Trail__c(
+                Name = name,
+                Description__c = description,
+                Distance_km__c = distance,
+                Elevation_m__c = elevation,
+                Difficulty__c = difficulty,
+                Location__c = location,
+                Start_Latitude__c = startLat,
+                Start_Longitude__c = startLng,
+                End_Latitude__c = endLat,
+                End_Longitude__c = endLng,
+                Route_Data__c = routeData
+            );
+
+            insert trail;
+            return trail.Id;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error creating trail: ' + e.getMessage());
+        }
+    }
+
     @AuraEnabled
     public static Boolean deleteTrail(Id trailId) {
         try {
@@ -180,7 +259,9 @@ public with sharing class TrailController {
     public static List<Trail__c> getAllTrailsForAdmin() {
         return [
             SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
-                   Location__c, Elevation_m__c, CreatedDate, LastModifiedDate
+                   Location__c, Elevation_m__c, Start_Latitude__c,
+                   Start_Longitude__c, End_Latitude__c,
+                   End_Longitude__c, Route_Data__c, CreatedDate, LastModifiedDate
             FROM Trail__c
             ORDER BY Name ASC
         ];

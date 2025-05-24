@@ -1,0 +1,199 @@
+<template>
+    <div class="campsite-manager">
+        <!-- Header Section -->
+        <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+            <div class="slds-col">
+                <h2 class="slds-text-heading_medium">My Campsites</h2>
+                <p class="slds-text-body_small slds-text-color_weak">
+                    Manage your campsite inventory and add new locations for campers to book.
+                </p>
+            </div>
+            <div class="slds-col slds-text-align_right">
+                <lightning-button 
+                    label="Add New Campsite" 
+                    variant="brand" 
+                    icon-name="utility:add" 
+                    onclick={handleAddNewCampsite}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- New Campsite Form -->
+        <template if:true={showNewCampsiteForm}>
+            <div class="slds-box slds-m-bottom_medium campsite-form">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Add New Campsite</h3>
+                <p class="slds-text-body_small slds-m-bottom_medium slds-text-color_weak">
+                    Fill in the details below to add a new campsite to your inventory.
+                </p>
+                
+                <lightning-record-edit-form object-api-name="Campsite__c" onsuccess={handleCampsiteFormSuccess}>
+                    <lightning-messages></lightning-messages>
+                    
+                    <!-- Basic Information Section -->
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Basic Information">Basic Information</span>
+                        </h3>
+                        <div class="slds-section__content slds-p-around_medium">
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                    <lightning-input-field 
+                                        field-name="Name" 
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                    <lightning-input-field 
+                                        field-name="Trail__c"
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+                                    <div class="slds-form-element__help slds-m-top_x-small">
+                                        Select the trail this campsite is associated with
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                    <lightning-input-field 
+                                        field-name="Description__c"
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing & Capacity Section -->
+                    <div class="slds-section slds-is-open slds-m-top_medium">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Pricing & Capacity">Pricing & Capacity</span>
+                        </h3>
+                        <div class="slds-section__content slds-p-around_medium">
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                    <lightning-input-field 
+                                        field-name="Daily_Fee__c" 
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+                                    <div class="slds-form-element__help slds-m-top_x-small">
+                                        Price per night for this campsite
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                    <lightning-input-field 
+                                        field-name="Capacity__c" 
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+                                    <div class="slds-form-element__help slds-m-top_x-small">
+                                        Maximum number of people who can stay
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Facilities Section -->
+                    <div class="slds-section slds-is-open slds-m-top_medium">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Facilities">Facilities</span>
+                        </h3>
+                        <div class="slds-section__content slds-p-around_medium">
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                    <lightning-input-field 
+                                        field-name="Facilities__c"
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+                                    <div class="slds-form-element__help slds-m-top_x-small">
+                                        Select the level of facilities available at this campsite
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Section -->
+                    <div class="slds-section slds-is-open slds-m-top_medium">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Location">Location</span>
+                        </h3>
+                        <div class="slds-section__content slds-p-around_medium">
+                            <div class="slds-box slds-p-around_medium">
+                                <h4 class="slds-text-heading_small slds-m-bottom_small">Select Campsite Location on Map</h4>
+                                <p class="slds-text-body_small slds-m-bottom_medium slds-text-color_weak">
+                                    Click on the map to set the exact location of your campsite
+                                </p>
+                                <c-location-selector
+                                    latitude={campsiteLatitude}
+                                    longitude={campsiteLongitude}
+                                    onlocationchange={handleLocationChange}>
+                                </c-location-selector>
+                            </div>
+                            <!-- Hidden input fields for latitude and longitude -->
+                            <div class="slds-hide">
+                                <lightning-input-field field-name="Latitude__c" value={campsiteLatitude}></lightning-input-field>
+                                <lightning-input-field field-name="Longitude__c" value={campsiteLongitude}></lightning-input-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="slds-grid slds-grid_align-center slds-m-top_large slds-p-around_medium">
+                        <lightning-button 
+                            class="slds-m-right_small" 
+                            label="Cancel" 
+                            onclick={handleCancelCampsiteForm}>
+                        </lightning-button>
+                        <lightning-button 
+                            variant="brand" 
+                            type="submit" 
+                            label="Save Campsite"
+                            icon-name="utility:save">
+                        </lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+        </template>
+
+        <!-- Campsites List -->
+        <template if:true={campsites.length}>
+            <div class="slds-m-top_medium">
+                <lightning-datatable
+                    key-field="Id"
+                    data={campsites}
+                    columns={campsiteColumns}
+                    hide-checkbox-column
+                    onrowaction={handleCampsiteRowAction}>
+                </lightning-datatable>
+            </div>
+        </template>
+        
+        <!-- Empty State -->
+        <template if:false={campsites.length}>
+            <template if:false={isLoading}>
+                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                    <div class="slds-text-longform slds-text-align_center">
+                        <h3 class="slds-text-heading_medium">No campsites found</h3>
+                        <p class="slds-text-body_regular slds-m-bottom_medium">
+                            Add your first campsite to get started with your service provider business.
+                        </p>
+                        <lightning-button 
+                            label="Add Your First Campsite" 
+                            variant="brand" 
+                            icon-name="utility:add"
+                            onclick={handleAddNewCampsite}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

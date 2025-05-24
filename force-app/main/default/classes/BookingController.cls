@@ -135,6 +135,7 @@ public with sharing class BookingController {
             rental.End_Date__c = endDate;
             rental.Number_of_People__c = numberOfPeople;
             rental.Special_Requests__c = specialRequests;
+            rental.Status__c = 'Pending'; // Set default status
 
             // Insert rental
             insert rental;
@@ -194,7 +195,7 @@ public with sharing class BookingController {
             return [
                 SELECT Id, Name, Start_Date__c, End_Date__c, Number_of_People__c,
                        Special_Requests__c, Trail__r.Name, Campsite__r.Name,
-                       CreatedDate
+                       Status__c, Total_Cost__c, CreatedDate
                 FROM Rental__c
                 WHERE Camper_Profile__c = :profiles[0].Id
                 ORDER BY CreatedDate DESC

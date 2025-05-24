@@ -1,6 +1,7 @@
 import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
+import { NavigationMixin } from 'lightning/navigation';
 import getAllTrailsForAdmin from '@salesforce/apex/TrailController.getAllTrailsForAdmin';
 import saveTrail from '@salesforce/apex/TrailController.saveTrail';
 import deleteTrail from '@salesforce/apex/TrailController.deleteTrail';
@@ -12,7 +13,7 @@ const DIFFICULTY_OPTIONS = [
     { label: 'Very Difficult', value: 'Very Difficult' }
 ];
 
-export default class TrailAdmin extends LightningElement {
+export default class TrailAdmin extends NavigationMixin(LightningElement) {
     @track trails = [];
     @track isLoading = true;
     @track error;
@@ -53,6 +54,17 @@ export default class TrailAdmin extends LightningElement {
         };
         this.isNewTrail = true;
         this.showModal = true;
+    }
+
+    // Handle create route button click
+    handleCreateRoute() {
+        // Navigate to the trail route creator component
+        this[NavigationMixin.Navigate]({
+            type: 'standard__component',
+            attributes: {
+                componentName: 'c__trailRouteCreator'
+            }
+        });
     }
 
     // Handle edit trail button click

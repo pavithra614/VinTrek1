@@ -1,0 +1,49 @@
+.inventory-manager {
+    padding: 1rem;
+}
+
+/* Item Form Styling */
+.item-form {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Enhanced form styling */
+lightning-input-field {
+    margin-bottom: 0.5rem;
+}
+
+/* Form actions styling */
+.slds-grid_align-center lightning-button {
+    min-width: 120px;
+}
+
+/* Data table styling */
+lightning-datatable {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Empty state styling */
+.slds-illustration {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #d8dde6;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .inventory-manager {
+        padding: 0.5rem;
+    }
+
+    .slds-col {
+        padding: 0.25rem !important;
+    }
+
+    .item-form {
+        margin: 0.5rem 0;
+    }
+}

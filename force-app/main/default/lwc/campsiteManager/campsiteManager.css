@@ -1,0 +1,83 @@
+.campsite-manager {
+    padding: 1rem;
+}
+
+/* Campsite Form Styling */
+.campsite-form {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.slds-section__title {
+    background-color: #f3f5f7;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.slds-section__title span {
+    font-weight: 600;
+    color: #032d60;
+}
+
+.slds-section__content {
+    background-color: #fafbfc;
+    border-radius: 4px;
+    border: 1px solid #e5e5e5;
+}
+
+.slds-form-element__help {
+    color: #706e6b;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Enhanced form styling */
+lightning-input-field {
+    margin-bottom: 0.5rem;
+}
+
+/* Location selector styling */
+c-location-selector {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #d8dde6;
+}
+
+/* Form actions styling */
+.slds-grid_align-center lightning-button {
+    min-width: 120px;
+}
+
+/* Data table styling */
+lightning-datatable {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Empty state styling */
+.slds-illustration {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #d8dde6;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .campsite-manager {
+        padding: 0.5rem;
+    }
+
+    .slds-section__content {
+        padding: 1rem !important;
+    }
+
+    .slds-col {
+        padding: 0.25rem !important;
+    }
+
+    .campsite-form {
+        margin: 0.5rem 0;
+    }
+}
