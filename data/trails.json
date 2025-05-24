@@ -1,0 +1,64 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Trail__c",
+        "referenceId": "Trail1"
+      },
+      "Name": "Mountain Ridge Trail",
+      "Description__c": "A beautiful trail with panoramic mountain views. Perfect for experienced hikers looking for a challenge.",
+      "Difficulty__c": "Hard",
+      "Distance_km__c": 15.5,
+      "Elevation_m__c": 850,
+      "Location__c": "37.7749,-122.4194"
+    },
+    {
+      "attributes": {
+        "type": "Trail__c",
+        "referenceId": "Trail2"
+      },
+      "Name": "Lakeside Loop",
+      "Description__c": "A gentle trail circling a serene lake. Great for families and beginners.",
+      "Difficulty__c": "Easy",
+      "Distance_km__c": 5.2,
+      "Elevation_m__c": 120,
+      "Location__c": "37.8044,-122.2711"
+    },
+    {
+      "attributes": {
+        "type": "Trail__c",
+        "referenceId": "Trail3"
+      },
+      "Name": "Forest Adventure",
+      "Description__c": "Wind through dense forest with diverse wildlife. Moderate difficulty with some steep sections.",
+      "Difficulty__c": "Moderate",
+      "Distance_km__c": 8.7,
+      "Elevation_m__c": 320,
+      "Location__c": "37.8715,-122.2730"
+    },
+    {
+      "attributes": {
+        "type": "Trail__c",
+        "referenceId": "Trail4"
+      },
+      "Name": "Coastal Bluffs",
+      "Description__c": "Stunning coastal views along dramatic cliffs. Watch for whales during migration season!",
+      "Difficulty__c": "Moderate",
+      "Distance_km__c": 10.3,
+      "Elevation_m__c": 250,
+      "Location__c": "37.7336,-122.5021"
+    },
+    {
+      "attributes": {
+        "type": "Trail__c",
+        "referenceId": "Trail5"
+      },
+      "Name": "Desert Canyon",
+      "Description__c": "Explore dramatic rock formations and desert flora. Bring plenty of water!",
+      "Difficulty__c": "Hard",
+      "Distance_km__c": 12.8,
+      "Elevation_m__c": 520,
+      "Location__c": "37.7469,-122.4586"
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+<template>
+    <div class="navigation-bar">
+        <div class="slds-context-bar">
+            <div class="slds-context-bar__primary">
+                <!-- App Logo and Name -->
+                <div class="slds-context-bar__item slds-no-hover">
+                    <div class="app-logo">
+                        <span class="slds-icon_container">
+                            <lightning-icon icon-name="custom:custom57" size="small" alternative-text="VinTrek Logo"></lightning-icon>
+                        </span>
+                        <span class="app-logo-text slds-context-bar__app-name">
+                            <span class="slds-truncate" title="VinTrek">VinTrek</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="mobile-menu-button">
+                    <lightning-button-icon
+                        icon-name="utility:rows"
+                        variant="bare"
+                        alternative-text="Toggle Menu"
+                        title="Toggle Menu"
+                        onclick={toggleMobileMenu}>
+                    </lightning-button-icon>
+                </div>
+            </div>
+
+            <!-- Navigation Items -->
+            <div class={navigationMenuClass}>
+                <!-- Loading Spinner -->
+                <template if:true={isLoading}>
+                    <div class="slds-is-relative slds-p-around_x-small">
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </div>
+                </template>
+
+                <!-- Navigation Items based on User Role -->
+                <template if:false={isLoading}>
+                    <!-- Common Navigation Items -->
+                    <div class={homeItemClass}>
+                        <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToHome}>
+                            <lightning-icon icon-name="utility:home" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                            <span class="slds-truncate" title="Home">Home</span>
+                        </a>
+                    </div>
+
+                    <!-- Camper Navigation Items -->
+                    <template if:true={isCamper}>
+                        <div class={trailsItemClass}>
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToTrails}>
+                                <lightning-icon icon-name="utility:trail" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                <span class="slds-truncate" title="Trails">Trails</span>
+                            </a>
+                        </div>
+                        <div class={bookingsItemClass}>
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToBookings}>
+                                <lightning-icon icon-name="utility:event" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                <span class="slds-truncate" title="My Bookings">My Bookings</span>
+                            </a>
+                        </div>
+                    </template>
+
+                    <!-- Admin Navigation Items -->
+                    <template if:true={isAdmin}>
+                        <div class={adminItemClass}>
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToAdminHome}>
+                                <lightning-icon icon-name="utility:setup" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                <span class="slds-truncate" title="Admin Dashboard">Admin Dashboard</span>
+                            </a>
+                        </div>
+                    </template>
+
+                    <!-- Service Provider Navigation Items -->
+                    <template if:true={isServiceProvider}>
+                        <div class={serviceItemClass}>
+                            <a href="javascript:void(0);" class="slds-context-bar__label-action" onclick={navigateToServiceProviderHome}>
+                                <lightning-icon icon-name="utility:service_territory" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                <span class="slds-truncate" title="Service Dashboard">Service Dashboard</span>
+                            </a>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- User Profile Menu -->
+            <div class="slds-context-bar__tertiary">
+                <div class="slds-context-bar__item">
+                    <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                        <button class="user-profile-button"
+                                aria-haspopup="true"
+                                title="User Menu"
+                                onclick={toggleUserMenu}>
+                            <template if:true={userInfo}>
+                                <img src={userInfo.SmallPhotoUrl} alt="User Avatar" class="user-avatar" width="32" height="32" />
+                                <span class="slds-truncate">{userInfo.Name}</span>
+                            </template>
+                            <template if:false={userInfo}>
+                                <lightning-icon icon-name="utility:user" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                <span>User Menu</span>
+                            </template>
+                            <lightning-icon icon-name="utility:chevrondown" size="xx-small" class="slds-m-left_x-small"></lightning-icon>
+                        </button>
+
+                        <!-- User Menu Dropdown -->
+                        <div class={userMenuClass}>
+                            <ul class="slds-dropdown__list" role="menu" aria-label="User Menu">
+                                <template if:true={userInfo}>
+                                    <li class="slds-dropdown__header" role="separator">
+                                        <span class="slds-text-title_caps">{userInfo.Name}</span>
+                                        <p class="slds-text-body_small">{userRole}</p>
+                                    </li>
+                                </template>
+                                <li class="slds-dropdown__item" role="presentation">
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="0" class="slds-dropdown__item">
+                                        <lightning-icon icon-name="utility:user" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                        <span class="slds-truncate" title="My Profile">My Profile</span>
+                                    </a>
+                                </li>
+                                <li class="slds-dropdown__item" role="presentation">
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="0" class="slds-dropdown__item">
+                                        <lightning-icon icon-name="utility:settings" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                        <span class="slds-truncate" title="Settings">Settings</span>
+                                    </a>
+                                </li>
+                                <li class="slds-dropdown__item" role="presentation">
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="0" onclick={handleLogout} class="slds-dropdown__item">
+                                        <lightning-icon icon-name="utility:logout" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                        <span class="slds-truncate" title="Logout">Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

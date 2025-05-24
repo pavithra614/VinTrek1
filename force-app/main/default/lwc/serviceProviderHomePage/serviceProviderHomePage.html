@@ -1,0 +1,653 @@
+<template>
+    <div class="service-provider-home-page">
+        <!-- Navigation Bar -->
+        <c-navigation-bar></c-navigation-bar>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Access Denied Message -->
+        <template if:false={hasAccess}>
+            <template if:false={isLoading}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>Access Denied: You do not have permission to view this page.</h2>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <!-- Service Provider Dashboard -->
+        <template if:true={hasAccess}>
+            <div class="slds-var-p-horizontal_medium">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner slds-var-m-bottom_medium">
+                    <h2>Welcome, Service Provider!</h2>
+                    <p>Manage your camping equipment inventory, track bookings, and view reports all in one place.</p>
+                </div>
+
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_12-of-12">
+                        <lightning-card title="Service Provider Dashboard" icon-name="custom:custom57">
+                            <lightning-button-group slot="actions">
+                                <lightning-button label="Refresh" icon-name="utility:refresh" variant="brand-outline" onclick={refreshData}></lightning-button>
+                                <lightning-button label="Settings" icon-name="utility:settings" variant="brand-outline"></lightning-button>
+                            </lightning-button-group>
+
+                            <div class="slds-p-horizontal_small">
+                                <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+                                    <lightning-tab label="Dashboard" value="dashboard" onactive={handleTabChange}>
+                                        <div class="slds-p-around_medium">
+                                            <div class="slds-grid slds-gutters slds-wrap">
+                                                <!-- Dashboard Stats -->
+                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                                    <div class="slds-box slds-p-around_medium stat-box">
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:service_appointment" size="medium"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h3 class="slds-text-heading_small">Active Bookings</h3>
+                                                                <p class="stat-value">12</p>
+                                                                <p class="slds-text-body_small slds-text-color_success">
+                                                                    <lightning-icon icon-name="utility:trending" size="xx-small"></lightning-icon>
+                                                                    <span class="slds-p-left_x-small">+3 from last week</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                                    <div class="slds-box slds-p-around_medium stat-box">
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:product_item" size="medium"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h3 class="slds-text-heading_small">Available Items</h3>
+                                                                <p class="stat-value">45</p>
+                                                                <p class="slds-text-body_small">
+                                                                    <lightning-badge label="In Stock" class="slds-badge_success"></lightning-badge>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+                                                    <div class="slds-box slds-p-around_medium stat-box">
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:customer" size="medium"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h3 class="slds-text-heading_small">Total Customers</h3>
+                                                                <p class="stat-value">78</p>
+                                                                <p class="slds-text-body_small slds-text-color_success">
+                                                                    <lightning-icon icon-name="utility:trending" size="xx-small"></lightning-icon>
+                                                                    <span class="slds-p-left_x-small">+12 this month</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Manage Inventory" value="inventory" onactive={handleTabChange}>
+                                        <div class="slds-p-around_medium">
+                                            <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+                                                <div class="slds-col">
+                                                    <h2 class="slds-text-heading_medium">Camping Equipment Inventory</h2>
+                                                </div>
+                                                <div class="slds-col slds-text-align_right">
+                                                    <lightning-button label="Add New Item" variant="brand" icon-name="utility:add" onclick={handleAddNewItem}></lightning-button>
+                                                </div>
+                                            </div>
+
+                                            <!-- New Item Form -->
+                                            <template if:true={showNewItemForm}>
+                                                <div class="slds-box slds-m-bottom_medium">
+                                                    <h3 class="slds-text-heading_small slds-m-bottom_small">Add New Camping Item</h3>
+                                                    <lightning-record-edit-form object-api-name="Camping_Item__c" onsuccess={handleItemFormSuccess}>
+                                                        <lightning-messages></lightning-messages>
+                                                        <div class="slds-grid slds-gutters slds-wrap">
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Name" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Category__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Daily_Rate__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Status__c" required></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Description__c"></lightning-input-field>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                                                                <lightning-input-field field-name="Image_URL__c"></lightning-input-field>
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                                                            <lightning-button class="slds-m-right_x-small" label="Cancel" onclick={handleCancelItemForm}></lightning-button>
+                                                            <lightning-button variant="brand" type="submit" label="Save Item"></lightning-button>
+                                                        </div>
+                                                    </lightning-record-edit-form>
+                                                </div>
+                                            </template>
+
+                                            <!-- Inventory List -->
+                                            <template if:true={campingItems.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={campingItems}
+                                                        columns={itemColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleRowAction}>
+                                                    </lightning-datatable>
+                                                </div>
+                                            </template>
+                                            <template if:false={campingItems.length}>
+                                                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                    <div class="slds-text-longform">
+                                                        <h3 class="slds-text-heading_medium">No camping items found</h3>
+                                                        <p class="slds-text-body_regular">Add your first camping item to get started.</p>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Add Campsite" value="campsites" onactive={handleTabChange}>
+                                        <div class="slds-p-around_medium">
+                                            <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+                                                <div class="slds-col">
+                                                    <h2 class="slds-text-heading_medium">My Campsites</h2>
+                                                    <p class="slds-text-body_small slds-text-color_weak">
+                                                        Manage your campsite inventory and add new locations for campers to book.
+                                                    </p>
+                                                </div>
+                                                <div class="slds-col slds-text-align_right">
+                                                    <lightning-button label="Add New Campsite" variant="brand" icon-name="utility:add" onclick={handleAddNewCampsite}></lightning-button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Enhanced Campsite Form v2.0 -->
+                                            <template if:true={showNewCampsiteForm}>
+                                                <div class="slds-card slds-m-bottom_medium campsite-form-card enhanced-form-v2">
+                                                    <div class="slds-card__header slds-grid">
+                                                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon icon-name="standard:location" size="medium" variant="inverse" class="slds-icon_container slds-icon-standard-location"></lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <h2 class="slds-card__header-title">
+                                                                    <span class="slds-text-heading_medium">Add New Campsite</span>
+                                                                </h2>
+                                                                <p class="slds-text-body_small slds-text-color_weak">
+                                                                    Create a new campsite location for your service provider business
+                                                                </p>
+                                                            </div>
+                                                        </header>
+                                                    </div>
+
+                                                    <div class="slds-card__body slds-card__body_inner">
+                                                        <form class="campsite-form" onsubmit={handleFormSubmit}>
+                                                            <lightning-messages></lightning-messages>
+
+                                                            <!-- Basic Information Section -->
+                                                            <div class="form-section">
+                                                                <div class="section-header">
+                                                                    <lightning-icon icon-name="utility:info" size="x-small" class="section-icon"></lightning-icon>
+                                                                    <h3 class="slds-text-heading_small">Basic Information</h3>
+                                                                </div>
+                                                                <div class="slds-grid slds-gutters slds-wrap slds-m-top_small">
+                                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                                                        <div class="slds-form-element">
+                                                                            <label class="slds-form-element__label" for="campsite-name">
+                                                                                <abbr class="slds-required" title="required">*</abbr>Campsite Name
+                                                                            </label>
+                                                                            <div class="slds-form-element__control">
+                                                                                <lightning-input
+                                                                                    id="campsite-name"
+                                                                                    name="name"
+                                                                                    type="text"
+                                                                                    required
+                                                                                    placeholder="Enter campsite name"
+                                                                                    value={formData.name}
+                                                                                    onchange={handleInputChange}
+                                                                                    class="custom-input">
+                                                                                </lightning-input>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                                                        <div class="slds-form-element">
+                                                                            <label class="slds-form-element__label" for="campsite-location">
+                                                                                <lightning-icon icon-name="utility:location" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                                                Location *
+                                                                            </label>
+                                                                            <div class="slds-form-element__control">
+                                                                                <lightning-input
+                                                                                    id="campsite-location"
+                                                                                    name="location"
+                                                                                    type="text"
+                                                                                    required
+                                                                                    placeholder="Enter campsite location (e.g., Kandy, Ella, Nuwara Eliya)"
+                                                                                    value={formData.location}
+                                                                                    onchange={handleInputChange}
+                                                                                    class="custom-input">
+                                                                                </lightning-input>
+                                                                                <div class="slds-text-body_small slds-text-color_weak slds-m-top_xx-small">
+                                                                                    📍 Enter the city or area where your campsite is located
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+
+                                                            <!-- Pricing & Capacity Section -->
+                                                            <div class="form-section">
+                                                                <div class="section-header">
+                                                                    <lightning-icon icon-name="utility:currency" size="x-small" class="section-icon"></lightning-icon>
+                                                                    <h3 class="slds-text-heading_small">Pricing & Capacity</h3>
+                                                                </div>
+                                                                <div class="slds-grid slds-gutters slds-wrap slds-m-top_small">
+                                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                                                        <div class="slds-form-element">
+                                                                            <label class="slds-form-element__label" for="daily-fee">
+                                                                                <abbr class="slds-required" title="required">*</abbr>Daily Fee ($)
+                                                                            </label>
+                                                                            <div class="slds-form-element__control">
+                                                                                <lightning-input
+                                                                                    id="daily-fee"
+                                                                                    name="dailyFee"
+                                                                                    type="number"
+                                                                                    required
+                                                                                    step="0.01"
+                                                                                    min="0"
+                                                                                    placeholder="0.00"
+                                                                                    value={formData.dailyFee}
+                                                                                    onchange={handleInputChange}
+                                                                                    class="custom-input">
+                                                                                </lightning-input>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                                                        <div class="slds-form-element">
+                                                                            <label class="slds-form-element__label" for="capacity">
+                                                                                <abbr class="slds-required" title="required">*</abbr>Capacity (People)
+                                                                            </label>
+                                                                            <div class="slds-form-element__control">
+                                                                                <lightning-input
+                                                                                    id="capacity"
+                                                                                    name="capacity"
+                                                                                    type="number"
+                                                                                    required
+                                                                                    min="1"
+                                                                                    placeholder="Enter max capacity"
+                                                                                    value={formData.capacity}
+                                                                                    onchange={handleInputChange}
+                                                                                    class="custom-input">
+                                                                                </lightning-input>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Trail Selection Section -->
+                                                            <div class="form-section">
+                                                                <div class="section-header">
+                                                                    <lightning-icon icon-name="utility:trail" size="x-small" class="section-icon"></lightning-icon>
+                                                                    <h3 class="slds-text-heading_small">Trail Association</h3>
+                                                                </div>
+                                                                <div class="slds-m-top_small">
+                                                                    <div class="slds-form-element">
+                                                                        <label class="slds-form-element__label" for="trail-select">
+                                                                            <lightning-icon icon-name="utility:trail" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                                            Associated Trail (Optional)
+                                                                        </label>
+                                                                        <div class="slds-form-element__control">
+                                                                            <lightning-combobox
+                                                                                id="trail-select"
+                                                                                name="trail"
+                                                                                placeholder="Select a trail..."
+                                                                                options={trailOptions}
+                                                                                value={formData.trail}
+                                                                                onchange={handleInputChange}
+                                                                                class="custom-combobox">
+                                                                            </lightning-combobox>
+                                                                            <div class="slds-text-body_small slds-text-color_weak slds-m-top_xx-small">
+                                                                                🥾 Choose which trail this campsite is associated with
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Description Section (temporarily hidden) -->
+                                                            <div class="form-section" style="display: none;">
+                                                                <div class="section-header">
+                                                                    <lightning-icon icon-name="utility:description" size="x-small" class="section-icon"></lightning-icon>
+                                                                    <h3 class="slds-text-heading_small">Description</h3>
+                                                                </div>
+                                                                <div class="slds-m-top_small">
+                                                                    <label class="slds-form-element__label" for="description">Campsite Description</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <lightning-textarea
+                                                                            id="description"
+                                                                            name="description"
+                                                                            placeholder="Describe your campsite, amenities, and what makes it special..."
+                                                                            value={formData.description}
+                                                                            onchange={handleInputChange}
+                                                                            class="custom-textarea">
+                                                                        </lightning-textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <!-- Form Actions -->
+                                                    <div class="slds-card__footer">
+                                                        <div class="slds-grid slds-grid_align-spread">
+                                                            <div class="slds-col">
+                                                                <lightning-button
+                                                                    label="Cancel"
+                                                                    variant="neutral"
+                                                                    onclick={handleCancelCampsiteForm}
+                                                                    class="cancel-button">
+                                                                </lightning-button>
+                                                            </div>
+                                                            <div class="slds-col">
+                                                                <lightning-button
+                                                                    variant="brand"
+                                                                    label="Save Campsite"
+                                                                    icon-name="utility:save"
+                                                                    onclick={handleFormSubmit}
+                                                                    class="save-button">
+                                                                </lightning-button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+
+                                            <!-- Campsites List -->
+                                            <template if:true={campsites.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={campsites}
+                                                        columns={campsiteColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleCampsiteRowAction}>
+                                                    </lightning-datatable>
+                                                </div>
+                                            </template>
+
+                                            <!-- Empty State -->
+                                            <template if:false={campsites.length}>
+                                                <template if:false={showNewCampsiteForm}>
+                                                    <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                        <div class="slds-text-longform slds-text-align_center">
+                                                            <h3 class="slds-text-heading_medium">No campsites found</h3>
+                                                            <p class="slds-text-body_regular slds-m-bottom_medium">
+                                                                Add your first campsite to get started with your service provider business.
+                                                            </p>
+                                                            <lightning-button label="Add Your First Campsite" variant="brand" icon-name="utility:add" onclick={handleAddNewCampsite}></lightning-button>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Bookings" value="bookings" onactive={handleTabChange}>
+                                        <div class="placeholder-content">
+                                            <lightning-icon icon-name="standard:service_appointment" size="large"></lightning-icon>
+                                            <h3 class="slds-text-heading_medium slds-p-vertical_small">Booking Management</h3>
+                                            <p class="slds-text-body_regular slds-p-bottom_medium">
+                                                View and manage customer bookings for your camping equipment.
+                                            </p>
+                                            <lightning-button label="View All Bookings" variant="brand" icon-name="utility:list"></lightning-button>
+                                        </div>
+                                    </lightning-tab>
+
+                                    <lightning-tab label="Reports" value="reports" onactive={handleTabChange}>
+                                        <div class="slds-p-around_medium">
+                                            <!-- Reports Header -->
+                                            <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+                                                <div class="slds-col">
+                                                    <h2 class="slds-text-heading_medium">Analytics & Reports</h2>
+                                                    <p class="slds-text-body_small slds-text-color_weak">
+                                                        View detailed reports and analytics about your business performance.
+                                                    </p>
+                                                </div>
+                                                <div class="slds-col slds-text-align_right">
+                                                    <lightning-button-group>
+                                                        <lightning-button label="Refresh Data" variant="brand-outline" icon-name="utility:refresh" onclick={refreshReportData}></lightning-button>
+                                                        <lightning-button label="Export Report" variant="brand" icon-name="utility:download" onclick={exportReport}></lightning-button>
+                                                    </lightning-button-group>
+                                                </div>
+                                            </div>
+
+                                            <!-- Loading Spinner for Reports -->
+                                            <template if:true={isLoadingReports}>
+                                                <div class="slds-is-relative slds-p-around_medium">
+                                                    <lightning-spinner alternative-text="Loading Reports" size="medium"></lightning-spinner>
+                                                </div>
+                                            </template>
+
+                                            <!-- Reports Content -->
+                                            <template if:false={isLoadingReports}>
+                                                <!-- Key Metrics Cards -->
+                                                <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                                                    <!-- Total Revenue Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card revenue-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="utility:currency" size="medium" variant="inverse" class="revenue-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Total Revenue</h3>
+                                                                    <p class="metric-value">${reportData.totalRevenue}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.revenueGrowth}% this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Total Profit Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card profit-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="utility:success" size="medium" variant="inverse" class="profit-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Net Profit</h3>
+                                                                    <p class="metric-value">${reportData.totalProfit}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.profitGrowth}% this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Total Bookings Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card bookings-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="standard:event" size="medium" variant="inverse" class="bookings-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Total Bookings</h3>
+                                                                    <p class="metric-value">{reportData.totalBookings}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.bookingsGrowth} this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Average Order Value Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card aov-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="utility:chart" size="medium" variant="inverse" class="aov-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Avg. Order Value</h3>
+                                                                    <p class="metric-value">${reportData.averageOrderValue}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.aovGrowth}% this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Charts and Tables Section -->
+                                                <div class="slds-grid slds-gutters slds-wrap">
+                                                    <!-- Sales Chart -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                                        <lightning-card title="Monthly Sales Trend" icon-name="utility:chart">
+                                                            <div class="slds-p-around_medium">
+                                                                <div class="chart-container">
+                                                                    <canvas class="sales-chart" width="400" height="200"></canvas>
+                                                                </div>
+                                                                <div class="slds-m-top_small">
+                                                                    <p class="slds-text-body_small slds-text-color_weak">
+                                                                        📈 Sales have increased by {reportData.revenueGrowth}% compared to last month
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </lightning-card>
+                                                    </div>
+
+                                                    <!-- Booking Status Distribution -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                                        <lightning-card title="Booking Status Distribution" icon-name="utility:pie_chart">
+                                                            <div class="slds-p-around_medium">
+                                                                <div class="booking-status-chart">
+                                                                    <template for:each={reportData.bookingStatusData} for:item="status">
+                                                                        <div key={status.label} class="status-item slds-m-bottom_small">
+                                                                            <div class="slds-grid slds-grid_vertical-align-center">
+                                                                                <div class="slds-col slds-size_1-of-3">
+                                                                                    <span class={status.badgeClass}>{status.label}</span>
+                                                                                </div>
+                                                                                <div class="slds-col slds-size_1-of-3 slds-text-align_center">
+                                                                                    <strong>{status.count}</strong>
+                                                                                </div>
+                                                                                <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                                                                    <span class="slds-text-body_small">{status.percentage}%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="progress-bar slds-m-top_xx-small">
+                                                                                <div class="progress-fill" style={status.progressStyle}></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                        </lightning-card>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Recent Bookings Table -->
+                                                <div class="slds-m-top_large">
+                                                    <lightning-card title="Recent Bookings" icon-name="standard:event">
+                                                        <div slot="actions">
+                                                            <lightning-button label="View All" variant="brand-outline" onclick={viewAllBookings}></lightning-button>
+                                                        </div>
+                                                        <div class="slds-p-around_medium">
+                                                            <template if:true={reportData.recentBookings.length}>
+                                                                <lightning-datatable
+                                                                    key-field="Id"
+                                                                    data={reportData.recentBookings}
+                                                                    columns={bookingColumns}
+                                                                    hide-checkbox-column
+                                                                    show-row-number-column>
+                                                                </lightning-datatable>
+                                                            </template>
+                                                            <template if:false={reportData.recentBookings.length}>
+                                                                <div class="slds-illustration slds-illustration_small">
+                                                                    <div class="slds-text-longform slds-text-align_center">
+                                                                        <h3 class="slds-text-heading_medium">No recent bookings</h3>
+                                                                        <p class="slds-text-body_regular">
+                                                                            Your recent bookings will appear here once customers start booking your services.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </lightning-card>
+                                                </div>
+
+                                                <!-- Top Performing Items -->
+                                                <div class="slds-m-top_large">
+                                                    <lightning-card title="Top Performing Items" icon-name="standard:product">
+                                                        <div class="slds-p-around_medium">
+                                                            <template if:true={reportData.topItems.length}>
+                                                                <lightning-datatable
+                                                                    key-field="Id"
+                                                                    data={reportData.topItems}
+                                                                    columns={topItemsColumns}
+                                                                    hide-checkbox-column
+                                                                    show-row-number-column>
+                                                                </lightning-datatable>
+                                                            </template>
+                                                            <template if:false={reportData.topItems.length}>
+                                                                <div class="slds-illustration slds-illustration_small">
+                                                                    <div class="slds-text-longform slds-text-align_center">
+                                                                        <h3 class="slds-text-heading_medium">No sales data available</h3>
+                                                                        <p class="slds-text-body_regular">
+                                                                            Your top performing items will appear here once you start making sales.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </lightning-card>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </lightning-tab>
+                                </lightning-tabset>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

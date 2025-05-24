@@ -1,0 +1,62 @@
+.service-provider-dashboard {
+    padding-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    margin-right: 1rem;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #032d60;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.stat-trend {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.stat-trend.positive {
+    color: #04844b;
+}
+
+.stat-trend.negative {
+    color: #c23934;
+}
+
+.stat-trend lightning-icon {
+    margin-right: 0.25rem;
+}
+
+.stat-badge {
+    margin-top: 0.5rem;
+}

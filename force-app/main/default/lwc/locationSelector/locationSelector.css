@@ -1,0 +1,15 @@
+.location-selector {
+    margin-bottom: 1rem;
+}
+
+.map-container {
+    height: 300px;
+    position: relative;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.map-container lightning-map {
+    height: 100%;
+}

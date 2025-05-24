@@ -1,0 +1,159 @@
+<template>
+    <div class="booking-summary slds-box slds-theme_shade">
+        <h3 class="slds-text-heading_small slds-m-bottom_medium">
+            <lightning-icon icon-name="utility:cart" size="small" class="slds-m-right_x-small"></lightning-icon>
+            Booking Summary
+        </h3>
+        
+        <!-- Trail Details -->
+        <template if:true={showTrailDetails}>
+            <div class="summary-section slds-m-bottom_medium">
+                <h4 class="slds-text-heading_small slds-m-bottom_x-small">
+                    <lightning-icon icon-name="utility:trail" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                    Trail
+                </h4>
+                <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="image-container">
+                            <lightning-icon icon-name="utility:trail" size="medium" class="trail-icon"></lightning-icon>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_3-of-4 slds-p-left_small">
+                        <div class="slds-text-heading_small">{trail.Name}</div>
+                        <div class="slds-text-body_small">{trail.Length_km__c} km | {trail.Difficulty__c}</div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Campsite Details -->
+        <template if:true={showCampsiteDetails}>
+            <div class="summary-section slds-m-bottom_medium">
+                <h4 class="slds-text-heading_small slds-m-bottom_x-small">
+                    <lightning-icon icon-name="utility:home" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                    Campsite
+                </h4>
+                <div class="campsite-card slds-box slds-box_x-small slds-theme_default">
+                    <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-icon icon-name="utility:home" size="large" class="campsite-icon"></lightning-icon>
+                        </div>
+                        <div class="slds-col slds-size_3-of-4 slds-p-left_small">
+                            <div class="slds-text-heading_small">{campsite.Name}</div>
+                            <div class="slds-text-body_small slds-m-bottom_x-small">
+                                <lightning-icon icon-name="utility:money" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                {campsitePricePerNight} per night
+                            </div>
+                            <div class="slds-text-body_small slds-m-bottom_x-small">
+                                <lightning-icon icon-name="utility:people" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                Max {campsiteCapacity} people
+                            </div>
+                            <div class="slds-text-body_small">
+                                <lightning-icon icon-name="utility:settings" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                {facilitiesText}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-breakdown slds-m-top_small slds-p-top_small slds-border_top">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-text-body_small">
+                                {numberOfDays} nights × {campsitePricePerNight}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-text-align_right slds-text-body_small">
+                                {formattedCampsitePrice}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Cart Items -->
+        <template if:true={showCartItems}>
+            <div class="summary-section slds-m-bottom_medium">
+                <h4 class="slds-text-heading_small slds-m-bottom_x-small">
+                    <lightning-icon icon-name="utility:package" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                    Rental Items ({cartItems.length})
+                </h4>
+                <template for:each={cartItems} for:item="item">
+                    <div key={item.Id} class="cart-item slds-box slds-box_x-small slds-theme_default slds-m-bottom_x-small">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="slds-col slds-size_1-of-6">
+                                <lightning-icon icon-name="utility:package" size="medium" class="item-icon"></lightning-icon>
+                            </div>
+                            <div class="slds-col slds-size_4-of-6 slds-p-left_small">
+                                <div class="slds-text-heading_small">{item.Name}</div>
+                                <div class="slds-text-body_small">{item.Category__c}</div>
+                                <div class="slds-text-body_small">Qty: {item.quantity}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_right">
+                                <div class="slds-text-body_small">${item.Price_Per_Day__c}/day</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <div class="cart-total slds-p-top_small slds-border_top">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-2 slds-text-body_small">
+                            Rental items total
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-text-align_right slds-text-body_small">
+                            {formattedCartItemsTotal}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Booking Details -->
+        <div class="summary-section slds-m-bottom_medium">
+            <h4 class="slds-text-heading_small slds-m-bottom_x-small">
+                <lightning-icon icon-name="utility:event" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                Trip Details
+            </h4>
+            <div class="slds-grid slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-2 slds-text-body_small">
+                    <lightning-icon icon-name="utility:clock" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                    Duration:
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">{numberOfDays} days</div>
+            </div>
+            <div class="slds-grid slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-2 slds-text-body_small">
+                    <lightning-icon icon-name="utility:people" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                    People:
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">{booking.numberOfPeople}</div>
+            </div>
+            <div class="slds-grid slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-2 slds-text-body_small">
+                    <lightning-icon icon-name="utility:date_input" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                    Check-in:
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">{booking.startDate}</div>
+            </div>
+            <div class="slds-grid slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-2 slds-text-body_small">
+                    <lightning-icon icon-name="utility:date_input" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                    Check-out:
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">{booking.endDate}</div>
+            </div>
+        </div>
+        
+        <!-- Total Price -->
+        <div class="summary-section slds-m-top_medium slds-p-top_medium slds-border_top">
+            <div class="slds-grid slds-grid_vertical-align-center">
+                <div class="slds-col slds-size_1-of-2">
+                    <div class="slds-text-heading_medium">
+                        <lightning-icon icon-name="utility:money" size="small" class="slds-m-right_x-small"></lightning-icon>
+                        Total:
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                    <div class="slds-text-heading_medium total-price">{formattedTotalPrice}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

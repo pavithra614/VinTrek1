@@ -1,0 +1,391 @@
+<template>
+    <!-- Navigation Bar -->
+    <c-navigation-bar></c-navigation-bar>
+
+    <!-- Loading Spinner -->
+    <template if:true={isLoading}>
+        <div class="slds-is-relative slds-p-around_medium">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+
+    <!-- Access Denied Message -->
+    <template if:false={hasAccess}>
+        <template if:false={isLoading}>
+            <div class="slds-p-around_medium">
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Access Denied: You do not have permission to view this page.</h2>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <!-- Main App Content -->
+    <template if:true={hasAccess}>
+        <!-- Weather Alert Section -->
+        <template if:true={showWeatherAlert}>
+            <div class={weatherAlert.alertClass} role="alert">
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        <lightning-icon icon-name="utility:warning" size="small" class="slds-m-right_x-small"></lightning-icon>
+                        Weather Alert for {weatherAlert.location}
+                    </h2>
+                    <p>{weatherAlert.message}</p>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Dismiss"
+                            variant="neutral"
+                            size="small"
+                            onclick={closeWeatherAlert}>
+                        </lightning-button>
+                    </div>
+                </div>
+                <button class="slds-notify__close" onclick={closeWeatherAlert}>
+                    <lightning-icon icon-name="utility:close" size="small" alternative-text="Close"></lightning-icon>
+                </button>
+            </div>
+        </template>
+
+        <!-- Full Width Main Content Area -->
+        <div class="full-width-container">
+            <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+                    <lightning-tab label="Trails" value="trails" onactive={handleTabChange}>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_2-of-3">
+                                <!-- Trail Explorer Component -->
+                                <c-trail-explorer ontrailselect={handleTrailSelect}></c-trail-explorer>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <!-- Trail Map Component -->
+                                <c-trail-map ontrailselect={handleTrailSelect}></c-trail-map>
+                            </div>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Campsites & Rentals" value="campsites" onactive={handleTabChange}>
+                        <!-- Campsite Explorer Component -->
+                        <div class="slds-p-around_medium">
+                            <!-- Search Section -->
+                            <div class="slds-text-align_center slds-m-bottom_large">
+                                <div class="slds-text-heading_medium slds-m-bottom_medium">
+                                    Search for Trails and Campsites
+                                </div>
+                                <div class="slds-form-element slds-m-bottom_medium">
+                                    <div class="slds-form-element__control">
+                                        <div class="search-container">
+                                            <lightning-input
+                                                type="search"
+                                                label="Search Trails and Campsites"
+                                                placeholder="Enter trail or campsite name..."
+                                                value={searchTerm}
+                                                onchange={handleSearchChange}
+                                                class="search-input">
+                                            </lightning-input>
+                                            <lightning-button
+                                                label="Search"
+                                                variant="brand"
+                                                icon-name="utility:search"
+                                                onclick={handleSearch}
+                                                class="search-button slds-m-left_small">
+                                            </lightning-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_medium">
+                                    <p>Search for trails and campsites to view available rental items like tents, gas stoves, and BBQ equipment.</p>
+                                </div>
+                            </div>
+
+                            <!-- Loading Spinner -->
+                            <template if:true={isLoading}>
+                                <div class="slds-is-relative slds-m-top_large">
+                                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                                </div>
+                            </template>
+
+                            <!-- Search Results Section -->
+                            <template if:true={searchResults}>
+                                <div class="slds-m-top_large">
+                                    <!-- Trail Results -->
+                                    <template if:true={searchResults.trails}>
+                                        <template if:true={searchResults.trails.length}>
+                                            <div class="slds-text-heading_medium slds-m-bottom_small">Trails</div>
+                                            <div class="slds-grid slds-wrap">
+                                                <template for:each={searchResults.trails} for:item="trail">
+                                                    <div key={trail.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-around_small">
+                                                        <div class="trail-card" data-id={trail.Id} onclick={handleTrailSelectFromSearch}>
+                                                            <div class="trail-card-content">
+                                                                <h3 class="slds-text-heading_small">{trail.Name}</h3>
+                                                                <div class="slds-grid slds-gutters slds-m-top_x-small">
+                                                                    <div class="slds-col slds-size_1-of-2">
+                                                                        <div class="trail-stat">
+                                                                            <lightning-icon icon-name="utility:route" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                            <span>{trail.Distance_km__c} km</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="slds-col slds-size_1-of-2">
+                                                                        <div class="trail-stat">
+                                                                            <lightning-icon icon-name="utility:trending" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                            <span>{trail.Elevation_m__c} m</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="slds-truncate slds-m-top_x-small">
+                                                                    <lightning-icon icon-name="utility:location" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                    <span>{trail.Location__c}</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </template>
+
+                            <!-- Selected Trail Details with Campsites -->
+                            <template if:true={selectedTrail}>
+                                <div class="selected-trail-details slds-m-top_large">
+                                    <div class="selected-trail-header">
+                                        <div class="selected-trail-header-content">
+                                            <h2 class="slds-text-heading_medium">{selectedTrail.Name}</h2>
+                                            <lightning-badge label={selectedTrail.Difficulty__c}></lightning-badge>
+                                        </div>
+                                    </div>
+
+                                    <div class="selected-trail-body slds-p-around_medium">
+                                        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <div class="trail-stat-card">
+                                                    <lightning-icon icon-name="utility:route" size="small"></lightning-icon>
+                                                    <div class="trail-stat-value">{selectedTrail.Distance_km__c} km</div>
+                                                    <div class="trail-stat-label">Distance</div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <div class="trail-stat-card">
+                                                    <lightning-icon icon-name="utility:trending" size="small"></lightning-icon>
+                                                    <div class="trail-stat-value">{selectedTrail.Elevation_m__c} m</div>
+                                                    <div class="trail-stat-label">Elevation</div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <div class="trail-stat-card">
+                                                    <lightning-icon icon-name="utility:people" size="small"></lightning-icon>
+                                                    <div class="trail-stat-value">{selectedTrail.Campsites.length}</div>
+                                                    <div class="trail-stat-label">Campsites</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-text-heading_small slds-m-bottom_small">Description</div>
+                                        <p class="slds-m-bottom_medium">{selectedTrail.Description__c}</p>
+
+                                        <!-- Campsites Section -->
+                                        <div class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">Available Campsites</div>
+                                        <div class="slds-grid slds-wrap">
+                                            <template for:each={selectedTrail.Campsites} for:item="campsite">
+                                                <div key={campsite.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small">
+                                                    <div class="campsite-card" data-id={campsite.Id} onclick={handleCampsiteSelectFromTrail}>
+                                                        <div class="campsite-card-content">
+                                                            <h3 class="slds-text-heading_small">{campsite.Name}</h3>
+                                                            <div class="slds-grid slds-gutters slds-m-top_x-small">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="campsite-stat">
+                                                                        <lightning-icon icon-name="utility:moneybag" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                        <span>${campsite.Daily_Fee__c}/night</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="campsite-stat">
+                                                                        <lightning-icon icon-name="utility:people" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                        <span>Capacity: {campsite.Capacity__c}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <p class="slds-truncate slds-m-top_x-small">
+                                                                <lightning-icon icon-name="utility:description" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                <span>{campsite.Description__c}</span>
+                                                            </p>
+                                                            <div class="slds-m-top_small">
+                                                                <lightning-button label="View Rental Items" variant="brand" data-id={campsite.Id} onclick={handleCampsiteSelectFromTrail}></lightning-button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Selected Campsite with Rental Items -->
+                            <template if:true={selectedCampsite}>
+                                <div class="selected-campsite-details slds-m-top_large">
+                                    <div class="selected-campsite-header">
+                                        <div class="selected-campsite-header-content">
+                                            <h2 class="slds-text-heading_medium">{selectedCampsite.Name}</h2>
+                                            <lightning-badge label="Capacity: {selectedCampsite.Capacity__c}"></lightning-badge>
+                                        </div>
+                                    </div>
+
+                                    <div class="selected-campsite-body slds-p-around_medium">
+                                        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <div class="campsite-stat-card">
+                                                    <lightning-icon icon-name="utility:moneybag" size="small"></lightning-icon>
+                                                    <div class="campsite-stat-value">${selectedCampsite.Daily_Fee__c}</div>
+                                                    <div class="campsite-stat-label">Per Night</div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <div class="campsite-stat-card">
+                                                    <lightning-icon icon-name="utility:people" size="small"></lightning-icon>
+                                                    <div class="campsite-stat-value">{selectedCampsite.Capacity__c}</div>
+                                                    <div class="campsite-stat-label">Max Capacity</div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <div class="campsite-stat-card">
+                                                    <lightning-icon icon-name="utility:checkin" size="small"></lightning-icon>
+                                                    <div class="campsite-stat-value">{selectedCampsite.Facilities__c}</div>
+                                                    <div class="campsite-stat-label">Facilities</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-text-heading_small slds-m-bottom_small">Description</div>
+                                        <p class="slds-m-bottom_medium">{selectedCampsite.Description__c}</p>
+
+                                        <!-- Rental Items Section -->
+                                        <div class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">Available Rental Items</div>
+                                        <div class="slds-grid slds-wrap">
+                                            <template for:each={rentalItems} for:item="item">
+                                                <div key={item.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-4 slds-p-around_small">
+                                                    <div class="rental-item-card">
+                                                        <div class="rental-item-content">
+                                                            <h3 class="slds-text-heading_small">{item.Name}</h3>
+                                                            <div class="slds-badge slds-m-top_x-small">{item.Category__c}</div>
+                                                            <p class="slds-text-body_small slds-m-top_small">{item.Description__c}</p>
+                                                            <div class="slds-grid slds-grid_vertical-align-center slds-m-top_small">
+                                                                <div class="slds-col">
+                                                                    <p class="rental-item-price">${item.Daily_Rate__c}/day</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+
+                                        <!-- Book Now Button -->
+                                        <div class="slds-grid slds-grid_align-center slds-m-top_large">
+                                            <lightning-button label="Book This Campsite" variant="brand" icon-name="utility:event" onclick={handleBookCampsiteWithItems}></lightning-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="My Bookings" value="bookings" onactive={handleTabChange}>
+                        <!-- My Bookings Component -->
+                        <div class="slds-p-around_medium">
+                            <template if:true={isLoading}>
+                                <lightning-spinner alternative-text="Loading bookings..." size="medium"></lightning-spinner>
+                            </template>
+
+                            <template if:false={isLoading}>
+                                <template if:true={userBookings.length}>
+                                    <div class="slds-text-heading_medium slds-m-bottom_large">My Bookings</div>
+
+                                    <div class="slds-grid slds-wrap slds-gutters">
+                                        <template for:each={userBookings} for:item="booking">
+                                            <div key={booking.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_medium">
+                                                <lightning-card>
+                                                    <div class="slds-p-around_medium">
+                                                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                                            <h3 class="slds-text-heading_small">{booking.Name}</h3>
+                                                            <span class={booking.statusClass}>{booking.Status__c}</span>
+                                                        </div>
+
+                                                        <div class="slds-m-bottom_small">
+                                                            <lightning-icon icon-name="utility:trail" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <strong>Trail:</strong> {booking.trailName}
+                                                        </div>
+
+                                                        <div class="slds-m-bottom_small">
+                                                            <lightning-icon icon-name="utility:location" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <strong>Campsite:</strong> {booking.campsiteName}
+                                                        </div>
+
+                                                        <div class="slds-m-bottom_small">
+                                                            <lightning-icon icon-name="utility:date_input" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <strong>Dates:</strong> {booking.formattedStartDate} - {booking.formattedEndDate}
+                                                        </div>
+
+                                                        <template if:true={booking.Number_of_People__c}>
+                                                            <div class="slds-m-bottom_small">
+                                                                <lightning-icon icon-name="utility:people" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                <strong>People:</strong> {booking.Number_of_People__c}
+                                                            </div>
+                                                        </template>
+
+                                                        <template if:true={booking.Total_Cost__c}>
+                                                            <div class="slds-m-bottom_small">
+                                                                <lightning-icon icon-name="utility:currency" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                                <strong>Total Cost:</strong> ${booking.Total_Cost__c}
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </lightning-card>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <template if:false={userBookings.length}>
+                                    <div class="slds-text-align_center slds-p-around_large">
+                                        <lightning-icon icon-name="utility:event" size="large" class="slds-m-bottom_medium"></lightning-icon>
+                                        <h3 class="slds-text-heading_medium slds-m-bottom_small">No Bookings Yet</h3>
+                                        <p class="slds-text-body_regular">Start exploring trails and campsites to make your first booking!</p>
+                                        <lightning-button
+                                            label="Explore Trails"
+                                            variant="brand"
+                                            onclick={handleExploreTrails}
+                                            class="slds-m-top_medium">
+                                        </lightning-button>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Booking" value="booking" onactive={handleTabChange}>
+                        <!-- Enhanced Booking Form -->
+                        <template if:true={showBookingForm}>
+                            <div class="slds-p-around_medium">
+                                <c-enhanced-booking-form
+                                    campsite-id={bookingCampsiteId}
+                                    trail-id={bookingTrailId}
+                                    onbookingcreated={handleBookingCreated}>
+                                </c-enhanced-booking-form>
+                            </div>
+                        </template>
+                        <template if:false={showBookingForm}>
+                            <div class="slds-text-align_center slds-p-around_large">
+                                <lightning-icon icon-name="utility:event" size="large" class="slds-m-bottom_medium"></lightning-icon>
+                                <h3 class="slds-text-heading_medium slds-m-bottom_small">No Active Booking</h3>
+                                <p class="slds-text-body_regular">Select a campsite or trail to start booking.</p>
+                                <lightning-button
+                                    label="Explore Campsites"
+                                    variant="brand"
+                                    onclick={handleExploreCampsites}
+                                    class="slds-m-top_medium">
+                                </lightning-button>
+                            </div>
+                        </template>
+                    </lightning-tab>
+            </lightning-tabset>
+        </div>
+    </template>
+</template>

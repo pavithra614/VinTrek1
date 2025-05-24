@@ -1,0 +1,45 @@
+.vintrek-admin-home .welcome-banner {
+    background-color: #f3f2f2;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.vintrek-admin-home .welcome-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.vintrek-admin-home .stat-box {
+    background-color: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.vintrek-admin-home .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #032d60;
+    margin-top: 0.5rem;
+}
+
+.vintrek-admin-home .action-card {
+    background-color: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.vintrek-admin-home .action-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.vintrek-admin-home .placeholder-content {
+    text-align: center;
+    padding: 3rem 1rem;
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Enhanced Review Component</masterLabel>
+    <description>Displays and manages reviews and ratings for trails and campsites</description>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage,lightningCommunity__Default">
+            <property name="recordId" type="String" label="Record ID" description="ID of the record to display reviews for"/>
+            <property name="objectApiName" type="String" label="Object API Name" description="API name of the object (Trail__c or Campsite__c)"/>
+            <property name="showAddReview" type="Boolean" default="true" label="Show Add Review" description="Allow users to add reviews"/>
+            <property name="showPhotoUpload" type="Boolean" default="true" label="Show Photo Upload" description="Allow users to upload photos with reviews"/>
+            <property name="maxReviews" type="Integer" default="10" label="Max Reviews" description="Maximum number of reviews to display initially"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

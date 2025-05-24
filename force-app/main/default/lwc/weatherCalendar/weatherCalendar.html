@@ -1,0 +1,106 @@
+<template>
+    <div class="weather-calendar-container">
+        <!-- Calendar Header -->
+        <div class="calendar-header slds-grid slds-grid_align-spread slds-m-bottom_medium">
+            <lightning-button-icon 
+                icon-name="utility:chevronleft" 
+                variant="border-filled" 
+                onclick={handlePreviousMonth}
+                alternative-text="Previous Month">
+            </lightning-button-icon>
+            
+            <h2 class="calendar-title slds-text-heading_medium">{currentMonthYear}</h2>
+            
+            <lightning-button-icon 
+                icon-name="utility:chevronright" 
+                variant="border-filled" 
+                onclick={handleNextMonth}
+                alternative-text="Next Month">
+            </lightning-button-icon>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid">
+            <!-- Day Headers -->
+            <div class="calendar-day-headers slds-grid">
+                <template for:each={dayHeaders} for:item="day">
+                    <div key={day} class="calendar-day-header slds-col slds-text-align_center">
+                        {day}
+                    </div>
+                </template>
+            </div>
+
+            <!-- Calendar Days -->
+            <div class="calendar-days slds-grid slds-wrap">
+                <template for:each={calendarDays} for:item="day">
+                    <div key={day.id} class="calendar-day slds-col slds-size_1-of-7" 
+                         data-date={day.date} onclick={handleDayClick}>
+                        <div class={day.dayClass}>
+                            <div class="day-number">{day.dayNumber}</div>
+                            
+                            <template if:true={day.hasWeather}>
+                                <div class="weather-info">
+                                    <lightning-icon 
+                                        icon-name={day.weatherIcon} 
+                                        size="x-small" 
+                                        class={day.weatherIconClass}>
+                                    </lightning-icon>
+                                    <div class="temperature">
+                                        <span class="temp-high">{day.highTemp}°</span>
+                                        <span class="temp-low">{day.lowTemp}°</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Selected Day Details -->
+        <template if:true={selectedDay}>
+            <div class="selected-day-details slds-box slds-theme_shade slds-m-top_medium">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">
+                    {selectedDay.formattedDate}
+                </h3>
+                
+                <div class="weather-details slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="weather-icon-large">
+                            <lightning-icon 
+                                icon-name={selectedDay.weatherIcon} 
+                                size="medium" 
+                                class={selectedDay.weatherIconClass}>
+                            </lightning-icon>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-col slds-size_2-of-3">
+                        <div class="weather-summary">
+                            <div class="temperature-range">
+                                <span class="temp-high-large">{selectedDay.highTemp}°C</span>
+                                <span class="temp-separator">/</span>
+                                <span class="temp-low-large">{selectedDay.lowTemp}°C</span>
+                            </div>
+                            <div class="weather-description">{selectedDay.description}</div>
+                            <div class="weather-details-grid slds-grid slds-gutters slds-m-top_small">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="weather-detail">
+                                        <lightning-icon icon-name="utility:water_drop" size="x-small"></lightning-icon>
+                                        <span>{selectedDay.humidity}% Humidity</span>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="weather-detail">
+                                        <lightning-icon icon-name="utility:wind" size="x-small"></lightning-icon>
+                                        <span>{selectedDay.windSpeed} km/h</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

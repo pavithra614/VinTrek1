@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Enhanced Trail Map</masterLabel>
+    <description>Interactive trail map with elevation profile and nearby points of interest</description>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
+            <property name="trailId" type="String" label="Trail ID" description="ID of the trail to display"/>
+            <property name="showElevationProfile" type="Boolean" default="true" label="Show Elevation Profile" description="Display elevation profile chart"/>
+            <property name="showNearbyPoints" type="Boolean" default="true" label="Show Nearby Points" description="Display nearby campsites and points of interest"/>
+            <property name="mapHeight" type="String" default="500px" label="Map Height" description="Height of the map container (e.g., 500px, 50vh)"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

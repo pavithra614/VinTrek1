@@ -1,0 +1,38 @@
+.availability-calendar {
+    position: relative;
+}
+
+.calendar-container {
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0.25rem;
+}
+
+.calendar {
+    min-height: 500px;
+}
+
+/* Override FullCalendar styles */
+:host {
+    --fc-border-color: #d8dde6;
+    --fc-button-bg-color: #0070d2;
+    --fc-button-border-color: #0070d2;
+    --fc-button-hover-bg-color: #005fb2;
+    --fc-button-hover-border-color: #005fb2;
+    --fc-button-active-bg-color: #005fb2;
+    --fc-button-active-border-color: #005fb2;
+    --fc-event-border-color: transparent;
+    --fc-today-bg-color: #f3f3f3;
+}
+
+/* Make sure the calendar is responsive */
+@media (max-width: 768px) {
+    .fc-header-toolbar {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .fc-header-toolbar .fc-toolbar-chunk {
+        margin-bottom: 0.5rem;
+    }
+}

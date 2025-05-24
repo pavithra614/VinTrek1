@@ -1,0 +1,59 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Review__c",
+        "referenceId": "Review1"
+      },
+      "Name": "R-00001",
+      "Comments__c": "Beautiful trail with amazing views. Highly recommend for experienced hikers!",
+      "Rating__c": 5,
+      "Trail__c": "@Trail1",
+      "Campsite__c": "@Campsite1"
+    },
+    {
+      "attributes": {
+        "type": "Review__c",
+        "referenceId": "Review2"
+      },
+      "Name": "R-00002",
+      "Comments__c": "Perfect for families. The lake is beautiful and the trail is easy to navigate.",
+      "Rating__c": 4,
+      "Trail__c": "@Trail2",
+      "Campsite__c": "@Campsite2"
+    },
+    {
+      "attributes": {
+        "type": "Review__c",
+        "referenceId": "Review3"
+      },
+      "Name": "R-00003",
+      "Comments__c": "Great forest trail with lots of wildlife. Some parts were a bit challenging.",
+      "Rating__c": 4,
+      "Trail__c": "@Trail3",
+      "Campsite__c": "@Campsite3"
+    },
+    {
+      "attributes": {
+        "type": "Review__c",
+        "referenceId": "Review4"
+      },
+      "Name": "R-00004",
+      "Comments__c": "The coastal views are spectacular! Bring a windbreaker as it can get breezy.",
+      "Rating__c": 5,
+      "Trail__c": "@Trail4",
+      "Campsite__c": "@Campsite4"
+    },
+    {
+      "attributes": {
+        "type": "Review__c",
+        "referenceId": "Review5"
+      },
+      "Name": "R-00005",
+      "Comments__c": "Challenging desert hike but worth it for the unique landscape.",
+      "Rating__c": 3,
+      "Trail__c": "@Trail5",
+      "Campsite__c": "@Campsite5"
+    }
+  ]
+}

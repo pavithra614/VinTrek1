@@ -1,0 +1,228 @@
+.checkout-form {
+    position: relative;
+    min-height: 500px;
+}
+
+.payment-section {
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    transition: all 0.3s ease;
+}
+
+.payment-section:hover {
+    border-color: #0176d3;
+    box-shadow: 0 2px 8px rgba(1, 118, 211, 0.1);
+}
+
+.payment-button {
+    width: 100%;
+    height: 48px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #0176d3 0%, #005fb2 100%);
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.payment-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #005fb2 0%, #004a8f 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(1, 118, 211, 0.3);
+}
+
+.payment-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.paypal-icon {
+    color: #0070ba;
+}
+
+.bank-icon {
+    color: #2e7d32;
+}
+
+.billing-address {
+    background: rgba(1, 118, 211, 0.02);
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.security-notice {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    border-radius: 8px;
+}
+
+.security-notice lightning-icon {
+    color: white;
+}
+
+.payment-actions {
+    position: sticky;
+    top: 20px;
+}
+
+/* Processing Overlay */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.processing-overlay .slds-spinner_container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+}
+
+/* Card Input Styling */
+.payment-section lightning-input {
+    margin-bottom: 0.5rem;
+}
+
+/* Radio Group Styling */
+lightning-radio-group {
+    --slds-c-radio-color-border: #0176d3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-form .slds-grid .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+    
+    .payment-actions {
+        position: static;
+        margin-top: 1rem;
+    }
+    
+    .payment-button {
+        height: 44px;
+        font-size: 1rem;
+    }
+}
+
+/* Animation for payment method transitions */
+.payment-section {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced form styling */
+.payment-section .slds-form-element__label {
+    font-weight: 600;
+    color: #0176d3;
+}
+
+.payment-section lightning-input {
+    --slds-c-input-color-border-focus: #0176d3;
+}
+
+/* Info boxes */
+.paypal-info,
+.bank-info {
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.paypal-info {
+    background: rgba(0, 112, 186, 0.1);
+    border: 1px solid rgba(0, 112, 186, 0.2);
+}
+
+.bank-info {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* Card number formatting */
+lightning-input[data-card-number] {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
+/* Loading states */
+.checkout-form.loading {
+    pointer-events: none;
+}
+
+.checkout-form.loading .payment-section {
+    opacity: 0.7;
+}
+
+/* Success states */
+.payment-success {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Error states */
+.payment-error {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    animation: shake 0.5s ease-out;
+}
+
+@keyframes shake {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+}
+
+/* Focus states */
+.payment-section lightning-input:focus-within {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
+
+/* Button hover effects */
+.payment-section lightning-button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}

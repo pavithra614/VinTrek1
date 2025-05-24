@@ -1,0 +1,269 @@
+.weather-calendar-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Calendar Header */
+.calendar-header {
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.calendar-title {
+    color: #2c5aa0;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    width: 100%;
+}
+
+.calendar-day-headers {
+    background: #f4f6f9;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-day-header {
+    padding: 0.5rem;
+    font-weight: 600;
+    color: #5c6b73;
+    font-size: 0.875rem;
+}
+
+/* Calendar Days */
+.calendar-days {
+    gap: 2px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    min-height: 80px;
+    padding: 2px;
+}
+
+.calendar-day-content {
+    height: 100%;
+    border-radius: 6px;
+    padding: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.calendar-day-content:hover {
+    background: #f8f9fa;
+    border-color: #2c5aa0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-day-current-month {
+    background: white;
+    border-color: #e5e5e5;
+}
+
+.calendar-day-other-month {
+    background: #f8f9fa;
+    color: #9ca3af;
+    cursor: default;
+}
+
+.calendar-day-other-month:hover {
+    background: #f8f9fa;
+    border-color: #e5e5e5;
+    transform: none;
+    box-shadow: none;
+}
+
+.calendar-day-today {
+    background: linear-gradient(135deg, #2c5aa0, #1e40af);
+    color: white;
+    border-color: #2c5aa0;
+}
+
+.calendar-day-today .day-number {
+    color: white;
+    font-weight: 700;
+}
+
+.calendar-day-today .temperature {
+    color: white;
+}
+
+/* Day Number */
+.day-number {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    text-align: left;
+}
+
+/* Weather Info */
+.weather-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+    margin-top: auto;
+}
+
+.temperature {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.temp-high {
+    color: #dc2626;
+}
+
+.temp-low {
+    color: #2563eb;
+}
+
+/* Weather Icons */
+.weather-sunny {
+    color: #fbbf24;
+}
+
+.weather-cloudy {
+    color: #6b7280;
+}
+
+.weather-rainy {
+    color: #3b82f6;
+}
+
+.weather-stormy {
+    color: #7c3aed;
+}
+
+.weather-snowy {
+    color: #e5e7eb;
+}
+
+.weather-foggy {
+    color: #9ca3af;
+}
+
+/* Selected Day Details */
+.selected-day-details {
+    border-left: 4px solid #2c5aa0;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+}
+
+.weather-icon-large {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weather-summary {
+    padding-left: 1rem;
+}
+
+.temperature-range {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.temp-high-large {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #dc2626;
+}
+
+.temp-separator {
+    font-size: 1.25rem;
+    color: #6b7280;
+}
+
+.temp-low-large {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+.weather-description {
+    font-size: 1rem;
+    color: #374151;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.weather-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calendar-day {
+        min-height: 60px;
+    }
+    
+    .calendar-day-content {
+        padding: 0.125rem;
+    }
+    
+    .day-number {
+        font-size: 0.75rem;
+    }
+    
+    .temperature {
+        font-size: 0.625rem;
+    }
+    
+    .weather-calendar-container {
+        padding: 0.5rem;
+    }
+    
+    .calendar-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 50px;
+    }
+    
+    .calendar-day-header {
+        padding: 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .weather-info {
+        gap: 0;
+    }
+    
+    .selected-day-details .slds-grid {
+        display: block;
+    }
+    
+    .weather-icon-large {
+        margin-bottom: 0.5rem;
+    }
+    
+    .weather-summary {
+        padding-left: 0;
+    }
+}

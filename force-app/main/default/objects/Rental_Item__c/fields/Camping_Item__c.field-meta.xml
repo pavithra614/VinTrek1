@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Camping_Item__c</fullName>
+    <description>Camping item being rented</description>
+    <externalId>false</externalId>
+    <label>Camping Item</label>
+    <referenceTo>Camping_Item__c</referenceTo>
+    <relationshipLabel>Rental Items</relationshipLabel>
+    <relationshipName>Rental_Items</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

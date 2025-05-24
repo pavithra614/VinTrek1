@@ -1,0 +1,87 @@
+.vintrek-admin {
+    background-color: #f3f3f3;
+}
+
+.welcome-banner {
+    background-color: #0070d2;
+    color: white;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.welcome-banner h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-box {
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0070d2;
+}
+
+.placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.trail-card, .campsite-card {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.trail-card:hover, .campsite-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.trail-stat-card, .campsite-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #f8f8f8;
+    border-radius: 0.25rem;
+}
+
+.trail-stat-value {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #0070d2;
+}
+
+.trail-stat-label {
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+.search-container {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input {
+    flex-grow: 1;
+}
+
+.search-button {
+    align-self: flex-end;
+}
