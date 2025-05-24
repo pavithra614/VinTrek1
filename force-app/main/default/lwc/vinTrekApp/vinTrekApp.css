@@ -431,6 +431,109 @@
     margin-bottom: 1rem;
 }
 
+/* Full Width Layout Improvements */
+.full-width-container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Remove any container width restrictions */
+.vintrek-app {
+    width: 100%;
+    max-width: none;
+}
+
+/* Ensure tabset uses full width */
+.full-width-container lightning-tabset {
+    width: 100%;
+    max-width: none;
+}
+
+/* Make tab content use full width */
+.full-width-container .slds-tabs_default__content {
+    padding: 1rem;
+    width: 100%;
+    max-width: none;
+}
+
+/* Override any SLDS container restrictions */
+.full-width-container .slds-container_large,
+.full-width-container .slds-container_medium,
+.full-width-container .slds-container_small {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Ensure grid uses full width */
+.full-width-container .slds-grid {
+    width: 100%;
+    max-width: none;
+}
+
+/* Remove any margin restrictions */
+.full-width-container .slds-p-around_medium {
+    padding: 1rem;
+}
+
+/* Enhanced Tab Styling */
+lightning-tabset {
+    --slds-c-tabs-color-background: var(--vintrek-background);
+    --slds-c-tabs-color-border: rgba(44, 85, 48, 0.1);
+    --slds-c-tabs-radius-border: var(--vintrek-border-radius);
+    box-shadow: var(--vintrek-shadow-light);
+    border-radius: var(--vintrek-border-radius);
+    overflow: hidden;
+    background: var(--vintrek-card-background);
+}
+
+/* Enhanced Grid Layout */
+.enhanced-grid {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.enhanced-grid .slds-col {
+    min-height: 300px;
+}
+
+/* Card Hover Effects Enhancement */
+.trail-card,
+.campsite-card,
+.rental-item-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.trail-card:hover,
+.campsite-card:hover,
+.rental-item-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--vintrek-shadow-heavy);
+}
+
+/* Better Typography */
+.section-title {
+    color: var(--vintrek-text-primary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--vintrek-gradient-primary);
+    border-radius: 2px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .search-container {
@@ -462,6 +565,16 @@
 
     .weather-alert {
         margin: 0.5rem;
+    }
+
+    .enhanced-grid {
+        gap: 1rem;
+    }
+
+    .trail-card:hover,
+    .campsite-card:hover,
+    .rental-item-card:hover {
+        transform: translateY(-4px) scale(1.01);
     }
 }
 

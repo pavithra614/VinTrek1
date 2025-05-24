@@ -15,7 +15,7 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
     @track isLoading = true;
     @track error;
     @track hasAccess = false;
-    @track cartItems = [];
+
     @track searchTerm = '';
     @track searchResults = null;
     @track selectedTrail = null;
@@ -77,7 +77,6 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
         this.showBookingForm = false;
         this.bookingCampsiteId = null;
         this.bookingTrailId = null;
-        this.cartItems = [];
 
         // Switch to bookings tab to show the new booking
         this.activeTab = 'bookings';
@@ -95,24 +94,14 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleCartUpdate(event) {
-        this.cartItems = event.detail.cartItems;
-        this.showToast('Cart Updated', `${this.cartItems.length} items in cart`, 'info');
-    }
-
     handleBookCampsite(event) {
-        const { campsiteId, cartItems } = event.detail;
+        const { campsiteId } = event.detail;
 
         // Set booking data and show enhanced booking form
         this.bookingCampsiteId = campsiteId;
         this.bookingTrailId = null;
         this.showBookingForm = true;
         this.activeTab = 'booking';
-
-        // Update cart items if provided
-        if (cartItems && cartItems.length > 0) {
-            this.cartItems = cartItems;
-        }
 
         this.showToast('Booking', 'Proceeding to booking form', 'info');
     }
@@ -221,29 +210,7 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
         }
     }
 
-    // Handle adding rental item to cart
-    handleAddToCart(event) {
-        const itemId = event.currentTarget.dataset.id;
-        const item = this.rentalItems.find(item => item.Id === itemId);
-
-        if (item) {
-            // Check if item is already in cart
-            const existingItem = this.cartItems.find(cartItem => cartItem.Id === itemId);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-                this.showToast('Cart Updated', `Added another ${item.Name} to cart (${existingItem.quantity} total)`, 'success');
-            } else {
-                this.cartItems.push({
-                    ...item,
-                    quantity: 1
-                });
-                this.showToast('Item Added', `${item.Name} added to cart`, 'success');
-            }
-        }
-    }
-
-    // Handle booking campsite with rental items
+    // Handle booking campsite
     handleBookCampsiteWithItems() {
         if (!this.selectedCampsite) {
             this.showToast('Error', 'Please select a campsite first', 'error');
@@ -256,12 +223,7 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
         this.showBookingForm = true;
         this.activeTab = 'booking';
 
-        // Show info if no items in cart but allow to continue
-        if (this.cartItems.length === 0) {
-            this.showToast('Info', 'Proceeding to booking without rental items', 'info');
-        } else {
-            this.showToast('Info', `Proceeding to booking with ${this.cartItems.length} rental items`, 'info');
-        }
+        this.showToast('Info', 'Proceeding to booking', 'info');
     }
 
     showToast(title, message, variant) {

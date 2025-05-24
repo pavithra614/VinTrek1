@@ -47,17 +47,16 @@
             </div>
         </template>
 
-        <div class="slds-grid slds-gutters">
-            <div class="slds-col slds-size_8-of-12">
-                <!-- Main Content Area -->
-                <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+        <!-- Full Width Main Content Area -->
+        <div class="full-width-container">
+            <lightning-tabset variant="scoped" active-tab-value={activeTab}>
                     <lightning-tab label="Trails" value="trails" onactive={handleTabChange}>
                         <div class="slds-grid slds-gutters">
-                            <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-col slds-size_2-of-3">
                                 <!-- Trail Explorer Component -->
                                 <c-trail-explorer ontrailselect={handleTrailSelect}></c-trail-explorer>
                             </div>
-                            <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-col slds-size_1-of-3">
                                 <!-- Trail Map Component -->
                                 <c-trail-map ontrailselect={handleTrailSelect}></c-trail-map>
                             </div>
@@ -113,7 +112,7 @@
                                             <div class="slds-text-heading_medium slds-m-bottom_small">Trails</div>
                                             <div class="slds-grid slds-wrap">
                                                 <template for:each={searchResults.trails} for:item="trail">
-                                                    <div key={trail.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small">
+                                                    <div key={trail.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-p-around_small">
                                                         <div class="trail-card" data-id={trail.Id} onclick={handleTrailSelectFromSearch}>
                                                             <div class="trail-card-content">
                                                                 <h3 class="slds-text-heading_small">{trail.Name}</h3>
@@ -187,7 +186,7 @@
                                         <div class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">Available Campsites</div>
                                         <div class="slds-grid slds-wrap">
                                             <template for:each={selectedTrail.Campsites} for:item="campsite">
-                                                <div key={campsite.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                                                <div key={campsite.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small">
                                                     <div class="campsite-card" data-id={campsite.Id} onclick={handleCampsiteSelectFromTrail}>
                                                         <div class="campsite-card-content">
                                                             <h3 class="slds-text-heading_small">{campsite.Name}</h3>
@@ -263,7 +262,7 @@
                                         <div class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">Available Rental Items</div>
                                         <div class="slds-grid slds-wrap">
                                             <template for:each={rentalItems} for:item="item">
-                                                <div key={item.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small">
+                                                <div key={item.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-4 slds-p-around_small">
                                                     <div class="rental-item-card">
                                                         <div class="rental-item-content">
                                                             <h3 class="slds-text-heading_small">{item.Name}</h3>
@@ -272,16 +271,6 @@
                                                             <div class="slds-grid slds-grid_vertical-align-center slds-m-top_small">
                                                                 <div class="slds-col">
                                                                     <p class="rental-item-price">${item.Daily_Rate__c}/day</p>
-                                                                </div>
-                                                                <div class="slds-col slds-text-align_right">
-                                                                    <lightning-button-icon
-                                                                        icon-name="utility:add"
-                                                                        variant="brand"
-                                                                        alternative-text="Add to Cart"
-                                                                        title="Add to Cart"
-                                                                        data-id={item.Id}
-                                                                        onclick={handleAddToCart}>
-                                                                    </lightning-button-icon>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -312,7 +301,7 @@
 
                                     <div class="slds-grid slds-wrap slds-gutters">
                                         <template for:each={userBookings} for:item="booking">
-                                            <div key={booking.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                                            <div key={booking.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_medium">
                                                 <lightning-card>
                                                     <div class="slds-p-around_medium">
                                                         <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
@@ -378,7 +367,6 @@
                                 <c-enhanced-booking-form
                                     campsite-id={bookingCampsiteId}
                                     trail-id={bookingTrailId}
-                                    cart-items={cartItems}
                                     onbookingcreated={handleBookingCreated}>
                                 </c-enhanced-booking-form>
                             </div>
@@ -397,43 +385,7 @@
                             </div>
                         </template>
                     </lightning-tab>
-                </lightning-tabset>
-            </div>
-            <div class="slds-col slds-size_4-of-12">
-                <!-- Sidebar for Booking and Details -->
-                <template if:true={showTrailBooking}>
-                    <lightning-card title="Book This Trail" icon-name="standard:event">
-                        <c-booking-form
-                            trail-id={selectedTrailId}
-                            onbookingcreated={handleBookingCreated}>
-                        </c-booking-form>
-                    </lightning-card>
-                </template>
-
-                <template if:true={showCampsiteBooking}>
-                    <lightning-card title="Book This Campsite" icon-name="standard:event">
-                        <c-booking-form
-                            campsite-id={selectedCampsiteId}
-                            onbookingcreated={handleBookingCreated}>
-                        </c-booking-form>
-                    </lightning-card>
-                </template>
-
-                <template if:false={showTrailBooking}>
-                    <template if:false={showCampsiteBooking}>
-                        <lightning-card title="VinTrek" icon-name="custom:custom57">
-                            <div class="slds-p-around_medium">
-                                <p class="slds-text-align_center">
-                                    Welcome to VinTrek! Select a trail or campsite to begin your adventure.
-                                </p>
-                                <div class="slds-align_absolute-center slds-m-top_medium">
-                                    <img src="/resource/VinTrekLogo" alt="VinTrek Logo" />
-                                </div>
-                            </div>
-                        </lightning-card>
-                    </template>
-                </template>
-            </div>
+            </lightning-tabset>
         </div>
     </template>
 </template>
