@@ -23,7 +23,10 @@ public with sharing class ReviewController {
         review.Campsite__c = campsiteId;
         review.Rating__c = rating;
         review.Comments__c = comments;
+<<<<<<< Updated upstream
         review.User__c = UserInfo.getUserId();
+=======
+>>>>>>> Stashed changes
 
         // Insert review
         try {
@@ -34,6 +37,7 @@ public with sharing class ReviewController {
         }
     }
 
+<<<<<<< Updated upstream
     /**
      * Create a new review with full details including photo
      * @param review - Review__c object to create
@@ -58,6 +62,8 @@ public with sharing class ReviewController {
      * @param trailId - Id of the trail to get reviews for
      * @return List<Review__c> - List of reviews
      */
+=======
+>>>>>>> Stashed changes
     @AuraEnabled(cacheable=true)
     public static List<Review__c> getTrailReviews(Id trailId) {
         try {
@@ -73,11 +79,14 @@ public with sharing class ReviewController {
         }
     }
 
+<<<<<<< Updated upstream
     /**
      * Get reviews for a campsite
      * @param campsiteId - Id of the campsite to get reviews for
      * @return List<Review__c> - List of reviews
      */
+=======
+>>>>>>> Stashed changes
     @AuraEnabled(cacheable=true)
     public static List<Review__c> getCampsiteReviews(Id campsiteId) {
         try {
@@ -98,27 +107,59 @@ public with sharing class ReviewController {
         // Determine if it's a trail or campsite
         String objectType = recordId.getSObjectType().getDescribe().getName();
 
+<<<<<<< Updated upstream
         // Query for average rating
         AggregateResult result;
 
         if (objectType == 'Trail__c') {
             result = [
                 SELECT AVG(Rating__c) avgRating, COUNT(Id) reviewCount
+=======
+        // Get reviews for the record
+        List<Review__c> reviews;
+
+        if (objectType == 'Trail__c') {
+            reviews = [
+                SELECT Rating__c
+>>>>>>> Stashed changes
                 FROM Review__c
                 WHERE Trail__c = :recordId
             ];
         } else {
+<<<<<<< Updated upstream
             result = [
                 SELECT AVG(Rating__c) avgRating, COUNT(Id) reviewCount
+=======
+            reviews = [
+                SELECT Rating__c
+>>>>>>> Stashed changes
                 FROM Review__c
                 WHERE Campsite__c = :recordId
             ];
         }
 
+<<<<<<< Updated upstream
         // Return the results
         Map<String, Object> ratingInfo = new Map<String, Object>();
         ratingInfo.put('averageRating', result.get('avgRating'));
         ratingInfo.put('reviewCount', result.get('reviewCount'));
+=======
+        // Calculate average rating manually
+        Decimal totalRating = 0;
+        Integer reviewCount = reviews.size();
+
+        for (Review__c review : reviews) {
+            // Convert string rating to decimal
+            totalRating += Decimal.valueOf(review.Rating__c);
+        }
+
+        Decimal averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
+
+        // Return the results
+        Map<String, Object> ratingInfo = new Map<String, Object>();
+        ratingInfo.put('averageRating', averageRating);
+        ratingInfo.put('reviewCount', reviewCount);
+>>>>>>> Stashed changes
 
         return ratingInfo;
     }
