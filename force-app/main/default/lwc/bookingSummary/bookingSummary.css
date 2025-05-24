@@ -1,0 +1,127 @@
+.booking-summary {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.summary-section {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 0.75rem;
+}
+
+.summary-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.image-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f3f3;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trail-icon,
+.campsite-icon,
+.item-icon {
+    color: #0176d3;
+}
+
+.campsite-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.campsite-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+    background: #e9ecef;
+}
+
+.price-breakdown,
+.cart-total {
+    background: rgba(1, 118, 211, 0.05);
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+.total-price {
+    color: #0176d3;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .booking-summary {
+        margin-bottom: 1rem;
+    }
+    
+    .slds-grid .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+    
+    .image-container {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Animation for loading states */
+.booking-summary.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Enhanced visual hierarchy */
+.summary-section h4 {
+    color: #0176d3;
+    font-weight: 600;
+}
+
+.summary-section .slds-text-body_small {
+    color: #5c6b73;
+}
+
+/* Icon styling */
+.summary-section lightning-icon {
+    vertical-align: middle;
+}
+
+/* Price highlighting */
+.price-breakdown .slds-text-body_small,
+.cart-total .slds-text-body_small {
+    font-weight: 500;
+}
+
+/* Hover effects for interactive elements */
+.campsite-card,
+.cart-item {
+    cursor: default;
+}
+
+.campsite-card:hover .campsite-icon,
+.cart-item:hover .item-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}

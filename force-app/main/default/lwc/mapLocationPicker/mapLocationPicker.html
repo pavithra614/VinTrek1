@@ -6,7 +6,7 @@
             </template>
             {label}
         </label>
-        
+
         <div class="slds-form-element__control">
             <div class="slds-combobox_container">
                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
@@ -17,7 +17,7 @@
                             id="location-search"
                             placeholder={placeholder}
                             value={searchTerm}
-                            onchange={handleSearchChange}
+                            oninput={handleSearchChange}
                             onblur={handleBlur}
                             required={required}
                         />
@@ -25,15 +25,15 @@
                             <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
                         </template>
                     </div>
-                    
+
                     <!-- Search Results Dropdown -->
                     <template if:true={showSearchResults}>
                         <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid">
                             <ul class="slds-listbox slds-listbox_vertical" role="listbox">
                                 <template for:each={searchResults} for:item="result">
                                     <li key={result.id} class="slds-listbox__item" role="presentation">
-                                        <div 
-                                            class="slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" 
+                                        <div
+                                            class="slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
                                             role="option"
                                             data-id={result.id}
                                             onclick={handleResultClick}
@@ -52,13 +52,13 @@
                     </template>
                 </div>
             </div>
-            
+
             <!-- Help Text -->
             <template if:true={helpText}>
                 <div class="slds-form-element__help">{helpText}</div>
             </template>
         </div>
-        
+
         <!-- Map -->
         <div class="slds-m-top_small" style={mapContainerStyle}>
             <lightning-map
@@ -68,6 +68,7 @@
                 markers-title="Selected Location"
                 onmarkerselect={handleMarkerSelect}
                 list-view="hidden"
+                onmapclick={handleMapClick}
                 onclick={handleMapClick}
             ></lightning-map>
         </div>

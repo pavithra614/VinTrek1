@@ -1,30 +1,70 @@
+/* Navigation Bar Variables */
+:host {
+    --nav-primary: #2c5530;
+    --nav-primary-light: #4a7c59;
+    --nav-primary-dark: #1e3a21;
+    --nav-secondary: #8bc34a;
+    --nav-accent: #ff6b35;
+    --nav-text: #ffffff;
+    --nav-shadow: 0 4px 20px rgba(44, 85, 48, 0.15);
+    --nav-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .navigation-bar {
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--nav-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .slds-context-bar {
-    background: linear-gradient(to right, #1a5276, #2980b9);
-    color: white;
+    background: linear-gradient(135deg, var(--nav-primary) 0%, var(--nav-primary-light) 50%, var(--nav-secondary) 100%);
+    color: var(--nav-text);
     border-bottom: none;
-    padding: 0.25rem 0;
+    padding: 0.75rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.slds-context-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
 }
 
 .slds-context-bar__label-action,
 .slds-context-bar__app-name {
-    color: white !important;
-    font-weight: 500;
+    color: var(--nav-text) !important;
+    font-weight: 600;
+    transition: var(--nav-transition);
+    position: relative;
+    z-index: 1;
+}
+
+.slds-context-bar__item {
+    position: relative;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    transition: var(--nav-transition);
 }
 
 .slds-context-bar__item:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .slds-context-bar__item.active-item {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-bottom: 3px solid #f39c12;
+    background: rgba(255, 255, 255, 0.2);
+    border-bottom: 3px solid var(--nav-accent);
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
 }
 
 .user-menu {
@@ -58,13 +98,60 @@
 .app-logo {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .app-logo-text {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-left: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-left: 0.75rem;
     letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--nav-text) 0%, rgba(255, 255, 255, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Enhanced User Profile */
+.user-profile-button {
+    display: flex;
+    align-items: center;
+    color: var(--nav-text);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: var(--nav-transition);
+    position: relative;
+    z-index: 1;
+}
+
+.user-profile-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+    margin-right: 0.75rem;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    transition: var(--nav-transition);
+}
+
+.user-profile-button:hover .user-avatar {
+    border-color: var(--nav-text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .mobile-menu-button {

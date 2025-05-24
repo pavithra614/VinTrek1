@@ -249,6 +249,25 @@ export default class CampsiteExplorer extends LightningElement {
         }
     }
 
+    // Handle weather day selection
+    handleWeatherDaySelect(event) {
+        const selectedDate = event.detail.date;
+        const weatherData = event.detail.weather;
+
+        // Show toast with weather information
+        this.showToast(
+            'Weather Selected',
+            `${weatherData.description} - High: ${weatherData.highTemp}°C, Low: ${weatherData.lowTemp}°C`,
+            'info'
+        );
+
+        // You can add additional logic here, such as:
+        // - Filtering campsites based on weather conditions
+        // - Showing weather alerts
+        // - Updating booking recommendations
+        console.log('Selected weather date:', selectedDate, weatherData);
+    }
+
     // Show toast message
     showToast(title, message, variant) {
         const event = new ShowToastEvent({

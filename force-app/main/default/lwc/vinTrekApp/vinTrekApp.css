@@ -1,31 +1,101 @@
+/* CSS Variables for VinTrek App */
+:host {
+    --vintrek-primary: #2c5530;
+    --vintrek-primary-light: #4a7c59;
+    --vintrek-primary-dark: #1e3a21;
+    --vintrek-secondary: #8bc34a;
+    --vintrek-accent: #ff6b35;
+    --vintrek-text-primary: #2c3e50;
+    --vintrek-text-secondary: #7f8c8d;
+    --vintrek-background: #f8fffe;
+    --vintrek-card-background: #ffffff;
+    --vintrek-shadow-light: 0 2px 8px rgba(44, 85, 48, 0.08);
+    --vintrek-shadow-medium: 0 4px 16px rgba(44, 85, 48, 0.12);
+    --vintrek-shadow-heavy: 0 8px 32px rgba(44, 85, 48, 0.16);
+    --vintrek-border-radius: 12px;
+    --vintrek-border-radius-small: 8px;
+    --vintrek-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --vintrek-gradient-primary: linear-gradient(135deg, var(--vintrek-primary) 0%, var(--vintrek-primary-light) 100%);
+    --vintrek-gradient-secondary: linear-gradient(135deg, var(--vintrek-secondary) 0%, #a4d65e 100%);
+}
+
+/* Main App Container */
+.vintrek-app {
+    background: var(--vintrek-background);
+    min-height: 100vh;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 /* Search Container */
 .search-container {
     display: flex;
     align-items: flex-end;
+    background: var(--vintrek-card-background);
+    padding: 1.5rem;
+    border-radius: var(--vintrek-border-radius);
+    box-shadow: var(--vintrek-shadow-light);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(44, 85, 48, 0.1);
 }
 
 .search-input {
     flex-grow: 1;
-    margin-right: 0.5rem;
+    margin-right: 1rem;
+}
+
+.search-input lightning-input {
+    --slds-c-input-color-background: var(--vintrek-background);
+    --slds-c-input-color-border: rgba(44, 85, 48, 0.2);
+    --slds-c-input-color-border-focus: var(--vintrek-primary);
+    --slds-c-input-radius-border: var(--vintrek-border-radius-small);
+    --slds-c-input-sizing-min-height: 3rem;
+}
+
+.search-button {
+    --slds-c-button-brand-color-background: var(--vintrek-primary);
+    --slds-c-button-brand-color-background-hover: var(--vintrek-primary-dark);
+    --slds-c-button-radius-border: var(--vintrek-border-radius-small);
+    --slds-c-button-sizing-min-height: 3rem;
+    transition: var(--vintrek-transition);
+    box-shadow: var(--vintrek-shadow-light);
+}
+
+.search-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--vintrek-shadow-medium);
 }
 
 /* Trail Card Styles */
 .trail-card {
-    border-radius: 8px;
+    border-radius: var(--vintrek-border-radius);
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: var(--vintrek-shadow-light);
+    transition: var(--vintrek-transition);
     height: 100%;
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    background-color: white;
-    padding: 16px;
+    background: var(--vintrek-card-background);
+    padding: 1.5rem;
+    border: 1px solid rgba(44, 85, 48, 0.08);
+    position: relative;
+}
+
+.trail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--vintrek-gradient-primary);
+    border-radius: var(--vintrek-border-radius) var(--vintrek-border-radius) 0 0;
 }
 
 .trail-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: var(--vintrek-shadow-heavy);
+    border-color: rgba(44, 85, 48, 0.15);
 }
 
 .trail-card-content {
@@ -34,30 +104,57 @@
     flex-direction: column;
 }
 
+.trail-card-content h3 {
+    color: var(--vintrek-text-primary);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+}
+
 .trail-stat {
     display: flex;
     align-items: center;
     font-size: 0.875rem;
-    color: #555;
+    color: var(--vintrek-text-secondary);
+    font-weight: 500;
+}
+
+.trail-stat lightning-icon {
+    color: var(--vintrek-primary);
+    margin-right: 0.5rem;
 }
 
 /* Campsite Card Styles */
 .campsite-card {
-    border-radius: 8px;
+    border-radius: var(--vintrek-border-radius);
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: var(--vintrek-shadow-light);
+    transition: var(--vintrek-transition);
     height: 100%;
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    background-color: white;
-    padding: 16px;
+    background: var(--vintrek-card-background);
+    padding: 1.5rem;
+    border: 1px solid rgba(44, 85, 48, 0.08);
+    position: relative;
+}
+
+.campsite-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--vintrek-gradient-secondary);
+    border-radius: var(--vintrek-border-radius) var(--vintrek-border-radius) 0 0;
 }
 
 .campsite-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: var(--vintrek-shadow-heavy);
+    border-color: rgba(139, 195, 74, 0.15);
 }
 
 .campsite-card-content {
@@ -66,29 +163,56 @@
     flex-direction: column;
 }
 
+.campsite-card-content h3 {
+    color: var(--vintrek-text-primary);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+}
+
 .campsite-stat {
     display: flex;
     align-items: center;
     font-size: 0.875rem;
-    color: #555;
+    color: var(--vintrek-text-secondary);
+    font-weight: 500;
+}
+
+.campsite-stat lightning-icon {
+    color: var(--vintrek-secondary);
+    margin-right: 0.5rem;
 }
 
 /* Rental Item Card Styles */
 .rental-item-card {
-    border-radius: 8px;
+    border-radius: var(--vintrek-border-radius);
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: var(--vintrek-shadow-light);
+    transition: var(--vintrek-transition);
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: white;
-    padding: 16px;
+    background: var(--vintrek-card-background);
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 107, 53, 0.08);
+    position: relative;
+}
+
+.rental-item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--vintrek-accent) 0%, #ff8a65 100%);
+    border-radius: var(--vintrek-border-radius) var(--vintrek-border-radius) 0 0;
 }
 
 .rental-item-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: var(--vintrek-shadow-heavy);
+    border-color: rgba(255, 107, 53, 0.15);
 }
 
 .rental-item-content {
@@ -97,10 +221,18 @@
     flex-direction: column;
 }
 
+.rental-item-content h3 {
+    color: var(--vintrek-text-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+}
+
 .rental-item-price {
-    font-weight: bold;
-    color: #2980b9;
-    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--vintrek-accent);
+    font-size: 1.25rem;
+    margin-top: auto;
 }
 
 /* Selected Trail Details Styles */

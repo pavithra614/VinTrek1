@@ -8,6 +8,8 @@ import { NavigationMixin } from 'lightning/navigation';
 import isCurrentUserServiceProvider from '@salesforce/apex/UserProfileService.isCurrentUserServiceProvider';
 import getServiceProviderItems from '@salesforce/apex/CampingItemController.getServiceProviderItems';
 import getAllTrails from '@salesforce/apex/TrailController.getAllTrails';
+import getReportData from '@salesforce/apex/ServiceProviderReportController.getReportData';
+import exportReportData from '@salesforce/apex/ServiceProviderReportController.exportReportData';
 // Temporarily commented out to fix deployment issues
 // import getServiceProviderCampsites from '@salesforce/apex/CampsiteController.getServiceProviderCampsites';
 
@@ -92,6 +94,43 @@ export default class ServiceProviderHomePage extends NavigationMixin(LightningEl
         }
     ];
 
+    // Reports data
+    @track isLoadingReports = false;
+    @track reportData = {
+        totalRevenue: '0.00',
+        totalProfit: '0.00',
+        totalBookings: 0,
+        averageOrderValue: '0.00',
+        revenueGrowth: '0',
+        profitGrowth: '0',
+        bookingsGrowth: '0',
+        aovGrowth: '0',
+        bookingStatusData: [],
+        recentBookings: [],
+        topItems: []
+    };
+
+    // Data table columns for reports
+    @track bookingColumns = [
+        { label: 'Booking #', fieldName: 'bookingNumber', type: 'text' },
+        { label: 'Package', fieldName: 'packageName', type: 'text' },
+        { label: 'Customer', fieldName: 'customerName', type: 'text' },
+        { label: 'Start Date', fieldName: 'startDate', type: 'date' },
+        { label: 'End Date', fieldName: 'endDate', type: 'date' },
+        { label: 'Duration', fieldName: 'duration', type: 'text' },
+        { label: 'Status', fieldName: 'status', type: 'text' },
+        { label: 'Amount', fieldName: 'amount', type: 'text' }
+    ];
+
+    @track topItemsColumns = [
+        { label: 'Item Name', fieldName: 'name', type: 'text' },
+        { label: 'Category', fieldName: 'category', type: 'text' },
+        { label: 'Bookings', fieldName: 'bookings', type: 'number' },
+        { label: 'Revenue', fieldName: 'revenue', type: 'text' },
+        { label: 'Avg. Price', fieldName: 'avgPrice', type: 'text' },
+        { label: 'Market Share', fieldName: 'marketShare', type: 'text' }
+    ];
+
     // Store the wired results for refreshing
     wiredUserAccessResult;
     wiredCampingItemsResult;
@@ -168,6 +207,11 @@ export default class ServiceProviderHomePage extends NavigationMixin(LightningEl
     // Handle tab change
     handleTabChange(event) {
         this.activeTab = event.target.value;
+
+        // Load report data when reports tab is selected
+        if (this.activeTab === 'reports') {
+            this.loadReportData();
+        }
     }
 
     // Refresh data
@@ -198,6 +242,10 @@ export default class ServiceProviderHomePage extends NavigationMixin(LightningEl
         this.campsites = [];
         // Load trails for the dropdown
         this.loadTrails();
+        // Load report data if reports tab is active
+        if (this.activeTab === 'reports') {
+            this.loadReportData();
+        }
         // Add event listener for window resize to handle responsive design
         window.addEventListener('resize', this.handleResize.bind(this));
     }
@@ -709,5 +757,194 @@ export default class ServiceProviderHomePage extends NavigationMixin(LightningEl
                 actionName: actionName
             }
         });
+    }
+
+    // Reports Methods
+    loadReportData() {
+        console.log('📊 Loading report data...');
+        this.isLoadingReports = true;
+
+        // For testing, let's use mock data directly if Apex fails
+        getReportData()
+            .then(result => {
+                console.log('✅ Report data loaded:', result);
+                this.reportData = result;
+                this.isLoadingReports = false;
+
+                // Initialize chart after data is loaded
+                this.initializeSalesChart();
+            })
+            .catch(error => {
+                console.error('❌ Error loading report data:', error);
+                console.log('🔄 Using mock data as fallback...');
+
+                // Use mock data as fallback
+                this.reportData = this.getMockReportData();
+                this.isLoadingReports = false;
+                this.initializeSalesChart();
+
+                this.showToast('Info', 'Using demo report data - Apex controller not available', 'info');
+            });
+    }
+
+    // Mock data method for fallback
+    getMockReportData() {
+        return {
+            totalRevenue: '15,750.00',
+            totalProfit: '8,925.00',
+            totalBookings: 47,
+            averageOrderValue: '335.11',
+            revenueGrowth: '23.5',
+            profitGrowth: '18.7',
+            bookingsGrowth: '12',
+            aovGrowth: '8.2',
+            bookingStatusData: [
+                { label: 'Confirmed', count: 28, percentage: 59.6, badgeClass: 'slds-badge slds-badge_success', progressStyle: 'width: 59.6%' },
+                { label: 'Pending', count: 12, percentage: 25.5, badgeClass: 'slds-badge slds-badge_warning', progressStyle: 'width: 25.5%' },
+                { label: 'Cancelled', count: 4, percentage: 8.5, badgeClass: 'slds-badge slds-badge_error', progressStyle: 'width: 8.5%' },
+                { label: 'Completed', count: 3, percentage: 6.4, badgeClass: 'slds-badge slds-badge_inverse', progressStyle: 'width: 6.4%' }
+            ],
+            recentBookings: [
+                { Id: 'BK-001', bookingNumber: 'BK-001', packageName: 'Mountain Adventure Package', customerName: 'John Smith', startDate: new Date(Date.now() - 2*24*60*60*1000), endDate: new Date(Date.now() + 1*24*60*60*1000), status: 'Confirmed', amount: '$450.00', duration: '3 days' },
+                { Id: 'BK-002', bookingNumber: 'BK-002', packageName: 'Lake Camping Experience', customerName: 'Sarah Johnson', startDate: new Date(Date.now() - 1*24*60*60*1000), endDate: new Date(Date.now() + 2*24*60*60*1000), status: 'Confirmed', amount: '$320.00', duration: '3 days' },
+                { Id: 'BK-003', bookingNumber: 'BK-003', packageName: 'Forest Retreat', customerName: 'Mike Wilson', startDate: new Date(), endDate: new Date(Date.now() + 3*24*60*60*1000), status: 'Pending', amount: '$275.00', duration: '3 days' }
+            ],
+            topItems: [
+                { Id: 'premium_tent_package', name: 'Premium Tent Package', category: 'Camping Equipment', bookings: 15, revenue: '$2,250.00', avgPrice: '$150.00', marketShare: '28.5%' },
+                { Id: 'hiking_gear_set', name: 'Hiking Gear Set', category: 'Equipment Rental', bookings: 12, revenue: '$1,800.00', avgPrice: '$150.00', marketShare: '22.8%' },
+                { Id: 'cooking_equipment_bundle', name: 'Cooking Equipment Bundle', category: 'Kitchen Gear', bookings: 10, revenue: '$1,200.00', avgPrice: '$120.00', marketShare: '19.0%' }
+            ]
+        };
+    }
+
+    refreshReportData() {
+        console.log('🔄 Refreshing report data...');
+        this.loadReportData();
+        this.showToast('Success', 'Report data refreshed successfully', 'success');
+    }
+
+    exportReport() {
+        console.log('📤 Exporting report...');
+        this.isLoadingReports = true;
+
+        exportReportData()
+            .then(result => {
+                console.log('✅ Report exported:', result);
+                this.showToast('Success', result, 'success');
+                this.isLoadingReports = false;
+            })
+            .catch(error => {
+                console.error('❌ Error exporting report:', error);
+                this.showToast('Error', 'Failed to export report: ' + error.body?.message || error.message, 'error');
+                this.isLoadingReports = false;
+            });
+    }
+
+    viewAllBookings() {
+        console.log('📋 Navigating to all bookings...');
+        // In a real implementation, this would navigate to a detailed bookings page
+        this.showToast('Info', 'Detailed bookings view coming soon!', 'info');
+    }
+
+    initializeSalesChart() {
+        // Simple chart implementation using canvas
+        setTimeout(() => {
+            const canvas = this.template.querySelector('.sales-chart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                this.drawSalesChart(ctx, canvas.width, canvas.height);
+            }
+        }, 100);
+    }
+
+    drawSalesChart(ctx, width, height) {
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+
+        // Mock data for chart
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+        const revenue = [8500, 9200, 11800, 13200, 14600, 15750];
+        const profit = [4800, 5200, 6700, 7500, 8300, 8925];
+
+        // Chart dimensions
+        const padding = 40;
+        const chartWidth = width - 2 * padding;
+        const chartHeight = height - 2 * padding;
+
+        // Find max value for scaling
+        const maxValue = Math.max(...revenue);
+
+        // Draw axes
+        ctx.strokeStyle = '#dddbda';
+        ctx.lineWidth = 1;
+
+        // Y-axis
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.stroke();
+
+        // X-axis
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.stroke();
+
+        // Draw revenue line
+        ctx.strokeStyle = '#1589ee';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        for (let i = 0; i < revenue.length; i++) {
+            const x = padding + (i * chartWidth) / (revenue.length - 1);
+            const y = height - padding - (revenue[i] / maxValue) * chartHeight;
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Draw profit line
+        ctx.strokeStyle = '#2e844a';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        for (let i = 0; i < profit.length; i++) {
+            const x = padding + (i * chartWidth) / (profit.length - 1);
+            const y = height - padding - (profit[i] / maxValue) * chartHeight;
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Draw month labels
+        ctx.fillStyle = '#706e6b';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+
+        for (let i = 0; i < months.length; i++) {
+            const x = padding + (i * chartWidth) / (months.length - 1);
+            ctx.fillText(months[i], x, height - padding + 20);
+        }
+
+        // Draw legend
+        ctx.fillStyle = '#1589ee';
+        ctx.fillRect(width - 150, 20, 15, 3);
+        ctx.fillStyle = '#706e6b';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('Revenue', width - 130, 25);
+
+        ctx.fillStyle = '#2e844a';
+        ctx.fillRect(width - 150, 35, 15, 3);
+        ctx.fillStyle = '#706e6b';
+        ctx.fillText('Profit', width - 130, 40);
     }
 }

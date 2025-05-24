@@ -15,7 +15,7 @@
         <targetConfig targets="lightning__RecordPage">
             <property name="trailId" type="String" label="Trail ID" description="ID of the trail to book"/>
             <property name="campsiteId" type="String" label="Campsite ID" description="ID of the campsite to book"/>
-            <property name="campingItemIds" type="String[]" label="Camping Item IDs" description="IDs of the camping items to book"/>
+            <property name="campingItemIds" type="String" label="Camping Item IDs" description="Comma-separated IDs of the camping items to book"/>
             <property name="showAvailabilityCalendar" type="Boolean" default="true" label="Show Availability Calendar" description="Display availability calendar for campsites"/>
             <supportedFormFactors>
                 <supportedFormFactor type="Large" />
@@ -25,7 +25,7 @@
         <targetConfig targets="lightningCommunity__Default">
             <property name="trailId" type="String" label="Trail ID" description="ID of the trail to book"/>
             <property name="campsiteId" type="String" label="Campsite ID" description="ID of the campsite to book"/>
-            <property name="campingItemIds" type="String[]" label="Camping Item IDs" description="IDs of the camping items to book"/>
+            <property name="campingItemIds" type="String" label="Camping Item IDs" description="Comma-separated IDs of the camping items to book"/>
             <property name="showAvailabilityCalendar" type="Boolean" default="true" label="Show Availability Calendar" description="Display availability calendar for campsites"/>
         </targetConfig>
     </targetConfigs>

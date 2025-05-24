@@ -126,6 +126,31 @@ public with sharing class BookingController {
             Integer numberOfPeople = Integer.valueOf(bookingData.get('numberOfPeople'));
             String specialRequests = bookingData.get('specialRequests') != null ? (String)bookingData.get('specialRequests') : '';
 
+            // Validate campsite ID if provided
+            if (campsiteId != null) {
+                String campsiteIdStr = String.valueOf(campsiteId);
+                // Check if the ID is a valid campsite ID (should start with 'a01' for Campsite__c)
+                if (!campsiteIdStr.startsWith('a01')) {
+                    System.debug('Invalid campsite ID provided: ' + campsiteIdStr + '. This appears to be a ' +
+                                (campsiteIdStr.startsWith('02i') ? 'Camping Item ID' : 'different object type'));
+
+                    // Try to get a default campsite instead of throwing an error
+                    Id defaultCampsiteId = getDefaultCampsiteId();
+                    if (defaultCampsiteId != null) {
+                        System.debug('Using default campsite: ' + defaultCampsiteId);
+                        campsiteId = defaultCampsiteId;
+                    } else {
+                        throw new AuraHandledException('Invalid campsite ID provided and no default campsite available. Please select a valid campsite.');
+                    }
+                } else {
+                    // Verify the campsite exists
+                    List<Campsite__c> campsites = [SELECT Id FROM Campsite__c WHERE Id = :campsiteId LIMIT 1];
+                    if (campsites.isEmpty()) {
+                        throw new AuraHandledException('The selected campsite does not exist. Please select a valid campsite.');
+                    }
+                }
+            }
+
             // Create new rental record
             Rental__c rental = new Rental__c();
             rental.Camper_Profile__c = profiles[0].Id;
@@ -234,6 +259,31 @@ public with sharing class BookingController {
         } catch (Exception e) {
             System.debug('Error canceling booking: ' + e.getMessage());
             throw new AuraHandledException('Error canceling booking: ' + e.getMessage());
+        }
+    }
+
+    /**
+     * Get the first available campsite ID as a fallback
+     * @return Id - Id of the first available campsite
+     */
+    @AuraEnabled(cacheable=true)
+    public static Id getDefaultCampsiteId() {
+        try {
+            List<Campsite__c> campsites = [
+                SELECT Id
+                FROM Campsite__c
+                ORDER BY Name ASC
+                LIMIT 1
+            ];
+
+            if (!campsites.isEmpty()) {
+                return campsites[0].Id;
+            }
+
+            return null;
+        } catch (Exception e) {
+            System.debug('Error getting default campsite: ' + e.getMessage());
+            return null;
         }
     }
 

@@ -548,3 +548,152 @@ c-location-selector {
         font-size: 0.9rem;
     }
 }
+
+/* ===== REPORTS STYLES ===== */
+.report-metric-card {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.report-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.revenue-card {
+    border-left: 4px solid #2e844a;
+}
+
+.profit-card {
+    border-left: 4px solid #1589ee;
+}
+
+.bookings-card {
+    border-left: 4px solid #ff6b35;
+}
+
+.aov-card {
+    border-left: 4px solid #8e44ad;
+}
+
+.metric-label {
+    color: #706e6b;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #080707;
+    margin: 0.25rem 0;
+    line-height: 1.2;
+}
+
+.metric-trend {
+    color: #2e844a;
+    font-weight: 500;
+}
+
+.trend-up {
+    color: #2e844a;
+}
+
+.revenue-icon {
+    background-color: #2e844a;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.profit-icon {
+    background-color: #1589ee;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.bookings-icon {
+    background-color: #ff6b35;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.aov-icon {
+    background-color: #8e44ad;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.chart-container {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.sales-chart {
+    width: 100%;
+    height: 200px;
+    border-radius: 4px;
+}
+
+.booking-status-chart {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e5e5e5;
+}
+
+.status-item {
+    padding: 0.75rem;
+    border-radius: 6px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #e5e5e5;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1589ee 0%, #2e844a 100%);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Reports responsive styles */
+@media (max-width: 768px) {
+    .metric-value {
+        font-size: 1.5rem;
+    }
+
+    .chart-container {
+        padding: 0.5rem;
+    }
+
+    .sales-chart {
+        height: 150px;
+    }
+
+    .status-item {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .metric-value {
+        font-size: 1.25rem;
+    }
+
+    .report-metric-card {
+        margin-bottom: 1rem;
+    }
+}

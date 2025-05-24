@@ -6,7 +6,7 @@
                 <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
             </div>
         </template>
-        
+
         <!-- Error Message -->
         <template if:true={error}>
             <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
@@ -14,7 +14,7 @@
                 <h2>{error}</h2>
             </div>
         </template>
-        
+
         <!-- Success Message -->
         <template if:true={showSuccessMessage}>
             <div class="success-message slds-p-around_medium">
@@ -33,9 +33,47 @@
                 </div>
             </div>
         </template>
-        
-        <!-- Booking Form -->
+
+        <!-- Enhanced Multi-Step Booking Form -->
         <template if:false={showSuccessMessage}>
+            <!-- Progress Indicator -->
+            <div class="slds-progress slds-progress_shade slds-m-bottom_medium">
+                <ol class="slds-progress__list">
+                    <li class={bookingStepClass}>
+                        <button class="slds-button slds-progress__marker">
+                            <span class="slds-assistive-text">Step 1</span>
+                        </button>
+                        <span class="slds-progress__item_content slds-grid slds-grid_align-spread">
+                            Booking Details
+                        </span>
+                    </li>
+                    <li class={weatherStepClass}>
+                        <button class="slds-button slds-progress__marker">
+                            <span class="slds-assistive-text">Step 2</span>
+                        </button>
+                        <span class="slds-progress__item_content slds-grid slds-grid_align-spread">
+                            Weather Check
+                        </span>
+                    </li>
+                    <li class={checkoutStepClass}>
+                        <button class="slds-button slds-progress__marker">
+                            <span class="slds-assistive-text">Step 3</span>
+                        </button>
+                        <span class="slds-progress__item_content slds-grid slds-grid_align-spread">
+                            Checkout
+                        </span>
+                    </li>
+                    <li class={confirmationStepClass}>
+                        <button class="slds-button slds-progress__marker">
+                            <span class="slds-assistive-text">Step 4</span>
+                        </button>
+                        <span class="slds-progress__item_content slds-grid slds-grid_align-spread">
+                            Confirmation
+                        </span>
+                    </li>
+                </ol>
+            </div>
+
             <div class="slds-card">
                 <div class="slds-card__header slds-grid">
                     <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -49,145 +87,347 @@
                         </div>
                     </header>
                 </div>
-                
+
                 <div class="slds-card__body slds-card__body_inner">
-                    <div class="slds-grid slds-gutters slds-wrap">
-                        <!-- Booking Details Column -->
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
-                            <!-- Booking Form -->
-                            <div class="slds-form slds-p-around_medium">
-                                <div class="slds-grid slds-gutters slds-wrap">
-                                    <!-- Start Date -->
-                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
-                                        <lightning-input type="date" label="Start Date" value={booking.startDate} required onchange={handleStartDateChange}></lightning-input>
-                                    </div>
-                                    
-                                    <!-- End Date -->
-                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
-                                        <lightning-input type="date" label="End Date" value={booking.endDate} required onchange={handleEndDateChange}></lightning-input>
-                                    </div>
-                                    
-                                    <!-- Number of People -->
-                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
-                                        <lightning-input type="number" label="Number of People" value={booking.numberOfPeople} min="1" max="10" required onchange={handleNumberOfPeopleChange}></lightning-input>
-                                    </div>
-                                    
-                                    <!-- Special Requests -->
-                                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
-                                        <lightning-textarea label="Special Requests" value={booking.specialRequests} onchange={handleSpecialRequestsChange}></lightning-textarea>
-                                    </div>
-                                    
-                                    <!-- Terms and Conditions -->
-                                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
-                                        <lightning-input type="checkbox" label="I accept the terms and conditions" checked={booking.termsAccepted} onchange={handleTermsChange}></lightning-input>
+                    <!-- Booking Details Step -->
+                    <template if:true={showBookingStep}>
+                        <div class="slds-grid slds-gutters slds-wrap">
+                            <!-- Booking Details Column -->
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                                <!-- Booking Form -->
+                                <div class="slds-form slds-p-around_medium">
+                                    <div class="slds-grid slds-gutters slds-wrap">
+                                        <!-- Start Date -->
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
+                                            <lightning-input type="date" label="Start Date" value={booking.startDate} required onchange={handleStartDateChange}></lightning-input>
+                                        </div>
+
+                                        <!-- End Date -->
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
+                                            <lightning-input type="date" label="End Date" value={booking.endDate} required onchange={handleEndDateChange}></lightning-input>
+                                        </div>
+
+                                        <!-- Number of People -->
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
+                                            <lightning-input type="number" label="Number of People" value={booking.numberOfPeople} min="1" max="10" required onchange={handleNumberOfPeopleChange}></lightning-input>
+                                        </div>
+
+                                        <!-- Special Requests -->
+                                        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                                            <lightning-textarea label="Special Requests" value={booking.specialRequests} onchange={handleSpecialRequestsChange}></lightning-textarea>
+                                        </div>
+
+                                        <!-- Terms and Conditions -->
+                                        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                                            <lightning-input type="checkbox" label="I accept the terms and conditions" checked={booking.termsAccepted} onchange={handleTermsChange}></lightning-input>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Availability Calendar (if enabled) -->
-                            <template if:true={showAvailabilityCalendar}>
-                                <template if:true={campsiteId}>
-                                    <div class="slds-box slds-theme_shade slds-m-top_medium">
-                                        <h3 class="slds-text-heading_small slds-m-bottom_small">Availability Calendar</h3>
-                                        <c-availability-calendar record-id={campsiteId} object-api-name="Campsite__c" is-read-only="true" height="400px"></c-availability-calendar>
+
+                            <!-- Booking Summary Column -->
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                                <!-- Simple Booking Summary -->
+                                <div class="slds-box slds-theme_shade">
+                                    <h3 class="slds-text-heading_small slds-m-bottom_small">Booking Summary</h3>
+
+                                    <template if:true={campsite}>
+                                        <div class="slds-m-bottom_small">
+                                            <strong>Campsite:</strong> {campsite.Name}
+                                        </div>
+                                        <div class="slds-m-bottom_small">
+                                            <strong>Daily Fee:</strong> ${campsite.Daily_Fee__c}
+                                        </div>
+                                    </template>
+
+                                    <template if:true={trail}>
+                                        <div class="slds-m-bottom_small">
+                                            <strong>Trail:</strong> {trail.Name}
+                                        </div>
+                                    </template>
+
+                                    <template if:true={campingItems.length}>
+                                        <div class="slds-m-bottom_small">
+                                            <strong>Rental Items:</strong> {campingItems.length} items
+                                        </div>
+                                    </template>
+
+                                    <div class="slds-m-bottom_small">
+                                        <strong>Duration:</strong> {numberOfDays} days
                                     </div>
-                                </template>
-                            </template>
+
+                                    <div class="slds-text-heading_small">
+                                        <strong>Total: {formattedTotalPrice}</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Continue to Weather Button -->
+                                <div class="slds-grid slds-grid_align-center slds-m-top_large">
+                                    <lightning-button label="Continue to Weather Check" variant="brand" icon-name="utility:forward" onclick={handleSubmit}></lightning-button>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <!-- Booking Summary Column -->
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
-                            <div class="slds-box slds-theme_shade">
-                                <h3 class="slds-text-heading_small slds-m-bottom_medium">Booking Summary</h3>
-                                
-                                <!-- Trail Details -->
-                                <template if:true={showTrailDetails}>
-                                    <div class="summary-section slds-m-bottom_medium">
-                                        <h4 class="slds-text-heading_small slds-m-bottom_x-small">Trail</h4>
-                                        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
-                                            <div class="slds-col slds-size_1-of-4">
-                                                <div class="image-container">
-                                                    <img src={trail.Image_URL__c} alt={trail.Name} onerror="this.src='/resource/default_trail_image';" />
-                                                </div>
-                                            </div>
-                                            <div class="slds-col slds-size_3-of-4 slds-p-left_small">
-                                                <div class="slds-text-heading_small">{trail.Name}</div>
-                                                <div class="slds-text-body_small">{trail.Length_km__c} km | {trail.Difficulty__c}</div>
-                                            </div>
-                                        </div>
+                    </template>
+
+                    <!-- Weather Check Step -->
+                    <template if:true={showWeatherStep}>
+                        <div class="weather-step slds-p-around_large">
+                            <div class="slds-text-align_center">
+                                <lightning-icon icon-name="utility:weather" size="large" class="slds-m-bottom_medium weather-icon"></lightning-icon>
+                                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Weather Forecast</h2>
+
+                                <template if:true={isLoading}>
+                                    <div class="slds-m-bottom_large">
+                                        <lightning-spinner alternative-text="Checking weather..." size="medium"></lightning-spinner>
+                                        <p class="slds-m-top_small slds-text-body_regular">Checking weather conditions for your camping dates...</p>
                                     </div>
                                 </template>
-                                
-                                <!-- Campsite Details -->
-                                <template if:true={showCampsiteDetails}>
-                                    <div class="summary-section slds-m-bottom_medium">
-                                        <h4 class="slds-text-heading_small slds-m-bottom_x-small">Campsite</h4>
-                                        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
-                                            <div class="slds-col slds-size_1-of-4">
-                                                <div class="image-container">
-                                                    <img src={campsite.Image_URL__c} alt={campsite.Name} onerror="this.src='/resource/default_campsite_image';" />
-                                                </div>
-                                            </div>
-                                            <div class="slds-col slds-size_3-of-4 slds-p-left_small">
-                                                <div class="slds-text-heading_small">{campsite.Name}</div>
-                                                <div class="slds-text-body_small">Daily Fee: ${campsite.Daily_Fee__c} | Capacity: {campsite.Capacity__c}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                                
-                                <!-- Camping Items Details -->
-                                <template if:true={showCampingItemsDetails}>
-                                    <div class="summary-section slds-m-bottom_medium">
-                                        <h4 class="slds-text-heading_small slds-m-bottom_x-small">Camping Items</h4>
-                                        <template for:each={campingItems} for:item="item">
-                                            <div key={item.Id} class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
-                                                <div class="slds-col slds-size_1-of-4">
-                                                    <div class="image-container">
-                                                        <img src={item.Image_URL__c} alt={item.Name} onerror="this.src='/resource/default_item_image';" />
+
+                                <template if:false={isLoading}>
+                                    <!-- Current Weather Display -->
+                                    <template if:true={weatherData}>
+                                        <div class="weather-info-card slds-box slds-theme_shade slds-m-bottom_large">
+                                            <h3 class="slds-text-heading_small slds-m-bottom_medium">Current Conditions</h3>
+                                            <div class="slds-grid slds-gutters slds-wrap">
+                                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                    <div class="weather-stat">
+                                                        <lightning-icon icon-name="utility:temperature" size="small" class="weather-stat-icon"></lightning-icon>
+                                                        <div class="weather-stat-content">
+                                                            <span class="weather-stat-value">{currentTemp}°C</span>
+                                                            <span class="weather-stat-label">Temperature</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="slds-col slds-size_3-of-4 slds-p-left_small">
-                                                    <div class="slds-text-heading_small">{item.Name}</div>
-                                                    <div class="slds-text-body_small">Daily Fee: ${item.Daily_Fee__c}</div>
+                                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                    <div class="weather-stat">
+                                                        <lightning-icon icon-name="utility:water" size="small" class="weather-stat-icon"></lightning-icon>
+                                                        <div class="weather-stat-content">
+                                                            <span class="weather-stat-value">{currentHumidity}%</span>
+                                                            <span class="weather-stat-label">Humidity</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                    <div class="weather-stat">
+                                                        <lightning-icon icon-name="utility:wind" size="small" class="weather-stat-icon"></lightning-icon>
+                                                        <div class="weather-stat-content">
+                                                            <span class="weather-stat-value">{currentWindSpeed} km/h</span>
+                                                            <span class="weather-stat-label">Wind Speed</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                    <div class="weather-stat">
+                                                        <lightning-icon icon-name="utility:dayview" size="small" class="weather-stat-icon"></lightning-icon>
+                                                        <div class="weather-stat-content">
+                                                            <span class="weather-stat-value">{currentWeather}</span>
+                                                            <span class="weather-stat-label">Conditions</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <!-- Weather Alert Section -->
+                                    <template if:true={showWeatherAlert}>
+                                        <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-bottom_medium weather-alert" role="alert">
+                                            <span class="slds-assistive-text">Warning</span>
+                                            <div class="alert-header">
+                                                <lightning-icon icon-name="utility:warning" size="medium" class="alert-icon"></lightning-icon>
+                                                <h2 class="slds-text-heading_small alert-title">{weatherAlertTitle}</h2>
+                                            </div>
+                                            <p class="alert-description">{weatherAlertMessage}</p>
+                                            <div class="alert-recommendation">
+                                                <lightning-icon icon-name="utility:info" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                                <span>We recommend checking weather updates before your trip or consider rescheduling.</span>
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid slds-grid_align-center slds-gutters">
+                                            <lightning-button
+                                                label="Change Dates"
+                                                variant="neutral"
+                                                icon-name="utility:back"
+                                                onclick={handleBackToBooking}
+                                                class="slds-m-right_small">
+                                            </lightning-button>
+                                            <lightning-button
+                                                label="Continue with Current Dates"
+                                                variant="brand"
+                                                icon-name="utility:forward"
+                                                onclick={handleWeatherContinue}>
+                                            </lightning-button>
+                                        </div>
+                                    </template>
+
+                                    <!-- Good Weather Section -->
+                                    <template if:false={showWeatherAlert}>
+                                        <div class="slds-notify slds-notify_alert slds-alert_success slds-m-bottom_medium weather-success" role="alert">
+                                            <span class="slds-assistive-text">Success</span>
+                                            <div class="alert-header">
+                                                <lightning-icon icon-name="utility:success" size="medium" class="alert-icon success-icon"></lightning-icon>
+                                                <h2 class="slds-text-heading_small alert-title">Perfect Weather!</h2>
+                                            </div>
+                                            <p class="alert-description">Great conditions for your camping adventure. No weather alerts for your selected dates.</p>
+                                            <div class="alert-recommendation">
+                                                <lightning-icon icon-name="utility:like" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                                <span>Ideal conditions for outdoor activities and camping.</span>
+                                            </div>
+                                        </div>
+                                        <p class="slds-text-body_small slds-m-bottom_medium">
+                                            <lightning-icon icon-name="utility:clock" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                            Proceeding to checkout in 5 seconds... Click below to continue immediately.
+                                        </p>
+                                        <div class="slds-grid slds-grid_align-center">
+                                            <lightning-button
+                                                label="Continue to Checkout"
+                                                variant="brand"
+                                                icon-name="utility:forward"
+                                                onclick={handleWeatherContinue}
+                                                class="slds-m-top_small">
+                                            </lightning-button>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Checkout Step -->
+                    <template if:true={showCheckoutStep}>
+                        <div class="checkout-step slds-p-around_large">
+                            <div class="slds-text-align_center">
+                                <lightning-icon icon-name="utility:payment_gateway" size="large" class="slds-m-bottom_medium"></lightning-icon>
+                                <h2 class="slds-text-heading_medium slds-m-bottom_large">Complete Your Booking</h2>
+
+                                <!-- Final Booking Summary -->
+                                <div class="slds-box slds-theme_shade slds-m-bottom_large">
+                                    <h3 class="slds-text-heading_small slds-m-bottom_medium">Final Booking Summary</h3>
+
+                                    <template if:true={campsite}>
+                                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                            <span><strong>Campsite:</strong> {campsite.Name}</span>
+                                            <span>${campsite.Daily_Fee__c} x {numberOfDays} days</span>
+                                        </div>
+                                    </template>
+
+                                    <template if:true={trail}>
+                                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                            <span><strong>Trail:</strong> {trail.Name}</span>
+                                            <span>Included</span>
+                                        </div>
+                                    </template>
+
+                                    <template if:true={campingItems.length}>
+                                        <div class="slds-m-bottom_small">
+                                            <strong>Rental Items:</strong> {campingItems.length} items
+                                        </div>
+                                    </template>
+
+                                    <div class="slds-border_top slds-p-top_small slds-m-top_small">
+                                        <div class="slds-grid slds-grid_align-spread">
+                                            <span class="slds-text-heading_small"><strong>Total:</strong></span>
+                                            <span class="slds-text-heading_small"><strong>{formattedTotalPrice}</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Section -->
+                                <div class="slds-m-bottom_large">
+                                    <p class="slds-text-body_regular slds-m-bottom_medium">
+                                        Click below to complete your booking. Payment will be processed securely.
+                                    </p>
+                                </div>
+
+                                <div class="slds-grid slds-grid_align-center slds-gutters">
+                                    <lightning-button label="Back to Weather" variant="neutral" onclick={handleBackToWeather} class="slds-m-right_small"></lightning-button>
+                                    <lightning-button label="Complete Booking" variant="brand" icon-name="utility:success" onclick={handlePaymentComplete}></lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Confirmation Step -->
+                    <template if:true={showConfirmationStep}>
+                        <div class="confirmation-step slds-p-around_large">
+                            <div class="slds-text-align_center">
+                                <lightning-icon icon-name="utility:success" size="large" class="slds-m-bottom_medium success-icon"></lightning-icon>
+                                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Booking Confirmed!</h2>
+
+                                <div class="slds-notify slds-notify_alert slds-alert_success slds-m-bottom_large" role="alert">
+                                    <span class="slds-assistive-text">Success</span>
+                                    <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                        <lightning-icon icon-name="utility:check" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                        Your camping adventure is booked!
+                                    </h3>
+                                    <p>Booking ID: <strong>{bookingId}</strong></p>
+                                    <p class="slds-m-top_small">You will receive a confirmation email shortly with all the details.</p>
+                                </div>
+
+                                <!-- Weather Summary for Reference -->
+                                <template if:true={weatherData}>
+                                    <div class="weather-summary-card slds-box slds-theme_shade slds-m-bottom_large">
+                                        <h3 class="slds-text-heading_small slds-m-bottom_medium">
+                                            <lightning-icon icon-name="utility:weather" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                            Weather Conditions for Your Trip
+                                        </h3>
+
+                                        <div class="slds-grid slds-gutters slds-wrap">
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                <div class="weather-summary-stat">
+                                                    <span class="weather-summary-value">{currentTemp}°C</span>
+                                                    <span class="weather-summary-label">Temperature</span>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                <div class="weather-summary-stat">
+                                                    <span class="weather-summary-value">{currentWeather}</span>
+                                                    <span class="weather-summary-label">Conditions</span>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                <div class="weather-summary-stat">
+                                                    <span class="weather-summary-value">{currentHumidity}%</span>
+                                                    <span class="weather-summary-label">Humidity</span>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                                <div class="weather-summary-stat">
+                                                    <span class="weather-summary-value">{currentWindSpeed} km/h</span>
+                                                    <span class="weather-summary-label">Wind Speed</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <template if:true={hasWeatherAlerts}>
+                                            <div class="weather-alert-reminder slds-m-top_medium">
+                                                <lightning-icon icon-name="utility:warning" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                                <span class="slds-text-body_small">
+                                                    <strong>Weather Alert:</strong> {weatherAlertTitle} - Please check weather updates before your trip.
+                                                </span>
                                             </div>
                                         </template>
                                     </div>
                                 </template>
-                                
-                                <!-- Booking Details -->
-                                <div class="summary-section slds-m-bottom_medium">
-                                    <h4 class="slds-text-heading_small slds-m-bottom_x-small">Details</h4>
-                                    <div class="slds-grid slds-m-bottom_x-small">
-                                        <div class="slds-col slds-size_1-of-2 slds-text-body_small">Duration:</div>
-                                        <div class="slds-col slds-size_1-of-2 slds-text-align_right">{numberOfDays} days</div>
-                                    </div>
-                                    <div class="slds-grid slds-m-bottom_x-small">
-                                        <div class="slds-col slds-size_1-of-2 slds-text-body_small">People:</div>
-                                        <div class="slds-col slds-size_1-of-2 slds-text-align_right">{booking.numberOfPeople}</div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Total Price -->
-                                <div class="summary-section slds-m-top_medium">
-                                    <div class="slds-grid slds-grid_vertical-align-center">
-                                        <div class="slds-col slds-size_1-of-2">
-                                            <div class="slds-text-heading_medium">Total:</div>
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-2 slds-text-align_right">
-                                            <div class="slds-text-heading_medium">{formattedTotalPrice}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Book Now Button -->
-                                <div class="slds-grid slds-grid_align-center slds-m-top_large">
-                                    <lightning-button label="Book Now" variant="brand" icon-name="utility:event" onclick={handleSubmit}></lightning-button>
+
+                                <div class="slds-grid slds-grid_align-center slds-gutters">
+                                    <lightning-button
+                                        label="View Booking Details"
+                                        variant="neutral"
+                                        icon-name="utility:preview"
+                                        onclick={handleViewBooking}
+                                        class="slds-m-right_small">
+                                    </lightning-button>
+                                    <lightning-button
+                                        label="Book Another Trip"
+                                        variant="brand"
+                                        icon-name="utility:add"
+                                        onclick={handleNewBooking}>
+                                    </lightning-button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </template>

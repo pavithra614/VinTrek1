@@ -51,7 +51,7 @@
                                                     <lightning-button label="Add New Trail" variant="brand" icon-name="utility:add" onclick={handleAddNewTrail}></lightning-button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Trail List -->
                                             <div class="slds-m-top_medium">
                                                 <template if:true={trails.length}>
@@ -85,7 +85,7 @@
                                                     <lightning-button label="Add New Campsite" variant="brand" icon-name="utility:add" onclick={handleAddNewCampsite}></lightning-button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- New Campsite Form -->
                                             <template if:true={showNewCampsiteForm}>
                                                 <div class="slds-box slds-m-bottom_medium">
@@ -171,13 +171,27 @@
                                                     <lightning-button label="Add New Shop" variant="brand" icon-name="utility:add" onclick={handleAddNewShop}></lightning-button>
                                                 </div>
                                             </div>
-                                            
-                                            <!-- Shop List -->
-                                            <div class="slds-m-top_medium">
-                                                <div class="slds-text-align_center">
-                                                    <p>Shop management will be implemented here</p>
+
+                                            <!-- Shops List -->
+                                            <template if:true={shops.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={shops}
+                                                        columns={shopColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleShopRowAction}>
+                                                    </lightning-datatable>
                                                 </div>
-                                            </div>
+                                            </template>
+                                            <template if:false={shops.length}>
+                                                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                    <div class="slds-text-longform">
+                                                        <h3 class="slds-text-heading_medium">No shops found</h3>
+                                                        <p class="slds-text-body_regular">Add your first shop to get started.</p>
+                                                    </div>
+                                                </div>
+                                            </template>
                                         </div>
                                     </lightning-tab>
 
@@ -191,13 +205,27 @@
                                                     <lightning-button label="Add New Item" variant="brand" icon-name="utility:add" onclick={handleAddNewItem}></lightning-button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Camping Items List -->
-                                            <div class="slds-m-top_medium">
-                                                <div class="slds-text-align_center">
-                                                    <p>Camping items management will be implemented here</p>
+                                            <template if:true={campingItems.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={campingItems}
+                                                        columns={campingItemColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleCampingItemRowAction}>
+                                                    </lightning-datatable>
                                                 </div>
-                                            </div>
+                                            </template>
+                                            <template if:false={campingItems.length}>
+                                                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                    <div class="slds-text-longform">
+                                                        <h3 class="slds-text-heading_medium">No camping items found</h3>
+                                                        <p class="slds-text-body_regular">Add your first camping item to get started.</p>
+                                                    </div>
+                                                </div>
+                                            </template>
                                         </div>
                                     </lightning-tab>
 
@@ -211,13 +239,27 @@
                                                     <lightning-button label="Add New User" variant="brand" icon-name="utility:add" onclick={handleAddNewUser}></lightning-button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Users List -->
-                                            <div class="slds-m-top_medium">
-                                                <div class="slds-text-align_center">
-                                                    <p>User management will be implemented here</p>
+                                            <template if:true={users.length}>
+                                                <div class="slds-m-top_medium">
+                                                    <lightning-datatable
+                                                        key-field="Id"
+                                                        data={users}
+                                                        columns={userColumns}
+                                                        hide-checkbox-column
+                                                        onrowaction={handleUserRowAction}>
+                                                    </lightning-datatable>
                                                 </div>
-                                            </div>
+                                            </template>
+                                            <template if:false={users.length}>
+                                                <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                                    <div class="slds-text-longform">
+                                                        <h3 class="slds-text-heading_medium">No users found</h3>
+                                                        <p class="slds-text-body_regular">Add your first user to get started.</p>
+                                                    </div>
+                                                </div>
+                                            </template>
                                         </div>
                                     </lightning-tab>
                                 </lightning-tabset>

@@ -21,6 +21,9 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
     @track selectedTrail = null;
     @track selectedCampsite = null;
     @track rentalItems = [];
+    @track showBookingForm = false;
+    @track bookingCampsiteId = null;
+    @track bookingTrailId = null;
     @track userBookings = [];
     @track weatherAlert = null;
     @track showWeatherAlert = false;
@@ -70,7 +73,17 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
         const bookingId = event.detail.bookingId;
         this.showToast('Success', 'Booking created successfully!', 'success');
 
-        // Navigate to the booking record
+        // Reset booking form state
+        this.showBookingForm = false;
+        this.bookingCampsiteId = null;
+        this.bookingTrailId = null;
+        this.cartItems = [];
+
+        // Switch to bookings tab to show the new booking
+        this.activeTab = 'bookings';
+        this.loadUserBookings();
+
+        // Navigate to the booking record if needed
         if (bookingId) {
             this[NavigationMixin.Navigate]({
                 type: 'standard__recordPage',
@@ -90,17 +103,18 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
     handleBookCampsite(event) {
         const { campsiteId, cartItems } = event.detail;
 
-        // Navigate to booking form
-        this[NavigationMixin.Navigate]({
-            type: 'standard__component',
-            attributes: {
-                componentName: 'c__BookingForm'
-            },
-            state: {
-                c__campsiteId: campsiteId,
-                c__cartItemIds: cartItems.map(item => item.Id).join(',')
-            }
-        });
+        // Set booking data and show enhanced booking form
+        this.bookingCampsiteId = campsiteId;
+        this.bookingTrailId = null;
+        this.showBookingForm = true;
+        this.activeTab = 'booking';
+
+        // Update cart items if provided
+        if (cartItems && cartItems.length > 0) {
+            this.cartItems = cartItems;
+        }
+
+        this.showToast('Booking', 'Proceeding to booking form', 'info');
     }
 
     // Handle search input change
@@ -236,21 +250,18 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
             return;
         }
 
-        if (this.cartItems.length === 0) {
-            this.showToast('Info', 'No rental items in cart. Do you want to continue?', 'info');
-        }
+        // Set booking data and show enhanced booking form
+        this.bookingCampsiteId = this.selectedCampsite.Id;
+        this.bookingTrailId = null;
+        this.showBookingForm = true;
+        this.activeTab = 'booking';
 
-        // Navigate to booking form
-        this[NavigationMixin.Navigate]({
-            type: 'standard__component',
-            attributes: {
-                componentName: 'c__BookingForm'
-            },
-            state: {
-                c__campsiteId: this.selectedCampsite.Id,
-                c__cartItemIds: this.cartItems.map(item => item.Id).join(',')
-            }
-        });
+        // Show info if no items in cart but allow to continue
+        if (this.cartItems.length === 0) {
+            this.showToast('Info', 'Proceeding to booking without rental items', 'info');
+        } else {
+            this.showToast('Info', `Proceeding to booking with ${this.cartItems.length} rental items`, 'info');
+        }
     }
 
     showToast(title, message, variant) {
@@ -347,5 +358,12 @@ export default class VinTrekApp extends NavigationMixin(LightningElement) {
     // Handle explore trails button click
     handleExploreTrails() {
         this.activeTab = 'trails';
+        this.showBookingForm = false;
+    }
+
+    // Handle explore campsites button click
+    handleExploreCampsites() {
+        this.activeTab = 'campsites';
+        this.showBookingForm = false;
     }
 }

@@ -4,6 +4,26 @@
 public with sharing class CampsiteController {
 
     /**
+     * Get all campsites (for admin view)
+     * @return List of Campsite__c records
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<Campsite__c> getCampsites() {
+        try {
+            // Query for all campsites (admin view)
+            return [
+                SELECT Id, Name, Description__c, Daily_Fee__c, Capacity__c,
+                       Facilities__c, Latitude__c, Longitude__c, Trail__c, Trail__r.Name
+                FROM Campsite__c
+                ORDER BY Name ASC
+                LIMIT 100
+            ];
+        } catch (Exception e) {
+            throw new AuraHandledException('Error retrieving campsites: ' + e.getMessage());
+        }
+    }
+
+    /**
      * Get all campsites for the current user (service provider)
      * @return List of Campsite__c records
      */
@@ -93,11 +113,7 @@ public with sharing class CampsiteController {
         try {
             return [
                 SELECT Id, Name, Description__c, Difficulty__c, Distance_km__c,
-                       Elevation_m__c, Location__c,
-                       (SELECT Id, Name, Description__c, Capacity__c, Daily_Fee__c,
-                               Facilities__c
-                        FROM Campsites
-                        ORDER BY Name ASC)
+                       Elevation_m__c, Location__c
                 FROM Trail__c
                 WHERE Id = :trailId
                 LIMIT 1
@@ -165,47 +181,5 @@ public with sharing class CampsiteController {
         }
     }
 
-    /**
-     * Create a booking with rental items
-     * @param campsiteId - The ID of the campsite
-     * @param startDate - The start date of the booking
-     * @param endDate - The end date of the booking
-     * @param rentalItemIds - List of rental item IDs to include in the booking
-     * @return ID of the created booking
-     */
-    @AuraEnabled
-    public static String createBooking(String campsiteId, Date startDate, Date endDate, List<String> rentalItemIds) {
-        try {
-            // Create the booking record
-            Rental__c booking = new Rental__c(
-                Campsite__c = campsiteId,
-                Start_Date__c = startDate,
-                End_Date__c = endDate,
-                Status__c = 'Pending'
-            );
 
-            insert booking;
-
-            // Create rental item bookings
-            List<Rental_Item__c> rentalItems = new List<Rental_Item__c>();
-
-            for (String itemId : rentalItemIds) {
-                Rental_Item__c rentalItem = new Rental_Item__c(
-                    Rental__c = booking.Id,
-                    Camping_Item__c = itemId,
-                    Quantity__c = 1
-                );
-                rentalItems.add(rentalItem);
-            }
-
-            if (!rentalItems.isEmpty()) {
-                insert rentalItems;
-            }
-
-            return booking.Id;
-
-        } catch (Exception e) {
-            throw new AuraHandledException('Error creating booking: ' + e.getMessage());
-        }
-    }
 }

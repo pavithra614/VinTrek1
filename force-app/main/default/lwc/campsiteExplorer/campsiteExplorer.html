@@ -5,17 +5,17 @@
             <div class="slds-form-element slds-m-bottom_medium">
                 <div class="slds-form-element__control">
                     <div class="search-container">
-                        <lightning-input 
-                            type="search" 
-                            label="Search Trails and Campsites" 
+                        <lightning-input
+                            type="search"
+                            label="Search Trails and Campsites"
                             placeholder="Enter trail or campsite name..."
                             value={searchTerm}
                             onchange={handleSearchChange}
                             class="search-input">
                         </lightning-input>
-                        <lightning-button 
-                            label="Search" 
-                            variant="brand" 
+                        <lightning-button
+                            label="Search"
+                            variant="brand"
                             icon-name="utility:search"
                             onclick={handleSearch}
                             class="search-button">
@@ -113,6 +113,12 @@
                         <div class="slds-text-heading_small slds-m-bottom_small">Description</div>
                         <p class="slds-m-bottom_medium">{selectedTrail.Description__c}</p>
 
+                        <!-- Weather Calendar Section -->
+                        <div class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">Weather Forecast</div>
+                        <div class="weather-calendar-wrapper slds-m-bottom_large">
+                            <c-weather-calendar ondayselect={handleWeatherDaySelect}></c-weather-calendar>
+                        </div>
+
                         <!-- Campsites Section -->
                         <div class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">Available Campsites</div>
                         <div class="slds-grid slds-wrap">
@@ -209,10 +215,10 @@
                                                     <p class="rental-item-price">${item.Daily_Rate__c}/day</p>
                                                 </div>
                                                 <div class="slds-col slds-text-align_right">
-                                                    <lightning-button-icon 
-                                                        icon-name="utility:add" 
-                                                        variant="brand" 
-                                                        alternative-text="Add to Cart" 
+                                                    <lightning-button-icon
+                                                        icon-name="utility:add"
+                                                        variant="brand"
+                                                        alternative-text="Add to Cart"
                                                         title="Add to Cart"
                                                         data-id={item.Id}
                                                         onclick={handleAddToCart}>

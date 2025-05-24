@@ -1,20 +1,574 @@
+/* CSS Variables for consistent theming */
+:host {
+    --primary-color: #2c5530;
+    --primary-light: #4a7c59;
+    --primary-dark: #1e3a21;
+    --secondary-color: #8bc34a;
+    --accent-color: #ff6b35;
+    --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --mountain-gradient: linear-gradient(to bottom, #2c5530 0%, #4a7c59 50%, #8bc34a 100%);
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --white: #ffffff;
+    --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --shadow-heavy: 0 15px 50px rgba(0, 0, 0, 0.2);
+    --border-radius: 16px;
+    --border-radius-small: 8px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main Container */
 .login-container {
     min-height: 100vh;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f3f3f3;
+    background: var(--background-gradient);
+    overflow: hidden;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.login-box {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Background Elements */
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(139, 195, 74, 0.2) 0%, transparent 50%);
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+.mountain-silhouette {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: var(--mountain-gradient);
+    clip-path: polygon(0 100%, 0 60%, 15% 45%, 25% 55%, 35% 40%, 50% 50%, 65% 35%, 75% 45%, 85% 30%, 100% 40%, 100% 100%);
+    opacity: 0.7;
+}
+
+/* Floating Elements */
+.floating-element {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-1 {
+    width: 80px;
+    height: 80px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-element-2 {
+    width: 120px;
+    height: 120px;
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.floating-element-3 {
+    width: 60px;
+    height: 60px;
+    top: 80%;
+    left: 70%;
+    animation-delay: 4s;
+}
+
+/* Login Content */
+.login-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 450px;
     padding: 2rem;
-    width: 100%;
-    max-width: 500px;
 }
 
-.slds-button_stretch {
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-heavy);
+    padding: 3rem 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Header Section */
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+.app-logo {
+    margin-right: 0.75rem;
+    color: var(--primary-color);
+    filter: drop-shadow(0 2px 4px rgba(44, 85, 48, 0.3));
+}
+
+.app-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.welcome-text {
+    margin-top: 1rem;
+}
+
+.welcome-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.welcome-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Form Styles */
+.login-form {
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    z-index: 2;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.custom-input {
     width: 100%;
+}
+
+.custom-input lightning-input {
+    --slds-c-input-color-background: rgba(255, 255, 255, 0.9);
+    --slds-c-input-color-border: rgba(44, 85, 48, 0.2);
+    --slds-c-input-color-border-focus: var(--primary-color);
+    --slds-c-input-radius-border: var(--border-radius-small);
+    --slds-c-input-spacing-inline-start: 3rem;
+    --slds-c-input-sizing-min-height: 3.5rem;
+}
+
+.floating-label {
+    position: absolute;
+    top: -0.5rem;
+    left: 0.75rem;
+    background: var(--white);
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    border-radius: 4px;
+    z-index: 3;
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+}
+
+.custom-checkbox {
+    --slds-c-checkbox-color-background-checked: var(--primary-color);
+    --slds-c-checkbox-color-border-checked: var(--primary-color);
+}
+
+.forgot-password-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: var(--transition);
+}
+
+.forgot-password-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Error Message */
+.error-message {
+    display: flex;
+    align-items: center;
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: var(--border-radius-small);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    color: #c0392b;
+    font-size: 0.875rem;
+    animation: shake 0.5s ease-in-out;
+}
+
+.error-icon {
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+/* Button Styles */
+.button-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.login-button {
+    width: 100%;
+    --slds-c-button-brand-color-background: var(--primary-color);
+    --slds-c-button-brand-color-background-hover: var(--primary-dark);
+    --slds-c-button-brand-color-background-active: var(--primary-dark);
+    --slds-c-button-radius-border: var(--border-radius-small);
+    --slds-c-button-sizing-min-height: 3.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+    transition: var(--transition);
+    box-shadow: var(--shadow-light);
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-small);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Divider */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(44, 85, 48, 0.2), transparent);
+}
+
+.divider-text {
+    background: var(--white);
+    padding: 0 1rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Signup Section */
+.signup-section {
+    text-align: center;
+}
+
+.signup-text {
+    margin: 0 0 1rem 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.signup-button {
+    width: 100%;
+    --slds-c-button-outline-color-border: var(--primary-color);
+    --slds-c-button-outline-color-border-hover: var(--primary-dark);
+    --slds-c-button-text-color: var(--primary-color);
+    --slds-c-button-text-color-hover: var(--primary-dark);
+    --slds-c-button-radius-border: var(--border-radius-small);
+    --slds-c-button-sizing-min-height: 3rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.signup-button:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-light);
+}
+
+/* Footer */
+.login-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(44, 85, 48, 0.1);
+}
+
+.footer-text {
+    margin: 0 0 1rem 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+.feature-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.feature-icons lightning-icon {
+    color: var(--primary-color);
+    opacity: 0.7;
+    transition: var(--transition);
+}
+
+.feature-icons lightning-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes logoGlow {
+    from {
+        filter: drop-shadow(0 2px 4px rgba(44, 85, 48, 0.3));
+    }
+    to {
+        filter: drop-shadow(0 4px 8px rgba(44, 85, 48, 0.5));
+    }
+}
+
+@keyframes backgroundShift {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(-5px) translateY(-5px);
+    }
+    50% {
+        transform: translateX(5px) translateY(5px);
+    }
+    75% {
+        transform: translateX(-3px) translateY(3px);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Focus States */
+.custom-input:focus-within .input-icon {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.form-group:focus-within .floating-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-content {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .login-card {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+        border-radius: 12px;
+    }
+
+    .app-title {
+        font-size: 2rem;
+    }
+
+    .welcome-title {
+        font-size: 1.5rem;
+    }
+
+    .mountain-silhouette {
+        height: 150px;
+    }
+
+    .floating-element-1,
+    .floating-element-2,
+    .floating-element-3 {
+        display: none;
+    }
+
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.5rem 1rem;
+        margin: 0.5rem;
+    }
+
+    .app-title {
+        font-size: 1.75rem;
+    }
+
+    .welcome-title {
+        font-size: 1.25rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .custom-input lightning-input {
+        --slds-c-input-sizing-min-height: 3rem;
+        --slds-c-input-spacing-inline-start: 2.5rem;
+    }
+
+    .input-icon {
+        left: 0.75rem;
+    }
+
+    .login-button {
+        --slds-c-button-sizing-min-height: 3rem;
+    }
+
+    .signup-button {
+        --slds-c-button-sizing-min-height: 2.75rem;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .login-card {
+        background: var(--white);
+        border: 2px solid var(--primary-color);
+    }
+
+    .background-overlay {
+        display: none;
+    }
+
+    .floating-element {
+        display: none;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .floating-element {
+        animation: none;
+    }
+
+    .background-overlay {
+        animation: none;
+    }
+}
+
+/* Safari backdrop-filter support */
+.floating-element {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.login-card {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+}
+
+.loading-overlay {
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 }

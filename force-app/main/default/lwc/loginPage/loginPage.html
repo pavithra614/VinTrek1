@@ -1,92 +1,136 @@
 <template>
     <div class="login-container">
-        <div class="slds-grid slds-gutters slds-wrap">
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12 slds-large-size_6-of-12 slds-align_absolute-center">
-                <div class="slds-box slds-box_x-small slds-m-around_medium login-box">
-                    <div class="slds-text-align_center slds-m-bottom_medium">
-                        <h2 class="slds-text-heading_medium slds-m-bottom_small">Welcome to VinTrek</h2>
-                        <p class="slds-text-body_regular">Sign in to continue to your account</p>
+        <!-- Background Elements -->
+        <div class="background-overlay"></div>
+        <div class="mountain-silhouette"></div>
+
+        <!-- Floating Elements -->
+        <div class="floating-element floating-element-1"></div>
+        <div class="floating-element floating-element-2"></div>
+        <div class="floating-element floating-element-3"></div>
+
+        <!-- Main Login Content -->
+        <div class="login-content">
+            <div class="login-card">
+                <!-- Logo and Header -->
+                <div class="login-header">
+                    <div class="logo-container">
+                        <lightning-icon icon-name="custom:custom57" size="large" class="app-logo"></lightning-icon>
+                        <h1 class="app-title">VinTrek</h1>
+                    </div>
+                    <div class="welcome-text">
+                        <h2 class="welcome-title">Welcome Back</h2>
+                        <p class="welcome-subtitle">Continue your adventure journey</p>
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <div class="login-form">
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <div class="input-container">
+                            <lightning-icon icon-name="utility:user" size="small" class="input-icon"></lightning-icon>
+                            <lightning-input
+                                type="text"
+                                placeholder="Enter your username"
+                                value={username}
+                                onchange={handleUsernameChange}
+                                class="custom-input"
+                                variant="label-hidden"
+                                required>
+                            </lightning-input>
+                        </div>
+                        <label class="floating-label">Username</label>
                     </div>
 
-                    <!-- Login Form -->
-                    <div class="slds-form">
-                        <!-- Username Field -->
-                        <div class="slds-form-element slds-m-bottom_medium">
-                            <label class="slds-form-element__label" for="username">Username</label>
-                            <div class="slds-form-element__control">
-                                <lightning-input
-                                    type="text"
-                                    id="username"
-                                    name="username"
-                                    value={username}
-                                    onchange={handleUsernameChange}
-                                    required>
-                                </lightning-input>
-                            </div>
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <div class="input-container">
+                            <lightning-icon icon-name="utility:lock" size="small" class="input-icon"></lightning-icon>
+                            <lightning-input
+                                type="password"
+                                placeholder="Enter your password"
+                                value={password}
+                                onchange={handlePasswordChange}
+                                class="custom-input"
+                                variant="label-hidden"
+                                required>
+                            </lightning-input>
                         </div>
+                        <label class="floating-label">Password</label>
+                    </div>
 
-                        <!-- Password Field -->
-                        <div class="slds-form-element slds-m-bottom_medium">
-                            <label class="slds-form-element__label" for="password">Password</label>
-                            <div class="slds-form-element__control">
-                                <lightning-input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={password}
-                                    onchange={handlePasswordChange}
-                                    required>
-                                </lightning-input>
-                            </div>
+                    <!-- Remember Me and Forgot Password -->
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <lightning-input
+                                type="checkbox"
+                                label="Remember me"
+                                name="rememberMe"
+                                checked={rememberMe}
+                                onchange={handleRememberMeChange}
+                                class="custom-checkbox">
+                            </lightning-input>
                         </div>
+                        <a href="#" class="forgot-password-link">Forgot Password?</a>
+                    </div>
 
-                        <!-- Remember Me Checkbox -->
-                        <div class="slds-form-element slds-m-bottom_medium">
-                            <div class="slds-form-element__control">
-                                <lightning-input
-                                    type="checkbox"
-                                    label="Remember me"
-                                    name="rememberMe"
-                                    checked={rememberMe}
-                                    onchange={handleRememberMeChange}>
-                                </lightning-input>
-                            </div>
+                    <!-- Error Message -->
+                    <template if:true={errorMessage}>
+                        <div class="error-message">
+                            <lightning-icon icon-name="utility:error" size="small" class="error-icon"></lightning-icon>
+                            <span>{errorMessage}</span>
                         </div>
+                    </template>
 
-                        <!-- Error Message -->
-                        <template if:true={errorMessage}>
-                            <div class="slds-text-color_error slds-m-bottom_small">
-                                {errorMessage}
-                            </div>
-                        </template>
-
-                        <!-- Login Button -->
-                        <div class="slds-m-top_medium">
-                            <lightning-button
-                                variant="brand"
-                                label="Sign In"
-                                onclick={handleLogin}
-                                class="slds-button_stretch"
-                                disabled={isLoading}>
-                            </lightning-button>
-                        </div>
+                    <!-- Login Button -->
+                    <div class="button-container">
+                        <lightning-button
+                            variant="brand"
+                            label="Sign In to VinTrek"
+                            onclick={handleLogin}
+                            class="login-button"
+                            disabled={isLoading}>
+                        </lightning-button>
 
                         <!-- Loading Spinner -->
                         <template if:true={isLoading}>
-                            <div class="slds-is-relative slds-m-top_small">
-                                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                            <div class="loading-overlay">
+                                <lightning-spinner alternative-text="Signing in..." size="small"></lightning-spinner>
                             </div>
                         </template>
+                    </div>
 
-                        <!-- Forgot Password Link -->
-                        <div class="slds-m-top_small slds-text-align_center">
-                            <a href="#" class="slds-text-link">Forgot your password?</a>
-                        </div>
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span class="divider-text">or</span>
+                    </div>
 
-                        <!-- Registration Link -->
-                        <div class="slds-m-top_small slds-text-align_center">
-                            <p>Don't have an account? <a href="javascript:void(0);" onclick={navigateToRegistration} class="slds-text-link">Sign up</a></p>
-                        </div>
+                    <!-- Registration Link -->
+                    <div class="signup-section">
+                        <p class="signup-text">New to VinTrek?</p>
+                        <lightning-button
+                            variant="outline-brand"
+                            label="Create Account"
+                            onclick={navigateToRegistration}
+                            class="signup-button">
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- Weather Calendar Section -->
+                <div class="weather-calendar-section slds-m-top_large">
+                    <h3 class="slds-text-heading_small slds-m-bottom_medium">Weather Forecast</h3>
+                    <c-weather-calendar></c-weather-calendar>
+                </div>
+
+                <!-- Footer -->
+                <div class="login-footer">
+                    <p class="footer-text">Discover trails, book campsites, rent gear</p>
+                    <div class="feature-icons">
+                        <lightning-icon icon-name="utility:trail" size="small" title="Explore Trails"></lightning-icon>
+                        <lightning-icon icon-name="utility:location" size="small" title="Find Campsites"></lightning-icon>
+                        <lightning-icon icon-name="utility:package" size="small" title="Rent Equipment"></lightning-icon>
                     </div>
                 </div>
             </div>

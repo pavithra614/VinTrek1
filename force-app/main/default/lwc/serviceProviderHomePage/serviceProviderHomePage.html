@@ -431,13 +431,215 @@
                                     </lightning-tab>
 
                                     <lightning-tab label="Reports" value="reports" onactive={handleTabChange}>
-                                        <div class="placeholder-content">
-                                            <lightning-icon icon-name="standard:report" size="large"></lightning-icon>
-                                            <h3 class="slds-text-heading_medium slds-p-vertical_small">Analytics & Reports</h3>
-                                            <p class="slds-text-body_regular slds-p-bottom_medium">
-                                                View detailed reports and analytics about your business performance.
-                                            </p>
-                                            <lightning-button label="Generate Report" variant="brand" icon-name="utility:chart"></lightning-button>
+                                        <div class="slds-p-around_medium">
+                                            <!-- Reports Header -->
+                                            <div class="slds-grid slds-gutters slds-grid_vertical-align-center slds-m-bottom_medium">
+                                                <div class="slds-col">
+                                                    <h2 class="slds-text-heading_medium">Analytics & Reports</h2>
+                                                    <p class="slds-text-body_small slds-text-color_weak">
+                                                        View detailed reports and analytics about your business performance.
+                                                    </p>
+                                                </div>
+                                                <div class="slds-col slds-text-align_right">
+                                                    <lightning-button-group>
+                                                        <lightning-button label="Refresh Data" variant="brand-outline" icon-name="utility:refresh" onclick={refreshReportData}></lightning-button>
+                                                        <lightning-button label="Export Report" variant="brand" icon-name="utility:download" onclick={exportReport}></lightning-button>
+                                                    </lightning-button-group>
+                                                </div>
+                                            </div>
+
+                                            <!-- Loading Spinner for Reports -->
+                                            <template if:true={isLoadingReports}>
+                                                <div class="slds-is-relative slds-p-around_medium">
+                                                    <lightning-spinner alternative-text="Loading Reports" size="medium"></lightning-spinner>
+                                                </div>
+                                            </template>
+
+                                            <!-- Reports Content -->
+                                            <template if:false={isLoadingReports}>
+                                                <!-- Key Metrics Cards -->
+                                                <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                                                    <!-- Total Revenue Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card revenue-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="utility:currency" size="medium" variant="inverse" class="revenue-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Total Revenue</h3>
+                                                                    <p class="metric-value">${reportData.totalRevenue}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.revenueGrowth}% this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Total Profit Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card profit-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="utility:success" size="medium" variant="inverse" class="profit-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Net Profit</h3>
+                                                                    <p class="metric-value">${reportData.totalProfit}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.profitGrowth}% this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Total Bookings Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card bookings-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="standard:event" size="medium" variant="inverse" class="bookings-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Total Bookings</h3>
+                                                                    <p class="metric-value">{reportData.totalBookings}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.bookingsGrowth} this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Average Order Value Card -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                                                        <div class="slds-box slds-p-around_medium report-metric-card aov-card">
+                                                            <div class="slds-media">
+                                                                <div class="slds-media__figure">
+                                                                    <lightning-icon icon-name="utility:chart" size="medium" variant="inverse" class="aov-icon"></lightning-icon>
+                                                                </div>
+                                                                <div class="slds-media__body">
+                                                                    <h3 class="slds-text-heading_small metric-label">Avg. Order Value</h3>
+                                                                    <p class="metric-value">${reportData.averageOrderValue}</p>
+                                                                    <p class="slds-text-body_small metric-trend">
+                                                                        <lightning-icon icon-name="utility:trending" size="xx-small" class="trend-up"></lightning-icon>
+                                                                        <span class="slds-p-left_xx-small">+{reportData.aovGrowth}% this month</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Charts and Tables Section -->
+                                                <div class="slds-grid slds-gutters slds-wrap">
+                                                    <!-- Sales Chart -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                                        <lightning-card title="Monthly Sales Trend" icon-name="utility:chart">
+                                                            <div class="slds-p-around_medium">
+                                                                <div class="chart-container">
+                                                                    <canvas class="sales-chart" width="400" height="200"></canvas>
+                                                                </div>
+                                                                <div class="slds-m-top_small">
+                                                                    <p class="slds-text-body_small slds-text-color_weak">
+                                                                        📈 Sales have increased by {reportData.revenueGrowth}% compared to last month
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </lightning-card>
+                                                    </div>
+
+                                                    <!-- Booking Status Distribution -->
+                                                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                                        <lightning-card title="Booking Status Distribution" icon-name="utility:pie_chart">
+                                                            <div class="slds-p-around_medium">
+                                                                <div class="booking-status-chart">
+                                                                    <template for:each={reportData.bookingStatusData} for:item="status">
+                                                                        <div key={status.label} class="status-item slds-m-bottom_small">
+                                                                            <div class="slds-grid slds-grid_vertical-align-center">
+                                                                                <div class="slds-col slds-size_1-of-3">
+                                                                                    <span class={status.badgeClass}>{status.label}</span>
+                                                                                </div>
+                                                                                <div class="slds-col slds-size_1-of-3 slds-text-align_center">
+                                                                                    <strong>{status.count}</strong>
+                                                                                </div>
+                                                                                <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                                                                    <span class="slds-text-body_small">{status.percentage}%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="progress-bar slds-m-top_xx-small">
+                                                                                <div class="progress-fill" style={status.progressStyle}></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                        </lightning-card>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Recent Bookings Table -->
+                                                <div class="slds-m-top_large">
+                                                    <lightning-card title="Recent Bookings" icon-name="standard:event">
+                                                        <div slot="actions">
+                                                            <lightning-button label="View All" variant="brand-outline" onclick={viewAllBookings}></lightning-button>
+                                                        </div>
+                                                        <div class="slds-p-around_medium">
+                                                            <template if:true={reportData.recentBookings.length}>
+                                                                <lightning-datatable
+                                                                    key-field="Id"
+                                                                    data={reportData.recentBookings}
+                                                                    columns={bookingColumns}
+                                                                    hide-checkbox-column
+                                                                    show-row-number-column>
+                                                                </lightning-datatable>
+                                                            </template>
+                                                            <template if:false={reportData.recentBookings.length}>
+                                                                <div class="slds-illustration slds-illustration_small">
+                                                                    <div class="slds-text-longform slds-text-align_center">
+                                                                        <h3 class="slds-text-heading_medium">No recent bookings</h3>
+                                                                        <p class="slds-text-body_regular">
+                                                                            Your recent bookings will appear here once customers start booking your services.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </lightning-card>
+                                                </div>
+
+                                                <!-- Top Performing Items -->
+                                                <div class="slds-m-top_large">
+                                                    <lightning-card title="Top Performing Items" icon-name="standard:product">
+                                                        <div class="slds-p-around_medium">
+                                                            <template if:true={reportData.topItems.length}>
+                                                                <lightning-datatable
+                                                                    key-field="Id"
+                                                                    data={reportData.topItems}
+                                                                    columns={topItemsColumns}
+                                                                    hide-checkbox-column
+                                                                    show-row-number-column>
+                                                                </lightning-datatable>
+                                                            </template>
+                                                            <template if:false={reportData.topItems.length}>
+                                                                <div class="slds-illustration slds-illustration_small">
+                                                                    <div class="slds-text-longform slds-text-align_center">
+                                                                        <h3 class="slds-text-heading_medium">No sales data available</h3>
+                                                                        <p class="slds-text-body_regular">
+                                                                            Your top performing items will appear here once you start making sales.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </lightning-card>
+                                                </div>
+                                            </template>
                                         </div>
                                     </lightning-tab>
                                 </lightning-tabset>
